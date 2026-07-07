@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الاكسيل للجميع</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0b1a2e;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+        }
+        h1 {
+            font-size: 3rem;
+            color: #f5c842;
+            margin-bottom: 10px;
+        }
+        h1 span { color: #fff; }
+        p {
+            font-size: 1.2rem;
+            color: #b0c4de;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: #f5c842;
+            color: #0b1a2e;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #ffd966;
+            transform: scale(1.05);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+            width: 100%;
+        }
+        .feature {
+            background: #1a2f44;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #2a4058;
+        }
+        .feature h3 { color: #f5c842; }
+        .footer {
+            margin-top: 40px;
+            color: #5a7a9a;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>الاكسيل <span>للجميع</span></h1>
+        <p>شيتات Excel احترافية • محاسبة • مخازن • مبيعات • موارد بشرية</p>
+        <a href="#" class="btn">📂 استعرض الشيتات</a>
+
+        <div class="features">
+            <div class="feature"><h3>📊 محاسبة</h3><p>قوائم مالية متكاملة</p></div>
+            <div class="feature"><h3>📦 مخازن</h3><p>نظام إدارة مخزون</p></div>
+            <div class="feature"><h3>💼 مبيعات</h3><p>تحليل وتقارير مبيعات</p></div>
+            <div class="feature"><h3>👥 موارد بشرية</h3><p>حضور ورواتب</p></div>
+        </div>
+        <div class="footer">
+            © 2026 الاكسيل للجميع • تواصل عبر واتساب
+        </div>
+    </div>
+</body>
+</html>
