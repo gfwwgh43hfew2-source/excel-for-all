@@ -294,8 +294,7 @@
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
-            // ===== البحث عن الأعمدة المهمة =====
-            // نبحث عن عمود المبلغ الإجمالي فقط
+            // ===== البحث عن عمود المبلغ الإجمالي فقط =====
             const idxTotal = findColumnIndex(headers, ['المبلغ الإجمالي المصروف', 'الإجمالي', 'المبلغ']);
             const idxCategory = findColumnIndex(headers, ['قسم النفقات', 'النفقات', 'قسم']);
             const idxProperty = findColumnIndex(headers, ['العقار المعني', 'العقار']);
@@ -318,7 +317,7 @@
 
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
-                // نأخذ القيمة من عمود المبلغ الإجمالي فقط
+                // 🔑 هنا التركيز: نأخذ القيمة من عمود المبلغ الإجمالي فقط
                 const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
                 if (total === 0) return;
 
@@ -388,7 +387,7 @@
                 </div>
             `;
 
-            // ===== عرض الجدول =====
+            // ===== عرض الجدول (جميع الأعمدة) =====
             let tableRows = '';
             const displayRows = rows.slice(0, 50);
             displayRows.forEach(row => {
@@ -399,9 +398,7 @@
                 tableRows += `<tr>
                     ${headers.map((h, i) => {
                         const value = (row[i] !== undefined && row[i] !== null) ? row[i] : '';
-                        const num = cleanNumber(value);
-                        const isNumber = num !== 0 && !isNaN(num) && String(value).replace(/[^0-9.]/g, '') !== '';
-                        return `<td style="${isNumber ? 'font-weight:600;color:#1a3a4a;' : ''}">${value}</td>`;
+                        return `<td>${value}</td>`;
                     }).join('')}
                 </tr>`;
             });
