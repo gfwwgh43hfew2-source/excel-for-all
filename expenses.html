@@ -255,17 +255,11 @@
         }
 
         // =============================================
-        // دالة البحث عن العمود (مرنة)
+        // دالة البحث عن العمود بالاسم الدقيق
         // =============================================
-        function findColumnIndex(headers, targetNames) {
+        function findColumnIndex(headers, targetName) {
             const clean = s => String(s).trim().replace(/\s+/g, ' ');
-            for (const target of targetNames) {
-                const idx = headers.findIndex(h => clean(h) === clean(target));
-                if (idx !== -1) return idx;
-                const idxPartial = headers.findIndex(h => clean(h).includes(clean(target)));
-                if (idxPartial !== -1) return idxPartial;
-            }
-            return -1;
+            return headers.findIndex(h => clean(h) === clean(targetName));
         }
 
         function getBadgeClass(category) {
@@ -297,19 +291,22 @@
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
-            // ===== البحث عن الأعمدة المهمة =====
-            // 🔑 نحدد بدقة عمود المبلغ الإجمالي فقط
-            const idxTotal = findColumnIndex(headers, ['المبلغ الإجمالي المصروف', 'الإجمالي', 'المبلغ']);
-            const idxCategory = findColumnIndex(headers, ['قسم النفقات', 'النفقات', 'قسم']);
-            const idxProperty = findColumnIndex(headers, ['العقار المعني', 'العقار']);
+            // =============================================
+            // 🔑 نحدد أرقام الأعمدة بالضبط بأسمائها الكاملة
+            // =============================================
+            const idxTotal = findColumnIndex(headers, 'المبلغ الإجمالي المصروف');
+            const idxCategory = findColumnIndex(headers, 'قسم النفقات');
+            const idxProperty = findColumnIndex(headers, 'العقار المعني');
 
             if (idxTotal === -1) {
-                kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود المبلغ الإجمالي</div>`;
-                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود المبلغ الإجمالي</div>`;
+                kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود "المبلغ الإجمالي المصروف"</div>`;
+                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود "المبلغ الإجمالي المصروف"</div>`;
                 return;
             }
 
-            // ===== حساب المؤشرات (من عمود واحد فقط) =====
+            // =============================================
+            // 🔑 حساب المؤشرات من عمود واحد فقط
+            // =============================================
             let totalExpenses = 0;
             let totalSalaries = 0;
             let totalMaintenance = 0;
@@ -321,7 +318,7 @@
 
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
-                // 🔑 هنا التركيز: نأخذ القيمة من عمود المبلغ الإجمالي فقط
+                // 🔑 نأخذ القيمة من عمود المبلغ الإجمالي فقط
                 const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
                 if (total === 0) return;
 
@@ -342,7 +339,9 @@
 
             const sortedProps = Object.entries(propertyExpenses).sort((a, b) => b[1] - a[1]);
 
-            // ===== عرض بطاقات KPI =====
+            // =============================================
+            // عرض بطاقات KPI
+            // =============================================
             kpiContainer.innerHTML = `
                 <div class="kpi-grid">
                     <div class="kpi-card">
@@ -391,7 +390,9 @@
                 </div>
             `;
 
-            // ===== عرض الجدول (جميع الأعمدة) =====
+            // =============================================
+            // عرض الجدول (جميع الأعمدة)
+            // =============================================
             let tableRows = '';
             const displayRows = rows.slice(0, 50);
             displayRows.forEach(row => {
