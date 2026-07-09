@@ -178,7 +178,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8rem;
-            min-width: 550px;
+            min-width: 700px;
         }
         th {
             background: #f2f5f7;
@@ -246,13 +246,13 @@
             .btn-grid { grid-template-columns: 1fr 1fr; }
             .btn-grid .btn { font-size: 0.65rem; padding: 8px 6px; }
             .company-box { padding: 15px; }
-            table { font-size: 0.7rem; min-width: 400px; }
+            table { font-size: 0.7rem; min-width: 500px; }
             th, td { padding: 6px; }
         }
         @media (max-width: 400px) {
             .kpi-grid { grid-template-columns: 1fr; }
             .btn-grid { grid-template-columns: 1fr; }
-            table { min-width: 350px; }
+            table { min-width: 400px; }
         }
     </style>
 </head>
@@ -354,18 +354,31 @@
         }
 
         // =============================================
-        // دالة لتحويل التاريخ من صيغة (DD/MM/YYYY) إلى Date
+        // دالة لتحويل التاريخ من صيغة (DD/MM/YYYY) أو (D-M-YYYY) إلى Date
         // =============================================
         function parseDate(dateStr) {
             if (!dateStr) return null;
             try {
-                const parts = String(dateStr).split('/');
+                let cleaned = String(dateStr).trim();
+                // محاولة صيغة DD/MM/YYYY
+                let parts = cleaned.split('/');
                 if (parts.length === 3) {
-                    // DD/MM/YYYY
                     const day = parseInt(parts[0]);
                     const month = parseInt(parts[1]) - 1;
                     const year = parseInt(parts[2]);
-                    return new Date(year, month, day);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                        return new Date(year, month, day);
+                    }
+                }
+                // محاولة صيغة D-M-YYYY
+                parts = cleaned.split('-');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]) - 1;
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                        return new Date(year, month, day);
+                    }
                 }
                 return null;
             } catch(e) { return null; }
@@ -398,7 +411,6 @@
             const idxName = findColumnIndex(headers, 'اسم الحجز');
             const idxDate = findColumnIndex(headers, 'تاريخ الفاتورة');
             const idxNumber = findColumnIndex(headers, 'رقم الحجز');
-            // ===== العمود الجديد: تاريخ الدخول =====
             const idxCheckIn = findColumnIndex(headers, 'تاريخ الدخول');
 
             if (idxTotal === -1) {
@@ -411,10 +423,8 @@
             let totalRevenue = 0, totalPaid = 0, totalRemaining = 0, totalDays = 0;
             let fullyPaid = 0, balanceDue = 0;
             let validRows = 0;
-            let futureBookings = 0; // العداد الفعلي للحجوزات المستقبلية
-            const nowDate = new Date();
-            // ضبط الوقت عند منتصف الليل عشان المقارنة تكون دقيقة
-            const today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
+            let futureBookings = 0;
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
@@ -433,7 +443,7 @@
                     else if (status.includes('Balance Due') || status.includes('متبقي')) balanceDue++;
                 }
 
-                // ===== حساب الحجوزات المستقبلية بناءً على تاريخ الدخول =====
+                // ===== حساب الحجوزات المستقبلية =====
                 if (idxCheckIn !== -1 && row[idxCheckIn]) {
                     const checkInDate = parseDate(row[idxCheckIn]);
                     if (checkInDate && checkInDate >= today) {
@@ -471,12 +481,20 @@
                     }
                 }
 
-                tableRows += `<tr>
+                const checkInDate = (idxCheckIn !== -1 && row[idxCheckIn]) ? row[idxCheckIn] : '-';
+                // تحديد إذا كان الحجز مستقبلي
+                let isFuture = false;
+                if (idxCheckIn !== -1 && row[idxCheckIn]) {
+                    const d = parseDate(row[idxCheckIn]);
+                    if (d && d >= today) isFuture = true;
+                }
+
+                tableRows += `<tr style="${isFuture ? 'background: #f0f7ff;' : ''}">
                     <td>${(idxNumber !== -1 && row[idxNumber]) ? row[idxNumber] : '-'}</td>
                     <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
                     <td><span class="badge badge-type">${(idxType !== -1 && row[idxType]) ? row[idxType] : '-'}</span></td>
                     <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
-                    <td>${(idxCheckIn !== -1 && row[idxCheckIn]) ? row[idxCheckIn] : '-'}</td>
+                    <td>${checkInDate} ${isFuture ? '⭐' : ''}</td>
                     <td>${total.toLocaleString()}</td>
                     <td>${(idxPaid !== -1 && row[idxPaid]) ? cleanNumber(row[idxPaid]).toLocaleString() : '0'}</td>
                     <td>${(idxRemaining !== -1 && row[idxRemaining]) ? cleanNumber(row[idxRemaining]).toLocaleString() : '0'}</td>
@@ -501,7 +519,7 @@
                         <tbody>${tableRows || '<tr><td colspan="9" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد حجوزات</td></tr>'}</tbody>
                     </table>
                 </div>
-                <div class="table-note">يعرض آخر 20 حجز</div>
+                <div class="table-note">⭐ حجوزات مستقبلية · يعرض آخر 20 حجز</div>
             `;
         }
 
