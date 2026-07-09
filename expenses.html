@@ -203,7 +203,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
         <div class="header-main">
             <div class="brand">
                 <h1>💰 المصاريف والتشغيل</h1>
@@ -217,17 +216,14 @@
 
         <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للوحة الرئيسية</a>
 
-        <!-- KPI -->
         <div id="kpiContainer"><div class="loading">⏳ جاري تحميل المؤشرات...</div></div>
 
-        <!-- TABLE -->
         <div class="section-title">📋 سجل المصاريف</div>
         <div id="tableContainer"><div class="loading">⏳ جاري تحميل البيانات...</div></div>
 
-        <!-- FOOTER -->
         <div class="footer">
             <div>© 2026 منتجع حياله - القصيم · تصميم محمد خلاف</div>
-            <div class="version">🔵 الإصدار: v2.2 (يجمع عمود "المبلغ الإجمالي المصروف" فقط - بالاسم الدقيق)</div>
+            <div class="version">🔵 الإصدار: v2.3 (يجمع العمود رقم 7 فقط - "المبلغ الإجمالي المصروف")</div>
         </div>
     </div>
 
@@ -285,16 +281,17 @@
             const rows = data.slice(1);
 
             // =============================================
-            // 🔑 نحدد رقم عمود "المبلغ الإجمالي المصروف" بالاسم الدقيق
+            // 🔑 نحدد رقم عمود "المبلغ الإجمالي المصروف" (العمود رقم 7)
             // =============================================
-            const idxTotal = headers.findIndex(h => h === 'المبلغ الإجمالي المصروف');
-            const idxCategory = headers.findIndex(h => h === 'قسم النفقات');
-            const idxProperty = headers.findIndex(h => h === 'العقار المعني');
+            // الأعمدة: 0=التاريخ, 1=اليوم, 2=العقار, 3=قسم النفقات, 4=البيان, 5=التكلفة اليومية, 6=المبلغ الإجمالي
+            const idxTotal = 6; // العمود رقم 7 (يبدأ العد من 0)
+            const idxCategory = 3;
+            const idxProperty = 2;
 
-            if (idxTotal === -1) {
+            if (idxTotal === -1 || idxTotal >= headers.length) {
                 kpiContainer.innerHTML = `
-                    <div class="error">❌ لم يتم العثور على عمود "المبلغ الإجمالي المصروف"
-                        <small>الأعمدة الموجودة: ${headers.join(' - ')}</small>
+                    <div class="error">❌ لم يتم العثور على العمود رقم 7
+                        <small>عدد الأعمدة: ${headers.length}</small>
                     </div>
                 `;
                 tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود المبلغ الإجمالي</div>`;
@@ -315,7 +312,6 @@
 
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
-                // 🔑 نأخذ القيمة من عمود المبلغ الإجمالي فقط
                 const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
                 if (total === 0) return;
 
@@ -336,9 +332,6 @@
 
             const sortedProps = Object.entries(propertyExpenses).sort((a, b) => b[1] - a[1]);
 
-            // =============================================
-            // عرض بطاقات KPI
-            // =============================================
             kpiContainer.innerHTML = `
                 <div class="kpi-grid">
                     <div class="kpi-card">
@@ -387,9 +380,6 @@
                 </div>
             `;
 
-            // =============================================
-            // عرض الجدول (جميع الأعمدة)
-            // =============================================
             let tableRows = '';
             const displayRows = rows.slice(0, 50);
             displayRows.forEach(row => {
