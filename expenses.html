@@ -227,7 +227,7 @@
         <!-- FOOTER -->
         <div class="footer">
             <div>© 2026 منتجع حياله - القصيم · تصميم محمد خلاف</div>
-            <div class="version">🔵 الإصدار: v2.0 (يجمع عمود "المبلغ الإجمالي المصروف" فقط)</div>
+            <div class="version">🔵 الإصدار: v2.1 (يجمع عمود "المبلغ الإجمالي المصروف" فقط - بالاسم الدقيق)</div>
         </div>
     </div>
 
@@ -305,11 +305,11 @@
             const rows = data.slice(1);
 
             // =============================================
-            // 🔑 نحدد أرقام الأعمدة بالضبط بأسمائها الكاملة
+            // 🔑 نحدد رقم عمود المبلغ الإجمالي بالاسم الدقيق (بدقة 100%)
             // =============================================
-            const idxTotal = findColumnIndex(headers, 'المبلغ الإجمالي المصروف');
-            const idxCategory = findColumnIndex(headers, 'قسم النفقات');
-            const idxProperty = findColumnIndex(headers, 'العقار المعني');
+            const idxTotal = headers.findIndex(h => h.trim() === 'المبلغ الإجمالي المصروف');
+            const idxCategory = headers.findIndex(h => h.trim() === 'قسم النفقات');
+            const idxProperty = headers.findIndex(h => h.trim() === 'العقار المعني');
 
             if (idxTotal === -1) {
                 kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود "المبلغ الإجمالي المصروف"</div>`;
