@@ -227,7 +227,7 @@
         <!-- FOOTER -->
         <div class="footer">
             <div>© 2026 منتجع حياله - القصيم · تصميم محمد خلاف</div>
-            <div class="version">🔵 الإصدار: v2.1 (يجمع عمود "المبلغ الإجمالي المصروف" فقط - بالاسم الدقيق)</div>
+            <div class="version">🔵 الإصدار: v2.2 (يجمع عمود "المبلغ الإجمالي المصروف" فقط - بالاسم الدقيق)</div>
         </div>
     </div>
 
@@ -267,26 +267,6 @@
             return parseFloat(cleaned) || 0;
         }
 
-        // =============================================
-        // دالة البحث عن العمود بالاسم الدقيق
-        // =============================================
-        function findColumnIndex(headers, targetName) {
-            const clean = s => String(s).trim().replace(/\s+/g, ' ');
-            return headers.findIndex(h => clean(h) === clean(targetName));
-        }
-
-        function getBadgeClass(category) {
-            const map = {
-                'رواتب': 'رواتب',
-                'صيانة': 'صيانة',
-                'مشتريات': 'مشتريات',
-                'تشغيل': 'تشغيل',
-                'أصول': 'أصول',
-                'أخرى': 'أخرى'
-            };
-            return map[category] || '';
-        }
-
         function displayData(data) {
             const kpiContainer = document.getElementById('kpiContainer');
             const tableContainer = document.getElementById('tableContainer');
@@ -305,15 +285,19 @@
             const rows = data.slice(1);
 
             // =============================================
-            // 🔑 نحدد رقم عمود المبلغ الإجمالي بالاسم الدقيق (بدقة 100%)
+            // 🔑 نحدد رقم عمود "المبلغ الإجمالي المصروف" بالاسم الدقيق
             // =============================================
-            const idxTotal = headers.findIndex(h => h.trim() === 'المبلغ الإجمالي المصروف');
-            const idxCategory = headers.findIndex(h => h.trim() === 'قسم النفقات');
-            const idxProperty = headers.findIndex(h => h.trim() === 'العقار المعني');
+            const idxTotal = headers.findIndex(h => h === 'المبلغ الإجمالي المصروف');
+            const idxCategory = headers.findIndex(h => h === 'قسم النفقات');
+            const idxProperty = headers.findIndex(h => h === 'العقار المعني');
 
             if (idxTotal === -1) {
-                kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود "المبلغ الإجمالي المصروف"</div>`;
-                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود "المبلغ الإجمالي المصروف"</div>`;
+                kpiContainer.innerHTML = `
+                    <div class="error">❌ لم يتم العثور على عمود "المبلغ الإجمالي المصروف"
+                        <small>الأعمدة الموجودة: ${headers.join(' - ')}</small>
+                    </div>
+                `;
+                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود المبلغ الإجمالي</div>`;
                 return;
             }
 
