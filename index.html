@@ -3,368 +3,287 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>منتجع حياله - القصيم | النظام المالي والإداري</title>
+    <title>منتجع حياله - النظام المالي والإداري</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f0e8;
-            color: #2c3e50;
-            padding: 20px 16px;
+            font-family: 'Segoe UI', 'Tahoma', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #1e2a3a;
+            padding: 30px 20px;
             direction: rtl;
         }
         .container { max-width: 1400px; margin: 0 auto; }
 
-        /* ===== HEADER ===== */
+        /* ===== HEADER (رسمي) ===== */
         .header-main {
-            background: linear-gradient(135deg, #1a4d3e, #2a6b57);
-            padding: 30px 25px;
-            border-radius: 20px;
-            text-align: center;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 30px rgba(26, 77, 62, 0.25);
-            position: relative;
-            overflow: hidden;
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 8px;
+            border-right: 5px solid #1a3a4a;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
         }
-        .header-main::before {
-            content: '🏕️';
-            position: absolute;
-            font-size: 6rem;
-            opacity: 0.06;
-            left: -20px;
-            bottom: -30px;
-            transform: rotate(-10deg);
+        .header-main .brand h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a3a4a;
+            letter-spacing: -0.5px;
         }
-        .header-main h1 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        .header-main .sub-title {
-            color: rgba(255,255,255,0.85);
-            font-size: 1rem;
-            margin-top: 4px;
+        .header-main .brand .sub {
+            color: #5a6a7a;
+            font-size: 0.9rem;
             font-weight: 400;
+            margin-top: 2px;
         }
-        .header-main .designer {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.8rem;
-            margin-top: 8px;
+        .header-main .meta {
+            text-align: left;
+            font-size: 0.75rem;
+            color: #6a7a8a;
+            line-height: 1.6;
         }
-        .header-main .designer span {
-            color: #f5c842;
-            font-weight: 600;
-        }
-        .header-main .update-time {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.7rem;
-            margin-top: 6px;
-        }
-        .header-main .gold-line {
-            width: 80px;
-            height: 3px;
-            background: #d4af37;
-            margin: 12px auto 0;
-            border-radius: 10px;
-        }
+        .header-main .meta span { color: #1a3a4a; font-weight: 600; }
+        .header-main .meta .gold { color: #a67c52; }
 
-        /* ===== KPI CARDS ===== */
+        /* ===== KPI CARDS (رسمية) ===== */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
             margin-bottom: 30px;
         }
         .kpi-card {
             background: #ffffff;
-            padding: 22px 16px;
-            border-radius: 18px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid rgba(26, 77, 62, 0.08);
-            transition: 0.3s;
+            padding: 20px 20px 16px;
+            border-radius: 8px;
+            border-bottom: 3px solid #1a3a4a;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.02);
+            transition: 0.2s;
         }
-        .kpi-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(26, 77, 62, 0.12);
-            border-color: #1a4d3e;
-        }
-        .kpi-card .icon {
-            font-size: 1.6rem;
-            color: #1a4d3e;
+        .kpi-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+        .kpi-card .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #6a7a8a;
+            font-weight: 600;
+            letter-spacing: 0.3px;
             margin-bottom: 4px;
         }
         .kpi-card .number {
             font-size: 2.2rem;
-            font-weight: 900;
-            color: #1a4d3e;
-        }
-        .kpi-card .label {
-            color: #5a7a6a;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-top: 2px;
-        }
-        .kpi-card .sub-label {
-            color: #8a9a90;
-            font-size: 0.6rem;
-            margin-top: 2px;
-        }
-
-        /* ===== SECTION TITLE ===== */
-        .section-title {
-            color: #1a4d3e;
-            font-size: 1.2rem;
             font-weight: 700;
-            margin: 30px 0 14px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #d4af37;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: #1a3a4a;
         }
-        .section-title .icon {
-            color: #d4af37;
+        .kpi-card .sub {
+            font-size: 0.7rem;
+            color: #8a9aaa;
+            margin-top: 4px;
+        }
+        .kpi-card .icon {
+            float: left;
+            font-size: 1.4rem;
+            color: #a67c52;
+            opacity: 0.6;
         }
 
-        /* ===== BUTTONS GRID ===== */
+        /* ===== BUTTONS (رسمية) ===== */
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a3a4a;
+            margin: 35px 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8edf0;
+        }
         .btn-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
             margin-bottom: 25px;
         }
         .btn-grid .btn {
             background: #ffffff;
-            padding: 13px 12px;
-            border-radius: 14px;
+            padding: 10px 14px;
+            border-radius: 6px;
             text-align: center;
-            border: 1px solid rgba(26, 77, 62, 0.08);
-            color: #2c3e50;
-            font-size: 0.8rem;
+            border: 1px solid #e8edf0;
+            color: #1e2a3a;
+            font-size: 0.75rem;
             font-weight: 500;
-            transition: 0.3s;
+            transition: 0.2s;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
         .btn-grid .btn:hover {
-            background: #1a4d3e;
-            border-color: #1a4d3e;
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(26, 77, 62, 0.2);
-        }
-        .btn-grid .btn .icon {
-            font-size: 0.9rem;
-            color: #d4af37;
-        }
-        .btn-grid .btn:hover .icon {
+            background: #1a3a4a;
+            border-color: #1a3a4a;
             color: #fff;
         }
+        .btn-grid .btn .icon { color: #a67c52; }
+        .btn-grid .btn:hover .icon { color: #fff; }
         .btn-grid .btn.active {
-            background: #1a4d3e;
-            border-color: #1a4d3e;
+            background: #1a3a4a;
+            border-color: #1a3a4a;
             color: #fff;
         }
-        .btn-grid .btn.active .icon {
-            color: #fff;
-        }
+        .btn-grid .btn.active .icon { color: #fff; }
 
-        /* ===== COMPANY DATA ===== */
+        /* ===== COMPANY DATA (رسمية) ===== */
         .company-box {
             background: #ffffff;
-            border-radius: 18px;
-            padding: 22px 25px;
-            border: 1px solid rgba(26, 77, 62, 0.06);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border-radius: 8px;
+            padding: 20px 25px;
+            border: 1px solid #e8edf0;
             margin: 20px 0 25px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.02);
         }
-        .company-box .company-title {
-            color: #1a4d3e;
-            font-size: 0.9rem;
+        .company-box .title {
+            font-size: 0.8rem;
             font-weight: 700;
+            color: #1a3a4a;
             margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .company-box .company-title .icon {
-            color: #d4af37;
         }
         .company-box .row {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px 20px;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(26, 77, 62, 0.04);
+            gap: 4px 25px;
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f3f5;
         }
-        .company-box .row:last-child {
-            border-bottom: none;
-        }
+        .company-box .row:last-child { border-bottom: none; }
         .company-box .label {
-            color: #7a8a80;
-            font-size: 0.8rem;
+            color: #6a7a8a;
+            font-size: 0.75rem;
             min-width: 100px;
-            font-weight: 500;
         }
         .company-box .value {
-            color: #1a3d3a;
-            font-size: 0.85rem;
+            color: #1e2a3a;
+            font-size: 0.8rem;
             font-weight: 500;
         }
-        .company-box .value .highlight {
-            color: #d4af37;
-        }
+        .company-box .value .gold { color: #a67c52; }
 
-        /* ===== TABLE ===== */
+        /* ===== TABLE (رسمية) ===== */
         .table-wrapper {
             background: #ffffff;
-            border-radius: 18px;
+            border-radius: 8px;
             overflow-x: auto;
-            border: 1px solid rgba(26, 77, 62, 0.06);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            margin-top: 10px;
-            -webkit-overflow-scrolling: touch;
+            border: 1px solid #e8edf0;
+            margin-top: 8px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             min-width: 550px;
         }
         th {
-            background: #1a4d3e;
-            color: #fff;
-            padding: 12px 10px;
+            background: #f2f5f7;
+            color: #1a3a4a;
+            padding: 12px 12px;
             text-align: right;
             white-space: nowrap;
-            font-size: 0.8rem;
             font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
         td {
-            padding: 10px 10px;
-            border-bottom: 1px solid rgba(26, 77, 62, 0.04);
-            color: #2c3e50;
-            font-size: 0.8rem;
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f3f5;
+            color: #1e2a3a;
         }
-        tr:hover td {
-            background: rgba(26, 77, 62, 0.02);
-        }
+        tr:last-child td { border-bottom: none; }
         .badge {
             display: inline-block;
-            padding: 3px 14px;
-            border-radius: 50px;
-            font-size: 0.7rem;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 0.65rem;
             font-weight: 600;
-            white-space: nowrap;
         }
-        .badge-paid {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-        .badge-balance {
-            background: #fce4ec;
-            color: #c62828;
-        }
-        .badge-type {
-            background: #e3f2fd;
-            color: #0d47a1;
-        }
-        .table-footer-note {
+        .badge-paid { background: #e6f0ea; color: #1a6a4a; }
+        .badge-balance { background: #fce8e8; color: #b33a3a; }
+        .badge-type { background: #eef2f5; color: #3a5a7a; }
+        .table-note {
             text-align: center;
-            color: #8a9a90;
-            font-size: 0.7rem;
+            color: #8a9aaa;
+            font-size: 0.65rem;
             padding: 10px 0 6px;
         }
 
         /* ===== FOOTER ===== */
         .footer {
             text-align: center;
-            color: #8a9a90;
+            color: #8a9aaa;
             margin-top: 40px;
             padding-top: 18px;
-            border-top: 1px solid rgba(26, 77, 62, 0.08);
-            font-size: 0.75rem;
-        }
-        .footer .heart {
-            color: #d4af37;
+            border-top: 1px solid #e8edf0;
+            font-size: 0.7rem;
         }
 
         /* ===== LOADING / ERROR ===== */
-        .loading {
+        .loading, .error {
             text-align: center;
-            color: #1a4d3e;
             padding: 40px 20px;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
-        .error {
-            text-align: center;
-            color: #c62828;
-            padding: 40px 20px;
-            font-size: 0.9rem;
-        }
+        .loading { color: #1a3a4a; }
+        .error { color: #b33a3a; }
         .error small {
             display: block;
-            margin-top: 12px;
-            color: #7a8a80;
+            margin-top: 10px;
+            color: #6a7a8a;
             font-size: 0.75rem;
-            line-height: 1.8;
         }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 600px) {
-            body { padding: 12px 8px; }
-            .header-main { padding: 20px 15px; }
-            .header-main h1 { font-size: 1.4rem; }
-            .header-main .sub-title { font-size: 0.8rem; }
-            .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .kpi-card { padding: 16px 10px; }
+            body { padding: 15px 10px; }
+            .header-main { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .header-main .meta { text-align: right; width: 100%; }
+            .kpi-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
             .kpi-card .number { font-size: 1.6rem; }
-            .kpi-card .label { font-size: 0.7rem; }
-            .btn-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .btn-grid .btn { font-size: 0.65rem; padding: 10px 6px; }
-            .company-box { padding: 16px 14px; }
-            .company-box .label { font-size: 0.7rem; min-width: 70px; }
-            .company-box .value { font-size: 0.75rem; }
+            .btn-grid { grid-template-columns: 1fr 1fr; }
+            .btn-grid .btn { font-size: 0.65rem; padding: 8px 6px; }
+            .company-box { padding: 15px; }
             table { font-size: 0.7rem; min-width: 400px; }
-            th { font-size: 0.65rem; padding: 8px 6px; }
-            td { font-size: 0.65rem; padding: 6px; }
-            .section-title { font-size: 1rem; }
+            th, td { padding: 6px; }
         }
         @media (max-width: 400px) {
-            .kpi-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-            .kpi-card .number { font-size: 1.3rem; }
-            .btn-grid { grid-template-columns: 1fr 1fr; }
+            .kpi-grid { grid-template-columns: 1fr; }
+            .btn-grid { grid-template-columns: 1fr; }
             table { min-width: 350px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- ===== HEADER ===== -->
+        <!-- HEADER -->
         <div class="header-main">
-            <h1>🏕️ منتجع حياله - القصيم</h1>
-            <div class="sub-title">النظام المالي والإداري الشامل لإدارة منتجع وشاليهات حيالة القصيم</div>
-            <div class="gold-line"></div>
-            <div class="designer">تصميم محاسب: <span>محمد خلاف</span> 📱 +201010422057</div>
-            <div id="updateTime" class="update-time">🔄 آخر تحديث: جاري التحميل...</div>
+            <div class="brand">
+                <h1>منتجع حياله - القصيم</h1>
+                <div class="sub">النظام المالي والإداري الشامل لإدارة منتجع وشاليهات حيالة القصيم</div>
+            </div>
+            <div class="meta">
+                <div>تصميم محاسب: <span>محمد خلاف</span></div>
+                <div>📱 <span>+201010422057</span></div>
+                <div class="gold">آخر تحديث: <span id="updateTime">جاري التحميل...</span></div>
+            </div>
         </div>
 
-        <!-- ===== KPI CARDS ===== -->
-        <div id="kpiContainer">
-            <div class="loading">⏳ جاري تحميل المؤشرات...</div>
-        </div>
+        <!-- KPI -->
+        <div id="kpiContainer"><div class="loading">⏳ جاري تحميل المؤشرات...</div></div>
 
-        <!-- ===== QUICK NAVIGATION ===== -->
-        <div class="section-title">
-            <span class="icon">📌</span> الانتقال السريع حسب الشيتات الموجودة
-        </div>
+        <!-- QUICK NAV -->
+        <div class="section-title">📌 الانتقال السريع حسب الشيتات</div>
         <div class="btn-grid">
             <a href="#" class="btn active"><span class="icon">📊</span> لوحة التحكم</a>
             <a href="#" class="btn"><span class="icon">📋</span> سجل الحجوزات</a>
@@ -380,59 +299,29 @@
             <a href="#" class="btn"><span class="icon">🎛️</span> لوحة التحكم</a>
         </div>
 
-        <!-- ===== COMPANY DATA ===== -->
+        <!-- COMPANY DATA -->
         <div class="company-box">
-            <div class="company-title"><span class="icon">🏢</span> بيانات المنشأة الأساسية</div>
-            <div class="row">
-                <span class="label">اسم المنشأة</span>
-                <span class="value">منتجع وشاليهات حيالة القصيم</span>
-            </div>
-            <div class="row">
-                <span class="label">العنوان / الموقع</span>
-                <span class="value">القصيم / بريدة - حي الخليج</span>
-            </div>
-            <div class="row">
-                <span class="label">جوال المنشأة</span>
-                <span class="value">📱 +966509982400</span>
-            </div>
-            <div class="row">
-                <span class="label">الرقم الضريبي</span>
-                <span class="value" style="color:#8a9a90;">(اختياري)</span>
-            </div>
-            <div class="row">
-                <span class="label">نسبة عمولة أبو زيد</span>
-                <span class="value"><span class="highlight">20%</span></span>
-            </div>
-            <div class="row">
-                <span class="label">شعار المنشأة</span>
-                <span class="value" style="color:#8a9a90;">(اختياري)</span>
-            </div>
+            <div class="title">🏢 بيانات المنشأة الأساسية</div>
+            <div class="row"><span class="label">اسم المنشأة</span><span class="value">منتجع وشاليهات حيالة القصيم</span></div>
+            <div class="row"><span class="label">العنوان / الموقع</span><span class="value">القصيم / بريدة - حي الخليج</span></div>
+            <div class="row"><span class="label">جوال المنشأة</span><span class="value">📱 +966509982400</span></div>
+            <div class="row"><span class="label">الرقم الضريبي</span><span class="value" style="color:#8a9aaa;">(اختياري)</span></div>
+            <div class="row"><span class="label">نسبة عمولة أبو زيد</span><span class="value"><span class="gold">20%</span></span></div>
+            <div class="row"><span class="label">شعار المنشأة</span><span class="value" style="color:#8a9aaa;">(اختياري)</span></div>
         </div>
 
-        <!-- ===== BOOKINGS TABLE ===== -->
-        <div class="section-title">
-            <span class="icon">📋</span> آخر الحجوزات
-        </div>
-        <div id="tableContainer">
-            <div class="loading">⏳ جاري تحميل البيانات...</div>
-        </div>
+        <!-- TABLE -->
+        <div class="section-title">📋 آخر الحجوزات</div>
+        <div id="tableContainer"><div class="loading">⏳ جاري تحميل البيانات...</div></div>
 
-        <!-- ===== FOOTER ===== -->
-        <div class="footer">
-            © 2026 منتجع حياله - القصيم <span class="heart">❤️</span> تصميم محمد خلاف • جميع الحقوق محفوظة
-        </div>
+        <!-- FOOTER -->
+        <div class="footer">© 2026 منتجع حياله - القصيم · تصميم محمد خلاف · جميع الحقوق محفوظة</div>
     </div>
 
     <script>
-        // =============================================
-        // 🔑 بيانات الشيت
-        // =============================================
         const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
         const SHEET_NAME = 'Sheet1';
 
-        // =============================================
-        // جلب البيانات
-        // =============================================
         async function fetchSheetData() {
             try {
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
@@ -440,56 +329,35 @@
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const csvText = await response.text();
                 const lines = csvText.split('\n').filter(line => line.trim() !== '');
-                const data = lines.map(line => {
+                return lines.map(line => {
                     const row = [];
-                    let current = '';
-                    let insideQuotes = false;
+                    let current = '', insideQuotes = false;
                     for (let i = 0; i < line.length; i++) {
                         const char = line[i];
-                        if (char === '"') {
-                            insideQuotes = !insideQuotes;
-                        } else if (char === ',' && !insideQuotes) {
-                            row.push(current.trim());
-                            current = '';
-                        } else {
-                            current += char;
-                        }
+                        if (char === '"') insideQuotes = !insideQuotes;
+                        else if (char === ',' && !insideQuotes) { row.push(current.trim()); current = ''; }
+                        else current += char;
                     }
                     row.push(current.trim());
                     return row;
                 });
-                return data;
-            } catch (error) {
-                console.error('Error fetching CSV:', error);
-                return null;
-            }
+            } catch (error) { console.error(error); return null; }
         }
 
-        // =============================================
-        // تنظيف الأرقام
-        // =============================================
         function cleanNumber(value) {
             if (!value) return 0;
             if (typeof value === 'number') return value;
             const cleaned = String(value).replace(/[^0-9.]/g, '');
-            const num = parseFloat(cleaned);
-            return isNaN(num) ? 0 : num;
+            return parseFloat(cleaned) || 0;
         }
 
-        // =============================================
-        // البحث عن العمود
-        // =============================================
-        function findColumnIndex(headers, targetName) {
-            const clean = (str) => String(str).trim().replace(/\s+/g, ' ');
-            let idx = headers.findIndex(h => clean(h) === clean(targetName));
+        function findColumnIndex(headers, target) {
+            const clean = s => String(s).trim().replace(/\s+/g, ' ');
+            let idx = headers.findIndex(h => clean(h) === clean(target));
             if (idx !== -1) return idx;
-            idx = headers.findIndex(h => clean(h).includes(clean(targetName)));
-            return idx;
+            return headers.findIndex(h => clean(h).includes(clean(target)));
         }
 
-        // =============================================
-        // عرض البيانات
-        // =============================================
         function displayData(data) {
             const kpiContainer = document.getElementById('kpiContainer');
             const tableContainer = document.getElementById('tableContainer');
@@ -502,12 +370,11 @@
             }
 
             const now = new Date();
-            timeEl.textContent = `🔄 آخر تحديث: ${now.toLocaleString('ar-EG')}`;
+            timeEl.textContent = now.toLocaleString('ar-EG');
 
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
-            // ===== البحث عن الأعمدة =====
             const idxTotal = findColumnIndex(headers, 'الإجمالي (صافي الإيراد)');
             const idxPaid = findColumnIndex(headers, 'المدفوع');
             const idxRemaining = findColumnIndex(headers, 'المتبقي');
@@ -524,11 +391,9 @@
                 return;
             }
 
-            // ===== حساب المؤشرات =====
             let totalRevenue = 0, totalPaid = 0, totalRemaining = 0, totalDays = 0;
             let fullyPaid = 0, balanceDue = 0;
-            let validRows = 0;
-            let futureBookings = 0;
+            let validRows = 0, futureBookings = 0;
             const nowDate = new Date();
 
             rows.forEach(row => {
@@ -550,10 +415,10 @@
 
                 if (idxDate !== -1 && row[idxDate]) {
                     try {
-                        const dateParts = String(row[idxDate]).split('/');
-                        if (dateParts.length === 3) {
-                            const bookingDate = new Date(2000 + parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
-                            if (bookingDate > nowDate) futureBookings++;
+                        const parts = String(row[idxDate]).split('/');
+                        if (parts.length === 3) {
+                            const d = new Date(2000 + parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+                            if (d > nowDate) futureBookings++;
                         }
                     } catch(e) {}
                 }
@@ -562,34 +427,15 @@
             const totalExpenses = 3046;
             const netProfit = totalRevenue - totalExpenses;
 
-            // ===== عرض بطاقات KPI =====
             kpiContainer.innerHTML = `
                 <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="icon">💰</div>
-                        <div class="number">${totalRevenue.toLocaleString()}</div>
-                        <div class="label">إجمالي الإيرادات</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="icon">📈</div>
-                        <div class="number">${netProfit.toLocaleString()}</div>
-                        <div class="label">صافي الربح</div>
-                        <div class="sub-label">(الإيرادات - المصاريف)</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="icon">📉</div>
-                        <div class="number">${totalExpenses.toLocaleString()}</div>
-                        <div class="label">إجمالي المصاريف</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="icon">📅</div>
-                        <div class="number">${futureBookings}</div>
-                        <div class="label">حجوزات مستقبلية</div>
-                    </div>
+                    <div class="kpi-card"><span class="icon">💰</span><div class="label">إجمالي الإيرادات</div><div class="number">${totalRevenue.toLocaleString()}</div></div>
+                    <div class="kpi-card"><span class="icon">📈</span><div class="label">صافي الربح</div><div class="number">${netProfit.toLocaleString()}</div><div class="sub">(الإيرادات - المصاريف)</div></div>
+                    <div class="kpi-card"><span class="icon">📉</span><div class="label">إجمالي المصاريف</div><div class="number">${totalExpenses.toLocaleString()}</div></div>
+                    <div class="kpi-card"><span class="icon">📅</span><div class="label">حجوزات مستقبلية</div><div class="number">${futureBookings}</div></div>
                 </div>
             `;
 
-            // ===== عرض الجدول =====
             let tableRows = '';
             const displayRows = rows.slice(0, 20);
             displayRows.forEach(row => {
@@ -605,58 +451,34 @@
                     }
                 }
 
-                tableRows += `
-                    <tr>
-                        <td>${(idxNumber !== -1 && row[idxNumber]) ? row[idxNumber] : '-'}</td>
-                        <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
-                        <td><span class="badge badge-type">${(idxType !== -1 && row[idxType]) ? row[idxType] : '-'}</span></td>
-                        <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
-                        <td>${total.toLocaleString()}</td>
-                        <td>${(idxPaid !== -1 && row[idxPaid]) ? cleanNumber(row[idxPaid]).toLocaleString() : '0'}</td>
-                        <td>${(idxRemaining !== -1 && row[idxRemaining]) ? cleanNumber(row[idxRemaining]).toLocaleString() : '0'}</td>
-                        <td>${statusBadge}</td>
-                    </tr>
-                `;
+                tableRows += `<tr>
+                    <td>${(idxNumber !== -1 && row[idxNumber]) ? row[idxNumber] : '-'}</td>
+                    <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
+                    <td><span class="badge badge-type">${(idxType !== -1 && row[idxType]) ? row[idxType] : '-'}</span></td>
+                    <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
+                    <td>${total.toLocaleString()}</td>
+                    <td>${(idxPaid !== -1 && row[idxPaid]) ? cleanNumber(row[idxPaid]).toLocaleString() : '0'}</td>
+                    <td>${(idxRemaining !== -1 && row[idxRemaining]) ? cleanNumber(row[idxRemaining]).toLocaleString() : '0'}</td>
+                    <td>${statusBadge}</td>
+                </tr>`;
             });
 
             tableContainer.innerHTML = `
                 <div class="table-wrapper">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>رقم الحجز</th>
-                                <th>اسم الحجز</th>
-                                <th>نوع العقار</th>
-                                <th>التاريخ</th>
-                                <th>الإجمالي</th>
-                                <th>المدفوع</th>
-                                <th>المتبقي</th>
-                                <th>الحالة</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRows || '<tr><td colspan="8" style="text-align:center;color:#8a9a90;padding:20px;">لا توجد حجوزات</td></tr>'}
-                        </tbody>
+                        <thead><tr><th>رقم الحجز</th><th>اسم الحجز</th><th>نوع العقار</th><th>التاريخ</th><th>الإجمالي</th><th>المدفوع</th><th>المتبقي</th><th>الحالة</th></tr></thead>
+                        <tbody>${tableRows || '<tr><td colspan="8" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد حجوزات</td></tr>'}</tbody>
                     </table>
                 </div>
-                <div class="table-footer-note">يعرض آخر 20 حجز</div>
+                <div class="table-note">يعرض آخر 20 حجز</div>
             `;
         }
 
-        // =============================================
-        // تحميل البيانات
-        // =============================================
         async function loadData() {
             const data = await fetchSheetData();
-            if (data && data.length > 0) {
-                displayData(data);
-            } else {
-                document.getElementById('kpiContainer').innerHTML = `
-                    <div class="error">
-                        ❌ حدث خطأ في تحميل البيانات
-                        <small>تأكد من أن الشيت عام للقراءة</small>
-                    </div>
-                `;
+            if (data && data.length > 0) displayData(data);
+            else {
+                document.getElementById('kpiContainer').innerHTML = `<div class="error">❌ حدث خطأ في تحميل البيانات<small>تأكد من أن الشيت عام للقراءة</small></div>`;
                 document.getElementById('tableContainer').innerHTML = '';
             }
         }
