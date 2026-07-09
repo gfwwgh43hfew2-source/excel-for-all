@@ -82,10 +82,10 @@
         // 🔑 بيانات الشيت
         // =============================================
         const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
-        const SHEET_NAME = 'Sheet1';
+        const SHEET_NAME = 'Sheet1'; // استخدم الاسم الصحيح للتبويب
 
         // =============================================
-        // دالة لجلب البيانات (طريقة CSV)
+        // دالة لجلب البيانات (طريقة CSV البديلة)
         // =============================================
         async function fetchSheetData() {
             try {
@@ -98,7 +98,7 @@
                 const csvText = await response.text();
                 const lines = csvText.split('\n').filter(line => line.trim() !== '');
                 const data = lines.map(line => {
-                    // معالجة CSV بشكل بسيط (تقسيم مع مراعاة الفواصل داخل النص)
+                    // معالجة CSV بشكل بسيط
                     const row = [];
                     let current = '';
                     let insideQuotes = false;
@@ -292,8 +292,9 @@
             const container = document.getElementById('statsContainer');
             container.innerHTML = '<div class="loading">⏳ جاري تحميل البيانات...</div>';
             const data = await fetchSheetData();
-            if (data && data.length > 0) displayStatistics(data);
-            else {
+            if (data && data.length > 0) {
+                displayStatistics(data);
+            } else {
                 container.innerHTML = `
                     <div class="error">
                         ❌ حدث خطأ في تحميل البيانات.<br><br>
@@ -301,6 +302,8 @@
                             <br>1. الشيت عام للقراءة (Share → Anyone with the link can view)
                             <br>2. اسم التبويب "${SHEET_NAME}" صحيح
                             <br>3. الـ ID صحيح: ${SHEET_ID}
+                            <br><br>
+                            <strong>ملاحظة:</strong> لو ظهرتلك رسالة 403، فمعناها إن الشيت مش عام للقراءة.
                         </small>
                     </div>
                 `;
