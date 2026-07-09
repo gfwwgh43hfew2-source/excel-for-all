@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
     <title>المصاريف والتشغيل - منتجع حياله</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
@@ -116,26 +113,37 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.75rem;
-            min-width: 700px;
+            font-size: 0.8rem;
+            min-width: 900px;
         }
         th {
             background: #1a3a4a;
             color: #ffffff;
-            padding: 10px 8px;
+            padding: 12px 10px;
             text-align: right;
             white-space: nowrap;
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
         }
         td {
-            padding: 8px 8px;
+            padding: 10px 10px;
             border-bottom: 1px solid #f0f3f5;
             color: #1e2a3a;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
         }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #f8f9fa; }
+        .badge-expense {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        .badge-رواتب { background: #e3f2fd; color: #0d47a1; }
+        .badge-صيانة { background: #fff3e0; color: #e65100; }
+        .badge-مشتريات { background: #e8f5e9; color: #1b5e20; }
+        .badge-تشغيل { background: #fce4ec; color: #880e4f; }
 
         .footer {
             text-align: center;
@@ -144,16 +152,6 @@
             padding-top: 18px;
             border-top: 1px solid #e8edf0;
             font-size: 0.7rem;
-        }
-        .footer .version {
-            color: #a67c52;
-            font-weight: 600;
-            font-size: 0.8rem;
-            margin-top: 8px;
-            padding: 6px 14px;
-            background: #f8f0e8;
-            border-radius: 30px;
-            display: inline-block;
         }
 
         .loading, .error {
@@ -169,12 +167,6 @@
             color: #6a7a8a;
             font-size: 0.75rem;
         }
-        .table-note {
-            text-align: center;
-            color: #8a9aaa;
-            font-size: 0.65rem;
-            padding: 10px 0 6px;
-        }
 
         @media (max-width: 768px) {
             body { padding: 15px 10px; }
@@ -182,17 +174,18 @@
             .header-main .meta { text-align: right; width: 100%; }
             .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             .kpi-card .number { font-size: 1.5rem; }
-            table { font-size: 0.6rem; min-width: 550px; }
-            th, td { padding: 5px 4px; }
+            table { font-size: 0.7rem; min-width: 700px; }
+            th, td { padding: 6px; }
         }
         @media (max-width: 480px) {
             .kpi-grid { grid-template-columns: 1fr; }
-            table { min-width: 400px; }
+            table { min-width: 550px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- HEADER -->
         <div class="header-main">
             <div class="brand">
                 <h1>💰 المصاريف والتشغيل</h1>
@@ -206,34 +199,28 @@
 
         <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للوحة الرئيسية</a>
 
+        <!-- KPI -->
         <div id="kpiContainer"><div class="loading">⏳ جاري تحميل المؤشرات...</div></div>
 
+        <!-- TABLE -->
         <div class="section-title">📋 سجل المصاريف</div>
         <div id="tableContainer"><div class="loading">⏳ جاري تحميل البيانات...</div></div>
 
-        <div class="footer">
-            <div>© 2026 منتجع حياله - القصيم · تصميم محمد خلاف</div>
-            <div class="version">🔵 الإصدار: v3.1 (مع منع الكاش)</div>
-        </div>
+        <!-- FOOTER -->
+        <div class="footer">© 2026 منتجع حياله - القصيم · تصميم محمد خلاف</div>
     </div>
 
     <script>
         // =============================================
-        // 🔑 بيانات الشيت
+        // 🔑 بيانات الشيت - المصاريف
         // =============================================
         const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
-        const SHEET_NAME = 'المصاريف والتشغيل';
+        const SHEET_NAME = 'المصاريف والتشغيل'; // اسم التبويب الجديد
 
         async function fetchSheetData() {
             try {
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
-                const response = await fetch(url, {
-                    cache: 'no-store',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
+                const response = await fetch(url);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const csvText = await response.text();
                 const lines = csvText.split('\n').filter(line => line.trim() !== '');
@@ -259,6 +246,23 @@
             return parseFloat(cleaned) || 0;
         }
 
+        function findColumnIndex(headers, target) {
+            const clean = s => String(s).trim().replace(/\s+/g, ' ');
+            let idx = headers.findIndex(h => clean(h) === clean(target));
+            if (idx !== -1) return idx;
+            return headers.findIndex(h => clean(h).includes(clean(target)));
+        }
+
+        function getBadgeClass(category) {
+            const map = {
+                'رواتب': 'رواتب',
+                'صيانة': 'صيانة',
+                'مشتريات': 'مشتريات',
+                'تشغيل': 'تشغيل'
+            };
+            return map[category] || '';
+        }
+
         function displayData(data) {
             const kpiContainer = document.getElementById('kpiContainer');
             const tableContainer = document.getElementById('tableContainer');
@@ -276,35 +280,29 @@
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
-            // =============================================
-            // 🔑 العمود رقم 6 هو "المبلغ الإجمالي المصروف"
-            // =============================================
-            const idxTotal = 6;
-            const idxCategory = 3;
-            const idxProperty = 2;
+            // ===== البحث عن الأعمدة =====
+            const idxDate = findColumnIndex(headers, 'التاريخ ميلادي');
+            const idxDay = findColumnIndex(headers, 'اليوم');
+            const idxProperty = findColumnIndex(headers, 'العقار المعني');
+            const idxCategory = findColumnIndex(headers, 'قسم النفقات');
+            const idxDescription = findColumnIndex(headers, 'البيان / التفصيل التفصيلي');
+            const idxQuantity = findColumnIndex(headers, 'الكمية / المدة');
+            const idxDailyCost = findColumnIndex(headers, 'التكلفة اليومية/الفرعية');
+            const idxTotal = findColumnIndex(headers, 'المبلغ الإجمالي المصروف');
 
-            if (idxTotal === -1 || idxTotal >= headers.length) {
-                kpiContainer.innerHTML = `
-                    <div class="error">❌ لم يتم العثور على العمود رقم 6
-                        <small>عدد الأعمدة: ${headers.length}</small>
-                    </div>
-                `;
-                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود المبلغ الإجمالي</div>`;
+            if (idxTotal === -1) {
+                kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
+                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
                 return;
             }
 
-            // =============================================
-            // 🔑 حساب المؤشرات من عمود واحد فقط
-            // =============================================
+            // ===== حساب المؤشرات =====
             let totalExpenses = 0;
             let totalSalaries = 0;
             let totalMaintenance = 0;
             let totalPurchases = 0;
             let totalOperations = 0;
-            let totalAssets = 0;
-            let totalOther = 0;
             const propertyExpenses = {};
-            const dayExpenses = {};
 
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
@@ -313,25 +311,22 @@
 
                 totalExpenses += total;
 
-                const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : 'غير محدد';
-                
+                // التصنيف حسب قسم النفقات
+                const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : '';
                 if (category.includes('رواتب')) totalSalaries += total;
                 else if (category.includes('صيانة')) totalMaintenance += total;
                 else if (category.includes('مشتريات')) totalPurchases += total;
                 else if (category.includes('تشغيل')) totalOperations += total;
-                else if (category.includes('أصول')) totalAssets += total;
-                else if (category.includes('أخرى')) totalOther += total;
 
+                // حسب العقار
                 const property = (idxProperty !== -1 && row[idxProperty]) ? String(row[idxProperty]).trim() : 'غير محدد';
                 propertyExpenses[property] = (propertyExpenses[property] || 0) + total;
-
-                const day = (row[1] !== undefined && row[1] !== null) ? String(row[1]).trim() : 'غير محدد';
-                dayExpenses[day] = (dayExpenses[day] || 0) + total;
             });
 
+            // ترتيب العقارات
             const sortedProps = Object.entries(propertyExpenses).sort((a, b) => b[1] - a[1]);
-            const sortedDays = Object.entries(dayExpenses).sort((a, b) => b[1] - a[1]);
 
+            // ===== عرض بطاقات KPI =====
             kpiContainer.innerHTML = `
                 <div class="kpi-grid">
                     <div class="kpi-card">
@@ -359,35 +354,18 @@
                         <div class="number">${totalOperations.toLocaleString()} ر.س</div>
                         <div class="label">التشغيل</div>
                     </div>
-                    <div class="kpi-card">
-                        <div class="icon">🏗️</div>
-                        <div class="number">${totalAssets.toLocaleString()} ر.س</div>
-                        <div class="label">الأصول</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="icon">📌</div>
-                        <div class="number">${totalOther.toLocaleString()} ر.س</div>
-                        <div class="label">أخرى</div>
-                    </div>
                 </div>
                 <div class="kpi-grid" style="margin-top:10px;">
-                    ${sortedProps.slice(0, 3).map(([name, amount]) => `
+                    ${sortedProps.slice(0, 4).map(([name, amount]) => `
                         <div class="kpi-card">
                             <div class="number">${amount.toLocaleString()} ر.س</div>
-                            <div class="label">${name || 'غير محدد'}</div>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="kpi-grid" style="margin-top:5px;">
-                    ${sortedDays.slice(0, 3).map(([name, amount]) => `
-                        <div class="kpi-card">
-                            <div class="number">${amount.toLocaleString()} ر.س</div>
-                            <div class="label">${name || 'غير محدد'}</div>
+                            <div class="label">${name}</div>
                         </div>
                     `).join('')}
                 </div>
             `;
 
+            // ===== عرض الجدول =====
             let tableRows = '';
             const displayRows = rows.slice(0, 50);
             displayRows.forEach(row => {
@@ -395,11 +373,18 @@
                 const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
                 if (total === 0) return;
 
+                const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : '-';
+                const badgeClass = getBadgeClass(category);
+
                 tableRows += `<tr>
-                    ${headers.map((h, i) => {
-                        const value = (row[i] !== undefined && row[i] !== null) ? row[i] : '';
-                        return `<td>${value}</td>`;
-                    }).join('')}
+                    <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
+                    <td>${(idxDay !== -1 && row[idxDay]) ? row[idxDay] : '-'}</td>
+                    <td>${(idxProperty !== -1 && row[idxProperty]) ? row[idxProperty] : '-'}</td>
+                    <td><span class="badge-expense badge-${badgeClass}">${category}</span></td>
+                    <td>${(idxDescription !== -1 && row[idxDescription]) ? row[idxDescription] : '-'}</td>
+                    <td>${(idxQuantity !== -1 && row[idxQuantity]) ? row[idxQuantity] : '-'}</td>
+                    <td>${(idxDailyCost !== -1 && row[idxDailyCost]) ? row[idxDailyCost] : '-'}</td>
+                    <td style="font-weight:600;color:#1a3a4a;">${total.toLocaleString()} ر.س</td>
                 </tr>`;
             });
 
@@ -407,9 +392,16 @@
                 <div class="table-wrapper">
                     <table>
                         <thead><tr>
-                            ${headers.map(h => `<th>${h}</th>`).join('')}
+                            <th>التاريخ</th>
+                            <th>اليوم</th>
+                            <th>العقار المعني</th>
+                            <th>قسم النفقات</th>
+                            <th>البيان</th>
+                            <th>الكمية</th>
+                            <th>التكلفة اليومية</th>
+                            <th>المبلغ الإجمالي</th>
                         </tr></thead>
-                        <tbody>${tableRows || '<tr><td colspan="999" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد بيانات</td></tr>'}</tbody>
+                        <tbody>${tableRows || '<tr><td colspan="8" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد مصاريف</td></tr>'}</tbody>
                     </table>
                 </div>
                 <div class="table-note">يعرض آخر 50 سجل · إجمالي المصاريف: ${totalExpenses.toLocaleString()} ر.س</div>
