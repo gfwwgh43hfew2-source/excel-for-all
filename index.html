@@ -16,7 +16,6 @@
         }
         .container { max-width: 1400px; margin: 0 auto; }
 
-        /* ===== HEADER (رسمي) ===== */
         .header-main {
             background: #ffffff;
             padding: 25px 30px;
@@ -50,7 +49,6 @@
         .header-main .meta span { color: #1a3a4a; font-weight: 600; }
         .header-main .meta .gold { color: #a67c52; }
 
-        /* ===== KPI CARDS (رسمية) ===== */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -91,7 +89,6 @@
             opacity: 0.6;
         }
 
-        /* ===== BUTTONS (رسمية) ===== */
         .section-title {
             font-size: 1rem;
             font-weight: 700;
@@ -136,7 +133,6 @@
         }
         .btn-grid .btn.active .icon { color: #fff; }
 
-        /* ===== COMPANY DATA (رسمية) ===== */
         .company-box {
             background: #ffffff;
             border-radius: 8px;
@@ -171,7 +167,6 @@
         }
         .company-box .value .gold { color: #a67c52; }
 
-        /* ===== TABLE (رسمية) ===== */
         .table-wrapper {
             background: #ffffff;
             border-radius: 8px;
@@ -219,7 +214,6 @@
             padding: 10px 0 6px;
         }
 
-        /* ===== FOOTER ===== */
         .footer {
             text-align: center;
             color: #8a9aaa;
@@ -229,7 +223,6 @@
             font-size: 0.7rem;
         }
 
-        /* ===== LOADING / ERROR ===== */
         .loading, .error {
             text-align: center;
             padding: 40px 20px;
@@ -244,7 +237,6 @@
             font-size: 0.75rem;
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 600px) {
             body { padding: 15px 10px; }
             .header-main { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -320,10 +312,10 @@
 
     <script>
         // =============================================
-        // 🔑 بيانات الشيت (تم التعديل)
+        // 🔑 بيانات الشيت
         // =============================================
         const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
-        const SHEET_NAME = 'سجل الحجوزات'; // <- تم التغيير من Sheet1 إلى سجل الحجوزات
+        const SHEET_NAME = 'سجل الحجوزات';
 
         async function fetchSheetData() {
             try {
@@ -361,6 +353,24 @@
             return headers.findIndex(h => clean(h).includes(clean(target)));
         }
 
+        // =============================================
+        // دالة لتحويل التاريخ من صيغة (DD/MM/YYYY) إلى Date
+        // =============================================
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            try {
+                const parts = String(dateStr).split('/');
+                if (parts.length === 3) {
+                    // DD/MM/YYYY
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]) - 1;
+                    const year = parseInt(parts[2]);
+                    return new Date(year, month, day);
+                }
+                return null;
+            } catch(e) { return null; }
+        }
+
         function displayData(data) {
             const kpiContainer = document.getElementById('kpiContainer');
             const tableContainer = document.getElementById('tableContainer');
@@ -378,6 +388,7 @@
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
+            // ===== البحث عن الأعمدة =====
             const idxTotal = findColumnIndex(headers, 'الإجمالي (صافي الإيراد)');
             const idxPaid = findColumnIndex(headers, 'المدفوع');
             const idxRemaining = findColumnIndex(headers, 'المتبقي');
@@ -387,6 +398,8 @@
             const idxName = findColumnIndex(headers, 'اسم الحجز');
             const idxDate = findColumnIndex(headers, 'تاريخ الفاتورة');
             const idxNumber = findColumnIndex(headers, 'رقم الحجز');
+            // ===== العمود الجديد: تاريخ الدخول =====
+            const idxCheckIn = findColumnIndex(headers, 'تاريخ الدخول');
 
             if (idxTotal === -1) {
                 kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
@@ -394,10 +407,14 @@
                 return;
             }
 
+            // ===== حساب المؤشرات =====
             let totalRevenue = 0, totalPaid = 0, totalRemaining = 0, totalDays = 0;
             let fullyPaid = 0, balanceDue = 0;
-            let validRows = 0, futureBookings = 0;
+            let validRows = 0;
+            let futureBookings = 0; // العداد الفعلي للحجوزات المستقبلية
             const nowDate = new Date();
+            // ضبط الوقت عند منتصف الليل عشان المقارنة تكون دقيقة
+            const today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
 
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
@@ -416,29 +433,29 @@
                     else if (status.includes('Balance Due') || status.includes('متبقي')) balanceDue++;
                 }
 
-                if (idxDate !== -1 && row[idxDate]) {
-                    try {
-                        const parts = String(row[idxDate]).split('/');
-                        if (parts.length === 3) {
-                            const d = new Date(2000 + parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-                            if (d > nowDate) futureBookings++;
-                        }
-                    } catch(e) {}
+                // ===== حساب الحجوزات المستقبلية بناءً على تاريخ الدخول =====
+                if (idxCheckIn !== -1 && row[idxCheckIn]) {
+                    const checkInDate = parseDate(row[idxCheckIn]);
+                    if (checkInDate && checkInDate >= today) {
+                        futureBookings++;
+                    }
                 }
             });
 
             const totalExpenses = 3046;
             const netProfit = totalRevenue - totalExpenses;
 
+            // ===== عرض بطاقات KPI =====
             kpiContainer.innerHTML = `
                 <div class="kpi-grid">
                     <div class="kpi-card"><span class="icon">💰</span><div class="label">إجمالي الإيرادات</div><div class="number">${totalRevenue.toLocaleString()}</div></div>
                     <div class="kpi-card"><span class="icon">📈</span><div class="label">صافي الربح</div><div class="number">${netProfit.toLocaleString()}</div><div class="sub">(الإيرادات - المصاريف)</div></div>
                     <div class="kpi-card"><span class="icon">📉</span><div class="label">إجمالي المصاريف</div><div class="number">${totalExpenses.toLocaleString()}</div></div>
-                    <div class="kpi-card"><span class="icon">📅</span><div class="label">حجوزات مستقبلية</div><div class="number">${futureBookings}</div></div>
+                    <div class="kpi-card"><span class="icon">📅</span><div class="label">حجوزات مستقبلية</div><div class="number">${futureBookings}</div><div class="sub">(تاريخ الدخول ≥ اليوم)</div></div>
                 </div>
             `;
 
+            // ===== عرض الجدول =====
             let tableRows = '';
             const displayRows = rows.slice(0, 20);
             displayRows.forEach(row => {
@@ -459,6 +476,7 @@
                     <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
                     <td><span class="badge badge-type">${(idxType !== -1 && row[idxType]) ? row[idxType] : '-'}</span></td>
                     <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
+                    <td>${(idxCheckIn !== -1 && row[idxCheckIn]) ? row[idxCheckIn] : '-'}</td>
                     <td>${total.toLocaleString()}</td>
                     <td>${(idxPaid !== -1 && row[idxPaid]) ? cleanNumber(row[idxPaid]).toLocaleString() : '0'}</td>
                     <td>${(idxRemaining !== -1 && row[idxRemaining]) ? cleanNumber(row[idxRemaining]).toLocaleString() : '0'}</td>
@@ -469,8 +487,18 @@
             tableContainer.innerHTML = `
                 <div class="table-wrapper">
                     <table>
-                        <thead><tr><th>رقم الحجز</th><th>اسم الحجز</th><th>نوع العقار</th><th>التاريخ</th><th>الإجمالي</th><th>المدفوع</th><th>المتبقي</th><th>الحالة</th></tr></thead>
-                        <tbody>${tableRows || '<tr><td colspan="8" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد حجوزات</td></tr>'}</tbody>
+                        <thead><tr>
+                            <th>رقم الحجز</th>
+                            <th>اسم الحجز</th>
+                            <th>نوع العقار</th>
+                            <th>تاريخ الفاتورة</th>
+                            <th>تاريخ الدخول</th>
+                            <th>الإجمالي</th>
+                            <th>المدفوع</th>
+                            <th>المتبقي</th>
+                            <th>الحالة</th>
+                        </tr></thead>
+                        <tbody>${tableRows || '<tr><td colspan="9" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد حجوزات</td></tr>'}</tbody>
                     </table>
                 </div>
                 <div class="table-note">يعرض آخر 20 حجز</div>
