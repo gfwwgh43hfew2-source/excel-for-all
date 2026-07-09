@@ -138,36 +138,43 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem;
-            min-width: 700px;
+            font-size: 0.75rem;
+            min-width: 1100px;
         }
         th {
             background: #1a3a4a;
-            color: #fff;
-            padding: 12px 12px;
+            color: #ffffff;
+            padding: 10px 8px;
             text-align: right;
             white-space: nowrap;
             font-weight: 600;
             font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
         td {
-            padding: 10px 12px;
+            padding: 8px 8px;
             border-bottom: 1px solid #f0f3f5;
             color: #1e2a3a;
+            font-size: 0.7rem;
         }
         tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8f9fa; }
         .badge {
             display: inline-block;
-            padding: 2px 14px;
+            padding: 2px 10px;
             border-radius: 30px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 600;
+            white-space: nowrap;
         }
         .badge-paid { background: #e6f0ea; color: #1a6a4a; }
         .badge-balance { background: #fce8e8; color: #b33a3a; }
         .badge-type { background: #eef2f5; color: #3a5a7a; }
+        .table-note {
+            text-align: center;
+            color: #8a9aaa;
+            font-size: 0.65rem;
+            padding: 10px 0 6px;
+        }
 
         .footer {
             text-align: center;
@@ -207,17 +214,17 @@
             margin-bottom: 8px;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             body { padding: 15px 10px; }
             .header-main { flex-direction: column; align-items: flex-start; gap: 12px; }
             .header-main .meta { text-align: right; width: 100%; }
             .filter-box { flex-direction: column; align-items: stretch; }
             .filter-box input[type="date"] { width: 100%; }
-            table { font-size: 0.7rem; min-width: 500px; }
-            th, td { padding: 6px; }
+            table { font-size: 0.6rem; min-width: 800px; }
+            th, td { padding: 5px 4px; }
         }
-        @media (max-width: 400px) {
-            table { min-width: 400px; }
+        @media (max-width: 480px) {
+            table { min-width: 600px; }
         }
     </style>
 </head>
@@ -265,7 +272,6 @@
         const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
         const SHEET_NAME = 'سجل الحجوزات';
         let allData = null;
-        let allHeaders = null;
 
         async function fetchSheetData() {
             try {
@@ -306,13 +312,14 @@
         function parseDate(dateStr) {
             if (!dateStr) return null;
             try {
-                let cleaned = String(dateStr).trim();
+                let cleaned = String(dateStr).trim().replace(/\s+/g, ' ');
+                cleaned = cleaned.split(' ')[0];
                 let parts = cleaned.split('/');
                 if (parts.length === 3) {
                     const day = parseInt(parts[0]);
                     const month = parseInt(parts[1]) - 1;
                     const year = parseInt(parts[2]);
-                    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
                         return new Date(year, month, day);
                     }
                 }
@@ -321,21 +328,12 @@
                     const day = parseInt(parts[0]);
                     const month = parseInt(parts[1]) - 1;
                     const year = parseInt(parts[2]);
-                    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
                         return new Date(year, month, day);
                     }
                 }
                 return null;
             } catch(e) { return null; }
-        }
-
-        function formatDateForInput(dateStr) {
-            const d = parseDate(dateStr);
-            if (!d) return '';
-            const year = d.getFullYear();
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
         }
 
         function displayFilteredData(rows, headers) {
@@ -346,16 +344,25 @@
             const now = new Date();
             timeEl.textContent = now.toLocaleString('ar-EG');
 
-            const idxTotal = findColumnIndex(headers, 'الإجمالي (صافي الإيراد)');
+            const idxNumber = findColumnIndex(headers, 'رقم الحجز');
+            const idxInvoiceDate = findColumnIndex(headers, 'تاريخ الفاتورة');
+            const idxCheckIn = findColumnIndex(headers, 'تاريخ الدخول');
+            const idxCheckInTime = findColumnIndex(headers, 'وقت الدخول');
+            const idxCheckOut = findColumnIndex(headers, 'تاريخ الخروج');
+            const idxCheckOutTime = findColumnIndex(headers, 'وقت الخروج');
+            const idxDay = findColumnIndex(headers, 'اليوم');
+            const idxName = findColumnIndex(headers, 'اسم الحجز');
+            const idxPhone = findColumnIndex(headers, 'رقم الجوال');
+            const idxType = findColumnIndex(headers, 'نوع الحجز (العقار)');
+            const idxNights = findColumnIndex(headers, 'عدد أيام المبيت');
+            const idxPrice = findColumnIndex(headers, 'السعر اليومي');
+            const idxDiscount = findColumnIndex(headers, 'الخصم');
             const idxPaid = findColumnIndex(headers, 'المدفوع');
             const idxRemaining = findColumnIndex(headers, 'المتبقي');
-            const idxType = findColumnIndex(headers, 'نوع الحجز (العقار)');
+            const idxTotal = findColumnIndex(headers, 'الإجمالي (صافي الإيراد)');
             const idxStatus = findColumnIndex(headers, 'حالة السداد');
-            const idxName = findColumnIndex(headers, 'اسم الحجز');
-            const idxDate = findColumnIndex(headers, 'تاريخ الفاتورة');
-            const idxNumber = findColumnIndex(headers, 'رقم الحجز');
-            const idxCheckIn = findColumnIndex(headers, 'تاريخ الدخول');
-            const idxCheckOut = findColumnIndex(headers, 'تاريخ الخروج');
+            const idxStayType = findColumnIndex(headers, 'نوع الإقامة');
+            const idxNote = findColumnIndex(headers, 'ملاحظة الوقت');
 
             if (idxTotal === -1) {
                 tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
@@ -390,15 +397,24 @@
 
                 tableRows += `<tr>
                     <td>${(idxNumber !== -1 && row[idxNumber]) ? row[idxNumber] : '-'}</td>
-                    <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
-                    <td><span class="badge badge-type">${(idxType !== -1 && row[idxType]) ? row[idxType] : '-'}</span></td>
-                    <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
+                    <td>${(idxInvoiceDate !== -1 && row[idxInvoiceDate]) ? row[idxInvoiceDate] : '-'}</td>
                     <td>${(idxCheckIn !== -1 && row[idxCheckIn]) ? row[idxCheckIn] : '-'}</td>
+                    <td>${(idxCheckInTime !== -1 && row[idxCheckInTime]) ? row[idxCheckInTime] : '-'}</td>
                     <td>${(idxCheckOut !== -1 && row[idxCheckOut]) ? row[idxCheckOut] : '-'}</td>
-                    <td>${total.toLocaleString()}</td>
+                    <td>${(idxCheckOutTime !== -1 && row[idxCheckOutTime]) ? row[idxCheckOutTime] : '-'}</td>
+                    <td>${(idxDay !== -1 && row[idxDay]) ? row[idxDay] : '-'}</td>
+                    <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
+                    <td>${(idxPhone !== -1 && row[idxPhone]) ? row[idxPhone] : '-'}</td>
+                    <td><span class="badge badge-type">${(idxType !== -1 && row[idxType]) ? row[idxType] : '-'}</span></td>
+                    <td>${(idxNights !== -1 && row[idxNights]) ? row[idxNights] : '0'}</td>
+                    <td>${(idxPrice !== -1 && row[idxPrice]) ? row[idxPrice] : '-'}</td>
+                    <td>${(idxDiscount !== -1 && row[idxDiscount]) ? row[idxDiscount] : '0'}</td>
                     <td>${(idxPaid !== -1 && row[idxPaid]) ? cleanNumber(row[idxPaid]).toLocaleString() : '0'}</td>
                     <td>${(idxRemaining !== -1 && row[idxRemaining]) ? cleanNumber(row[idxRemaining]).toLocaleString() : '0'}</td>
+                    <td>${total.toLocaleString()}</td>
                     <td>${statusBadge}</td>
+                    <td>${(idxStayType !== -1 && row[idxStayType]) ? row[idxStayType] : '-'}</td>
+                    <td>${(idxNote !== -1 && row[idxNote]) ? row[idxNote] : '-'}</td>
                 </tr>`;
             });
 
@@ -407,15 +423,24 @@
                     <table>
                         <thead><tr>
                             <th>رقم الحجز</th>
-                            <th>اسم الحجز</th>
-                            <th>نوع العقار</th>
                             <th>تاريخ الفاتورة</th>
                             <th>تاريخ الدخول</th>
+                            <th>وقت الدخول</th>
                             <th>تاريخ الخروج</th>
-                            <th>الإجمالي</th>
+                            <th>وقت الخروج</th>
+                            <th>اليوم</th>
+                            <th>اسم الحجز</th>
+                            <th>رقم الجوال</th>
+                            <th>نوع العقار</th>
+                            <th>عدد الأيام</th>
+                            <th>السعر اليومي</th>
+                            <th>الخصم</th>
                             <th>المدفوع</th>
                             <th>المتبقي</th>
+                            <th>الإجمالي</th>
                             <th>الحالة</th>
+                            <th>نوع الإقامة</th>
+                            <th>ملاحظة</th>
                         </tr></thead>
                         <tbody>${tableRows}</tbody>
                     </table>

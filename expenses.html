@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>المصاريف والتشغيل - منتجع حياله</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Tahoma', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #1e2a3a;
+            padding: 30px 20px;
+            direction: rtl;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        .header-main {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 8px;
+            border-right: 5px solid #1a3a4a;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-main .brand h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a3a4a;
+        }
+        .header-main .brand .sub {
+            color: #5a6a7a;
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+        .header-main .meta {
+            text-align: left;
+            font-size: 0.75rem;
+            color: #6a7a8a;
+            line-height: 1.6;
+        }
+        .header-main .meta span { color: #1a3a4a; font-weight: 600; }
+        .header-main .meta .gold { color: #a67c52; }
+
+        .btn-back {
+            display: inline-block;
+            background: #1a3a4a;
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            margin-bottom: 20px;
+        }
+        .btn-back:hover { background: #2a5a6a; }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .kpi-card {
+            background: #ffffff;
+            padding: 18px 16px;
+            border-radius: 8px;
+            border-bottom: 3px solid #a67c52;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.02);
+            text-align: center;
+        }
+        .kpi-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a3a4a;
+        }
+        .kpi-card .label {
+            font-size: 0.75rem;
+            color: #6a7a8a;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 4px;
+        }
+        .kpi-card .icon {
+            font-size: 1.4rem;
+            color: #a67c52;
+            margin-bottom: 4px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a3a4a;
+            margin: 30px 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8edf0;
+        }
+
+        .table-wrapper {
+            background: #ffffff;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #e8edf0;
+            margin-top: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            min-width: 900px;
+        }
+        th {
+            background: #1a3a4a;
+            color: #ffffff;
+            padding: 12px 10px;
+            text-align: right;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        td {
+            padding: 10px 10px;
+            border-bottom: 1px solid #f0f3f5;
+            color: #1e2a3a;
+            font-size: 0.75rem;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8f9fa; }
+        .badge-expense {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        .badge-رواتب { background: #e3f2fd; color: #0d47a1; }
+        .badge-صيانة { background: #fff3e0; color: #e65100; }
+        .badge-مشتريات { background: #e8f5e9; color: #1b5e20; }
+        .badge-تشغيل { background: #fce4ec; color: #880e4f; }
+
+        .footer {
+            text-align: center;
+            color: #8a9aaa;
+            margin-top: 40px;
+            padding-top: 18px;
+            border-top: 1px solid #e8edf0;
+            font-size: 0.7rem;
+        }
+
+        .loading, .error {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.95rem;
+        }
+        .loading { color: #1a3a4a; }
+        .error { color: #b33a3a; }
+        .error small {
+            display: block;
+            margin-top: 10px;
+            color: #6a7a8a;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 15px 10px; }
+            .header-main { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .header-main .meta { text-align: right; width: 100%; }
+            .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .kpi-card .number { font-size: 1.5rem; }
+            table { font-size: 0.7rem; min-width: 700px; }
+            th, td { padding: 6px; }
+        }
+        @media (max-width: 480px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+            table { min-width: 550px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header-main">
+            <div class="brand">
+                <h1>💰 المصاريف والتشغيل</h1>
+                <div class="sub">سجل المصاريف، المشتريات، الرواتب، والصيانة الكلي</div>
+            </div>
+            <div class="meta">
+                <div>📱 <span>+201010422057</span></div>
+                <div class="gold">آخر تحديث: <span id="updateTime">جاري التحميل...</span></div>
+            </div>
+        </div>
+
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للوحة الرئيسية</a>
+
+        <!-- KPI -->
+        <div id="kpiContainer"><div class="loading">⏳ جاري تحميل المؤشرات...</div></div>
+
+        <!-- TABLE -->
+        <div class="section-title">📋 سجل المصاريف</div>
+        <div id="tableContainer"><div class="loading">⏳ جاري تحميل البيانات...</div></div>
+
+        <!-- FOOTER -->
+        <div class="footer">© 2026 منتجع حياله - القصيم · تصميم محمد خلاف</div>
+    </div>
+
+    <script>
+        // =============================================
+        // 🔑 بيانات الشيت - المصاريف
+        // =============================================
+        const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
+        const SHEET_NAME = 'المصاريف والتشغيل'; // اسم التبويب الجديد
+
+        async function fetchSheetData() {
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const csvText = await response.text();
+                const lines = csvText.split('\n').filter(line => line.trim() !== '');
+                return lines.map(line => {
+                    const row = [];
+                    let current = '', insideQuotes = false;
+                    for (let i = 0; i < line.length; i++) {
+                        const char = line[i];
+                        if (char === '"') insideQuotes = !insideQuotes;
+                        else if (char === ',' && !insideQuotes) { row.push(current.trim()); current = ''; }
+                        else current += char;
+                    }
+                    row.push(current.trim());
+                    return row;
+                });
+            } catch (error) { console.error(error); return null; }
+        }
+
+        function cleanNumber(value) {
+            if (!value) return 0;
+            if (typeof value === 'number') return value;
+            const cleaned = String(value).replace(/[^0-9.]/g, '');
+            return parseFloat(cleaned) || 0;
+        }
+
+        function findColumnIndex(headers, target) {
+            const clean = s => String(s).trim().replace(/\s+/g, ' ');
+            let idx = headers.findIndex(h => clean(h) === clean(target));
+            if (idx !== -1) return idx;
+            return headers.findIndex(h => clean(h).includes(clean(target)));
+        }
+
+        function getBadgeClass(category) {
+            const map = {
+                'رواتب': 'رواتب',
+                'صيانة': 'صيانة',
+                'مشتريات': 'مشتريات',
+                'تشغيل': 'تشغيل'
+            };
+            return map[category] || '';
+        }
+
+        function displayData(data) {
+            const kpiContainer = document.getElementById('kpiContainer');
+            const tableContainer = document.getElementById('tableContainer');
+            const timeEl = document.getElementById('updateTime');
+
+            if (!data || data.length < 2) {
+                kpiContainer.innerHTML = `<div class="error">❌ لا توجد بيانات</div>`;
+                tableContainer.innerHTML = `<div class="error">❌ لا توجد بيانات</div>`;
+                return;
+            }
+
+            const now = new Date();
+            timeEl.textContent = now.toLocaleString('ar-EG');
+
+            const headers = data[0].map(h => String(h).trim());
+            const rows = data.slice(1);
+
+            // ===== البحث عن الأعمدة =====
+            const idxDate = findColumnIndex(headers, 'التاريخ ميلادي');
+            const idxDay = findColumnIndex(headers, 'اليوم');
+            const idxProperty = findColumnIndex(headers, 'العقار المعني');
+            const idxCategory = findColumnIndex(headers, 'قسم النفقات');
+            const idxDescription = findColumnIndex(headers, 'البيان / التفصيل التفصيلي');
+            const idxQuantity = findColumnIndex(headers, 'الكمية / المدة');
+            const idxDailyCost = findColumnIndex(headers, 'التكلفة اليومية/الفرعية');
+            const idxTotal = findColumnIndex(headers, 'المبلغ الإجمالي المصروف');
+
+            if (idxTotal === -1) {
+                kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
+                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
+                return;
+            }
+
+            // ===== حساب المؤشرات =====
+            let totalExpenses = 0;
+            let totalSalaries = 0;
+            let totalMaintenance = 0;
+            let totalPurchases = 0;
+            let totalOperations = 0;
+            const propertyExpenses = {};
+
+            rows.forEach(row => {
+                if (!row || row.length === 0) return;
+                const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
+                if (total === 0) return;
+
+                totalExpenses += total;
+
+                // التصنيف حسب قسم النفقات
+                const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : '';
+                if (category.includes('رواتب')) totalSalaries += total;
+                else if (category.includes('صيانة')) totalMaintenance += total;
+                else if (category.includes('مشتريات')) totalPurchases += total;
+                else if (category.includes('تشغيل')) totalOperations += total;
+
+                // حسب العقار
+                const property = (idxProperty !== -1 && row[idxProperty]) ? String(row[idxProperty]).trim() : 'غير محدد';
+                propertyExpenses[property] = (propertyExpenses[property] || 0) + total;
+            });
+
+            // ترتيب العقارات
+            const sortedProps = Object.entries(propertyExpenses).sort((a, b) => b[1] - a[1]);
+
+            // ===== عرض بطاقات KPI =====
+            kpiContainer.innerHTML = `
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="icon">💰</div>
+                        <div class="number">${totalExpenses.toLocaleString()} ر.س</div>
+                        <div class="label">إجمالي المصاريف</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">👤</div>
+                        <div class="number">${totalSalaries.toLocaleString()} ر.س</div>
+                        <div class="label">الرواتب</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">🔧</div>
+                        <div class="number">${totalMaintenance.toLocaleString()} ر.س</div>
+                        <div class="label">الصيانة</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">🛒</div>
+                        <div class="number">${totalPurchases.toLocaleString()} ر.س</div>
+                        <div class="label">المشتريات</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">⚡</div>
+                        <div class="number">${totalOperations.toLocaleString()} ر.س</div>
+                        <div class="label">التشغيل</div>
+                    </div>
+                </div>
+                <div class="kpi-grid" style="margin-top:10px;">
+                    ${sortedProps.slice(0, 4).map(([name, amount]) => `
+                        <div class="kpi-card">
+                            <div class="number">${amount.toLocaleString()} ر.س</div>
+                            <div class="label">${name}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // ===== عرض الجدول =====
+            let tableRows = '';
+            const displayRows = rows.slice(0, 50);
+            displayRows.forEach(row => {
+                if (!row || row.length === 0) return;
+                const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
+                if (total === 0) return;
+
+                const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : '-';
+                const badgeClass = getBadgeClass(category);
+
+                tableRows += `<tr>
+                    <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
+                    <td>${(idxDay !== -1 && row[idxDay]) ? row[idxDay] : '-'}</td>
+                    <td>${(idxProperty !== -1 && row[idxProperty]) ? row[idxProperty] : '-'}</td>
+                    <td><span class="badge-expense badge-${badgeClass}">${category}</span></td>
+                    <td>${(idxDescription !== -1 && row[idxDescription]) ? row[idxDescription] : '-'}</td>
+                    <td>${(idxQuantity !== -1 && row[idxQuantity]) ? row[idxQuantity] : '-'}</td>
+                    <td>${(idxDailyCost !== -1 && row[idxDailyCost]) ? row[idxDailyCost] : '-'}</td>
+                    <td style="font-weight:600;color:#1a3a4a;">${total.toLocaleString()} ر.س</td>
+                </tr>`;
+            });
+
+            tableContainer.innerHTML = `
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr>
+                            <th>التاريخ</th>
+                            <th>اليوم</th>
+                            <th>العقار المعني</th>
+                            <th>قسم النفقات</th>
+                            <th>البيان</th>
+                            <th>الكمية</th>
+                            <th>التكلفة اليومية</th>
+                            <th>المبلغ الإجمالي</th>
+                        </tr></thead>
+                        <tbody>${tableRows || '<tr><td colspan="8" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد مصاريف</td></tr>'}</tbody>
+                    </table>
+                </div>
+                <div class="table-note">يعرض آخر 50 سجل · إجمالي المصاريف: ${totalExpenses.toLocaleString()} ر.س</div>
+            `;
+        }
+
+        async function loadData() {
+            const data = await fetchSheetData();
+            if (data && data.length > 0) displayData(data);
+            else {
+                document.getElementById('kpiContainer').innerHTML = `
+                    <div class="error">❌ حدث خطأ في تحميل البيانات
+                        <small>تأكد من:
+                            <br>1. أن الشيت عام للقراءة
+                            <br>2. أن اسم التبويب "${SHEET_NAME}" صحيح
+                            <br>3. أن هناك بيانات في الشيت
+                        </small>
+                    </div>
+                `;
+                document.getElementById('tableContainer').innerHTML = '';
+            }
+        }
+
+        loadData();
+        setInterval(loadData, 300000);
+    </script>
+</body>
+</html>

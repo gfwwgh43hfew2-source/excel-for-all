@@ -157,6 +157,18 @@
             color: #fff;
         }
         .btn-grid .btn-filter:hover .icon { color: #f5e6c8; }
+        .btn-grid .btn-expenses {
+            background: #2d6a4f;
+            border-color: #2d6a4f;
+            color: #fff;
+        }
+        .btn-grid .btn-expenses .icon { color: #a8e6cf; }
+        .btn-grid .btn-expenses:hover {
+            background: #1b4332;
+            border-color: #1b4332;
+            color: #fff;
+        }
+        .btn-grid .btn-expenses:hover .icon { color: #a8e6cf; }
 
         .company-box {
             background: #ffffff;
@@ -202,32 +214,33 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem;
-            min-width: 700px;
+            font-size: 0.75rem;
+            min-width: 1100px;
         }
         th {
-            background: #f2f5f7;
-            color: #1a3a4a;
-            padding: 12px 12px;
+            background: #1a3a4a;
+            color: #ffffff;
+            padding: 10px 8px;
             text-align: right;
             white-space: nowrap;
             font-weight: 600;
             font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
         td {
-            padding: 10px 12px;
+            padding: 8px 8px;
             border-bottom: 1px solid #f0f3f5;
             color: #1e2a3a;
+            font-size: 0.7rem;
         }
         tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8f9fa; }
         .badge {
             display: inline-block;
-            padding: 2px 14px;
+            padding: 2px 10px;
             border-radius: 30px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 600;
+            white-space: nowrap;
         }
         .badge-paid { background: #e6f0ea; color: #1a6a4a; }
         .badge-balance { background: #fce8e8; color: #b33a3a; }
@@ -262,7 +275,7 @@
             font-size: 0.75rem;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             body { padding: 15px 10px; }
             .header-main { flex-direction: column; align-items: flex-start; gap: 12px; }
             .header-main .meta { text-align: right; width: 100%; }
@@ -271,13 +284,13 @@
             .btn-grid { grid-template-columns: 1fr 1fr; }
             .btn-grid .btn { font-size: 0.65rem; padding: 8px 6px; }
             .company-box { padding: 15px; }
-            table { font-size: 0.7rem; min-width: 500px; }
-            th, td { padding: 6px; }
+            table { font-size: 0.6rem; min-width: 800px; }
+            th, td { padding: 5px 4px; }
         }
-        @media (max-width: 400px) {
+        @media (max-width: 480px) {
             .kpi-grid { grid-template-columns: 1fr; }
             .btn-grid { grid-template-columns: 1fr; }
-            table { min-width: 400px; }
+            table { min-width: 600px; }
         }
     </style>
 </head>
@@ -286,7 +299,7 @@
         <!-- HEADER -->
         <div class="header-main">
             <div class="brand">
-                <h1>منتجع حياله - القصيم</h1>
+                <h1>🏕️ منتجع حياله - القصيم</h1>
                 <div class="sub">النظام المالي والإداري الشامل لإدارة منتجع وشاليهات حيالة القصيم</div>
             </div>
             <div class="meta">
@@ -300,28 +313,23 @@
         <div id="kpiContainer"><div class="loading">⏳ جاري تحميل المؤشرات...</div></div>
 
         <!-- QUICK NAV -->
-        <div class="section-title">📌 الانتقال السريع حسب الشيتات</div>
+        <div class="section-title">📌 الانتقال السريع</div>
         <div class="btn-grid">
-            <a href="#" class="btn active"><span class="icon">📊</span> لوحة التحكم</a>
+            <!-- الأزرار الفعلية (تفتح صفحات) -->
+            <a href="future.html" class="btn btn-future"><span class="icon">📅</span> الحجوزات المستقبلية</a>
+            <a href="filter.html" class="btn btn-filter"><span class="icon">📆</span> فلترة حسب الفترة</a>
+            <a href="expenses.html" class="btn btn-expenses"><span class="icon">💰</span> المصاريف والتشغيل</a>
+            <!-- باقي الأزرار (وهمية) -->
             <a href="#" class="btn"><span class="icon">📋</span> سجل الحجوزات</a>
             <a href="#" class="btn"><span class="icon">🧾</span> فاتورة</a>
             <a href="#" class="btn"><span class="icon">📅</span> تقويم التوافر</a>
-            <a href="#" class="btn"><span class="icon">💰</span> المصاريف والتشغيل</a>
             <a href="#" class="btn"><span class="icon">📈</span> الملخص التنفيذي</a>
             <a href="#" class="btn"><span class="icon">🏠</span> أداء العقارات</a>
             <a href="#" class="btn"><span class="icon">📉</span> تقرير المصاريف</a>
             <a href="#" class="btn"><span class="icon">📆</span> تقرير شهري</a>
             <a href="#" class="btn"><span class="icon">💳</span> حالة السداد</a>
             <a href="#" class="btn"><span class="icon">📂</span> اختيار صفحة</a>
-            <a href="#" class="btn"><span class="icon">🎛️</span> لوحة التحكم</a>
-            <!-- زر الحجوزات المستقبلية -->
-            <a href="future.html" class="btn btn-future">
-                <span class="icon">📅</span> الحجوزات المستقبلية
-            </a>
-            <!-- زر فلترة حسب الفترة -->
-            <a href="filter.html" class="btn btn-filter">
-                <span class="icon">📆</span> فلترة حسب الفترة
-            </a>
+            <a href="#" class="btn active"><span class="icon">📊</span> لوحة التحكم</a>
         </div>
 
         <!-- COMPANY DATA -->
@@ -336,7 +344,7 @@
         </div>
 
         <!-- TABLE -->
-        <div class="section-title">📋 آخر الحجوزات</div>
+        <div class="section-title">📋 سجل الحجوزات</div>
         <div id="tableContainer"><div class="loading">⏳ جاري تحميل البيانات...</div></div>
 
         <!-- FOOTER -->
@@ -389,13 +397,14 @@
         function parseDate(dateStr) {
             if (!dateStr) return null;
             try {
-                let cleaned = String(dateStr).trim();
+                let cleaned = String(dateStr).trim().replace(/\s+/g, ' ');
+                cleaned = cleaned.split(' ')[0];
                 let parts = cleaned.split('/');
                 if (parts.length === 3) {
                     const day = parseInt(parts[0]);
                     const month = parseInt(parts[1]) - 1;
                     const year = parseInt(parts[2]);
-                    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
                         return new Date(year, month, day);
                     }
                 }
@@ -404,7 +413,7 @@
                     const day = parseInt(parts[0]);
                     const month = parseInt(parts[1]) - 1;
                     const year = parseInt(parts[2]);
-                    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
                         return new Date(year, month, day);
                     }
                 }
@@ -429,16 +438,26 @@
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
-            const idxTotal = findColumnIndex(headers, 'الإجمالي (صافي الإيراد)');
+            // ===== البحث عن الأعمدة =====
+            const idxNumber = findColumnIndex(headers, 'رقم الحجز');
+            const idxInvoiceDate = findColumnIndex(headers, 'تاريخ الفاتورة');
+            const idxCheckIn = findColumnIndex(headers, 'تاريخ الدخول');
+            const idxCheckInTime = findColumnIndex(headers, 'وقت الدخول');
+            const idxCheckOut = findColumnIndex(headers, 'تاريخ الخروج');
+            const idxCheckOutTime = findColumnIndex(headers, 'وقت الخروج');
+            const idxDay = findColumnIndex(headers, 'اليوم');
+            const idxName = findColumnIndex(headers, 'اسم الحجز');
+            const idxPhone = findColumnIndex(headers, 'رقم الجوال');
+            const idxType = findColumnIndex(headers, 'نوع الحجز (العقار)');
+            const idxNights = findColumnIndex(headers, 'عدد أيام المبيت');
+            const idxPrice = findColumnIndex(headers, 'السعر اليومي');
+            const idxDiscount = findColumnIndex(headers, 'الخصم');
             const idxPaid = findColumnIndex(headers, 'المدفوع');
             const idxRemaining = findColumnIndex(headers, 'المتبقي');
-            const idxType = findColumnIndex(headers, 'نوع الحجز (العقار)');
+            const idxTotal = findColumnIndex(headers, 'الإجمالي (صافي الإيراد)');
             const idxStatus = findColumnIndex(headers, 'حالة السداد');
-            const idxDays = findColumnIndex(headers, 'عدد أيام المبيت');
-            const idxName = findColumnIndex(headers, 'اسم الحجز');
-            const idxDate = findColumnIndex(headers, 'تاريخ الفاتورة');
-            const idxNumber = findColumnIndex(headers, 'رقم الحجز');
-            const idxCheckIn = findColumnIndex(headers, 'تاريخ الدخول');
+            const idxStayType = findColumnIndex(headers, 'نوع الإقامة');
+            const idxNote = findColumnIndex(headers, 'ملاحظة الوقت');
 
             if (idxTotal === -1) {
                 kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
@@ -446,7 +465,8 @@
                 return;
             }
 
-            let totalRevenue = 0, totalPaid = 0, totalRemaining = 0, totalDays = 0;
+            // ===== حساب المؤشرات =====
+            let totalRevenue = 0, totalPaid = 0, totalRemaining = 0, totalNights = 0;
             let fullyPaid = 0, balanceDue = 0;
             let validRows = 0;
             let futureBookings = 0;
@@ -461,7 +481,7 @@
                 totalRevenue += totalVal;
                 totalPaid += (idxPaid !== -1 && row[idxPaid]) ? cleanNumber(row[idxPaid]) : 0;
                 totalRemaining += (idxRemaining !== -1 && row[idxRemaining]) ? cleanNumber(row[idxRemaining]) : 0;
-                totalDays += (idxDays !== -1 && row[idxDays]) ? cleanNumber(row[idxDays]) : 0;
+                totalNights += (idxNights !== -1 && row[idxNights]) ? cleanNumber(row[idxNights]) : 0;
 
                 if (idxStatus !== -1) {
                     const status = String(row[idxStatus]).trim();
@@ -489,8 +509,9 @@
                 </div>
             `;
 
+            // ===== عرض الجدول =====
             let tableRows = '';
-            const displayRows = rows.slice(0, 20);
+            const displayRows = rows.slice(0, 50);
             displayRows.forEach(row => {
                 if (!row || row.length === 0) return;
                 const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
@@ -513,14 +534,24 @@
 
                 tableRows += `<tr style="${isFuture ? 'background: #f0f7ff;' : ''}">
                     <td>${(idxNumber !== -1 && row[idxNumber]) ? row[idxNumber] : '-'}</td>
-                    <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
-                    <td><span class="badge badge-type">${(idxType !== -1 && row[idxType]) ? row[idxType] : '-'}</span></td>
-                    <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
+                    <td>${(idxInvoiceDate !== -1 && row[idxInvoiceDate]) ? row[idxInvoiceDate] : '-'}</td>
                     <td>${checkInDate} ${isFuture ? '⭐' : ''}</td>
-                    <td>${total.toLocaleString()}</td>
+                    <td>${(idxCheckInTime !== -1 && row[idxCheckInTime]) ? row[idxCheckInTime] : '-'}</td>
+                    <td>${(idxCheckOut !== -1 && row[idxCheckOut]) ? row[idxCheckOut] : '-'}</td>
+                    <td>${(idxCheckOutTime !== -1 && row[idxCheckOutTime]) ? row[idxCheckOutTime] : '-'}</td>
+                    <td>${(idxDay !== -1 && row[idxDay]) ? row[idxDay] : '-'}</td>
+                    <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
+                    <td>${(idxPhone !== -1 && row[idxPhone]) ? row[idxPhone] : '-'}</td>
+                    <td><span class="badge badge-type">${(idxType !== -1 && row[idxType]) ? row[idxType] : '-'}</span></td>
+                    <td>${(idxNights !== -1 && row[idxNights]) ? row[idxNights] : '0'}</td>
+                    <td>${(idxPrice !== -1 && row[idxPrice]) ? row[idxPrice] : '-'}</td>
+                    <td>${(idxDiscount !== -1 && row[idxDiscount]) ? row[idxDiscount] : '0'}</td>
                     <td>${(idxPaid !== -1 && row[idxPaid]) ? cleanNumber(row[idxPaid]).toLocaleString() : '0'}</td>
                     <td>${(idxRemaining !== -1 && row[idxRemaining]) ? cleanNumber(row[idxRemaining]).toLocaleString() : '0'}</td>
+                    <td>${total.toLocaleString()}</td>
                     <td>${statusBadge}</td>
+                    <td>${(idxStayType !== -1 && row[idxStayType]) ? row[idxStayType] : '-'}</td>
+                    <td>${(idxNote !== -1 && row[idxNote]) ? row[idxNote] : '-'}</td>
                 </tr>`;
             });
 
@@ -529,19 +560,29 @@
                     <table>
                         <thead><tr>
                             <th>رقم الحجز</th>
-                            <th>اسم الحجز</th>
-                            <th>نوع العقار</th>
                             <th>تاريخ الفاتورة</th>
                             <th>تاريخ الدخول</th>
-                            <th>الإجمالي</th>
+                            <th>وقت الدخول</th>
+                            <th>تاريخ الخروج</th>
+                            <th>وقت الخروج</th>
+                            <th>اليوم</th>
+                            <th>اسم الحجز</th>
+                            <th>رقم الجوال</th>
+                            <th>نوع العقار</th>
+                            <th>عدد الأيام</th>
+                            <th>السعر اليومي</th>
+                            <th>الخصم</th>
                             <th>المدفوع</th>
                             <th>المتبقي</th>
+                            <th>الإجمالي</th>
                             <th>الحالة</th>
+                            <th>نوع الإقامة</th>
+                            <th>ملاحظة</th>
                         </tr></thead>
-                        <tbody>${tableRows || '<tr><td colspan="9" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد حجوزات</td></tr>'}</tbody>
+                        <tbody>${tableRows || '<tr><td colspan="19" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد حجوزات</td></tr>'}</tbody>
                     </table>
                 </div>
-                <div class="table-note">⭐ حجوزات مستقبلية · يعرض آخر 20 حجز</div>
+                <div class="table-note">⭐ حجوزات مستقبلية · يعرض آخر 50 حجز</div>
             `;
         }
 
