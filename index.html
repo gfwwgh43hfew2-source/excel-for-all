@@ -118,6 +118,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            text-decoration: none;
         }
         .btn-grid .btn:hover {
             background: #1a3a4a;
@@ -132,6 +133,19 @@
             color: #fff;
         }
         .btn-grid .btn.active .icon { color: #fff; }
+        /* الزر الجديد - الحجوزات المستقبلية */
+        .btn-grid .btn-future {
+            background: #1a3a4a;
+            border-color: #1a3a4a;
+            color: #fff;
+        }
+        .btn-grid .btn-future .icon { color: #f5c842; }
+        .btn-grid .btn-future:hover {
+            background: #2a5a6a;
+            border-color: #2a5a6a;
+            color: #fff;
+        }
+        .btn-grid .btn-future:hover .icon { color: #f5c842; }
 
         .company-box {
             background: #ffffff;
@@ -289,6 +303,10 @@
             <a href="#" class="btn"><span class="icon">💳</span> حالة السداد</a>
             <a href="#" class="btn"><span class="icon">📂</span> اختيار صفحة</a>
             <a href="#" class="btn"><span class="icon">🎛️</span> لوحة التحكم</a>
+            <!-- ===== الزر الجديد ===== -->
+            <a href="future.html" class="btn btn-future">
+                <span class="icon">📅</span> الحجوزات المستقبلية
+            </a>
         </div>
 
         <!-- COMPANY DATA -->
@@ -353,14 +371,10 @@
             return headers.findIndex(h => clean(h).includes(clean(target)));
         }
 
-        // =============================================
-        // دالة لتحويل التاريخ من صيغة (DD/MM/YYYY) أو (D-M-YYYY) إلى Date
-        // =============================================
         function parseDate(dateStr) {
             if (!dateStr) return null;
             try {
                 let cleaned = String(dateStr).trim();
-                // محاولة صيغة DD/MM/YYYY
                 let parts = cleaned.split('/');
                 if (parts.length === 3) {
                     const day = parseInt(parts[0]);
@@ -370,7 +384,6 @@
                         return new Date(year, month, day);
                     }
                 }
-                // محاولة صيغة D-M-YYYY
                 parts = cleaned.split('-');
                 if (parts.length === 3) {
                     const day = parseInt(parts[0]);
@@ -401,7 +414,6 @@
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
-            // ===== البحث عن الأعمدة =====
             const idxTotal = findColumnIndex(headers, 'الإجمالي (صافي الإيراد)');
             const idxPaid = findColumnIndex(headers, 'المدفوع');
             const idxRemaining = findColumnIndex(headers, 'المتبقي');
@@ -419,7 +431,6 @@
                 return;
             }
 
-            // ===== حساب المؤشرات =====
             let totalRevenue = 0, totalPaid = 0, totalRemaining = 0, totalDays = 0;
             let fullyPaid = 0, balanceDue = 0;
             let validRows = 0;
@@ -443,7 +454,6 @@
                     else if (status.includes('Balance Due') || status.includes('متبقي')) balanceDue++;
                 }
 
-                // ===== حساب الحجوزات المستقبلية =====
                 if (idxCheckIn !== -1 && row[idxCheckIn]) {
                     const checkInDate = parseDate(row[idxCheckIn]);
                     if (checkInDate && checkInDate >= today) {
@@ -455,7 +465,6 @@
             const totalExpenses = 3046;
             const netProfit = totalRevenue - totalExpenses;
 
-            // ===== عرض بطاقات KPI =====
             kpiContainer.innerHTML = `
                 <div class="kpi-grid">
                     <div class="kpi-card"><span class="icon">💰</span><div class="label">إجمالي الإيرادات</div><div class="number">${totalRevenue.toLocaleString()}</div></div>
@@ -465,7 +474,6 @@
                 </div>
             `;
 
-            // ===== عرض الجدول =====
             let tableRows = '';
             const displayRows = rows.slice(0, 20);
             displayRows.forEach(row => {
@@ -482,7 +490,6 @@
                 }
 
                 const checkInDate = (idxCheckIn !== -1 && row[idxCheckIn]) ? row[idxCheckIn] : '-';
-                // تحديد إذا كان الحجز مستقبلي
                 let isFuture = false;
                 if (idxCheckIn !== -1 && row[idxCheckIn]) {
                     const d = parseDate(row[idxCheckIn]);
