@@ -113,37 +113,39 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             min-width: 900px;
         }
         th {
             background: #1a3a4a;
             color: #ffffff;
-            padding: 12px 10px;
+            padding: 10px 8px;
             text-align: right;
             white-space: nowrap;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
         td {
-            padding: 10px 10px;
+            padding: 8px 8px;
             border-bottom: 1px solid #f0f3f5;
             color: #1e2a3a;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #f8f9fa; }
         .badge-expense {
             display: inline-block;
-            padding: 2px 12px;
+            padding: 2px 10px;
             border-radius: 30px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 600;
         }
         .badge-رواتب { background: #e3f2fd; color: #0d47a1; }
         .badge-صيانة { background: #fff3e0; color: #e65100; }
         .badge-مشتريات { background: #e8f5e9; color: #1b5e20; }
         .badge-تشغيل { background: #fce4ec; color: #880e4f; }
+        .badge-أصول { background: #f3e5f5; color: #4a148c; }
+        .badge-أخرى { background: #e0f7fa; color: #00695c; }
 
         .footer {
             text-align: center;
@@ -167,6 +169,12 @@
             color: #6a7a8a;
             font-size: 0.75rem;
         }
+        .table-note {
+            text-align: center;
+            color: #8a9aaa;
+            font-size: 0.65rem;
+            padding: 10px 0 6px;
+        }
 
         @media (max-width: 768px) {
             body { padding: 15px 10px; }
@@ -174,8 +182,8 @@
             .header-main .meta { text-align: right; width: 100%; }
             .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             .kpi-card .number { font-size: 1.5rem; }
-            table { font-size: 0.7rem; min-width: 700px; }
-            th, td { padding: 6px; }
+            table { font-size: 0.6rem; min-width: 700px; }
+            th, td { padding: 5px 4px; }
         }
         @media (max-width: 480px) {
             .kpi-grid { grid-template-columns: 1fr; }
@@ -212,10 +220,10 @@
 
     <script>
         // =============================================
-        // 🔑 بيانات الشيت - المصاريف
+        // 🔑 بيانات الشيت
         // =============================================
         const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
-        const SHEET_NAME = 'المصاريف والتشغيل'; // اسم التبويب الجديد
+        const SHEET_NAME = 'المصاريف والتشغيل';
 
         async function fetchSheetData() {
             try {
@@ -246,11 +254,15 @@
             return parseFloat(cleaned) || 0;
         }
 
-        function findColumnIndex(headers, target) {
+        function findColumnIndex(headers, targetNames) {
             const clean = s => String(s).trim().replace(/\s+/g, ' ');
-            let idx = headers.findIndex(h => clean(h) === clean(target));
-            if (idx !== -1) return idx;
-            return headers.findIndex(h => clean(h).includes(clean(target)));
+            for (const target of targetNames) {
+                const idx = headers.findIndex(h => clean(h) === clean(target));
+                if (idx !== -1) return idx;
+                const idxPartial = headers.findIndex(h => clean(h).includes(clean(target)));
+                if (idxPartial !== -1) return idxPartial;
+            }
+            return -1;
         }
 
         function getBadgeClass(category) {
@@ -258,7 +270,9 @@
                 'رواتب': 'رواتب',
                 'صيانة': 'صيانة',
                 'مشتريات': 'مشتريات',
-                'تشغيل': 'تشغيل'
+                'تشغيل': 'تشغيل',
+                'أصول': 'أصول',
+                'أخرى': 'أخرى'
             };
             return map[category] || '';
         }
@@ -280,19 +294,14 @@
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
-            // ===== البحث عن الأعمدة =====
-            const idxDate = findColumnIndex(headers, 'التاريخ ميلادي');
-            const idxDay = findColumnIndex(headers, 'اليوم');
-            const idxProperty = findColumnIndex(headers, 'العقار المعني');
-            const idxCategory = findColumnIndex(headers, 'قسم النفقات');
-            const idxDescription = findColumnIndex(headers, 'البيان / التفصيل التفصيلي');
-            const idxQuantity = findColumnIndex(headers, 'الكمية / المدة');
-            const idxDailyCost = findColumnIndex(headers, 'التكلفة اليومية/الفرعية');
-            const idxTotal = findColumnIndex(headers, 'المبلغ الإجمالي المصروف');
+            // ===== البحث عن الأعمدة المهمة =====
+            const idxTotal = findColumnIndex(headers, ['المبلغ الإجمالي المصروف', 'الإجمالي', 'المبلغ']);
+            const idxCategory = findColumnIndex(headers, ['قسم النفقات', 'النفقات', 'قسم']);
+            const idxProperty = findColumnIndex(headers, ['العقار المعني', 'العقار']);
 
             if (idxTotal === -1) {
-                kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
-                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
+                kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود المبلغ الإجمالي</div>`;
+                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على عمود المبلغ الإجمالي</div>`;
                 return;
             }
 
@@ -302,6 +311,8 @@
             let totalMaintenance = 0;
             let totalPurchases = 0;
             let totalOperations = 0;
+            let totalAssets = 0;
+            let totalOther = 0;
             const propertyExpenses = {};
 
             rows.forEach(row => {
@@ -311,19 +322,19 @@
 
                 totalExpenses += total;
 
-                // التصنيف حسب قسم النفقات
-                const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : '';
+                const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : 'غير محدد';
+                
                 if (category.includes('رواتب')) totalSalaries += total;
                 else if (category.includes('صيانة')) totalMaintenance += total;
                 else if (category.includes('مشتريات')) totalPurchases += total;
                 else if (category.includes('تشغيل')) totalOperations += total;
+                else if (category.includes('أصول')) totalAssets += total;
+                else if (category.includes('أخرى')) totalOther += total;
 
-                // حسب العقار
                 const property = (idxProperty !== -1 && row[idxProperty]) ? String(row[idxProperty]).trim() : 'غير محدد';
                 propertyExpenses[property] = (propertyExpenses[property] || 0) + total;
             });
 
-            // ترتيب العقارات
             const sortedProps = Object.entries(propertyExpenses).sort((a, b) => b[1] - a[1]);
 
             // ===== عرض بطاقات KPI =====
@@ -354,12 +365,22 @@
                         <div class="number">${totalOperations.toLocaleString()} ر.س</div>
                         <div class="label">التشغيل</div>
                     </div>
+                    <div class="kpi-card">
+                        <div class="icon">🏗️</div>
+                        <div class="number">${totalAssets.toLocaleString()} ر.س</div>
+                        <div class="label">الأصول</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">📌</div>
+                        <div class="number">${totalOther.toLocaleString()} ر.س</div>
+                        <div class="label">أخرى</div>
+                    </div>
                 </div>
                 <div class="kpi-grid" style="margin-top:10px;">
                     ${sortedProps.slice(0, 4).map(([name, amount]) => `
                         <div class="kpi-card">
                             <div class="number">${amount.toLocaleString()} ر.س</div>
-                            <div class="label">${name}</div>
+                            <div class="label">${name || 'غير محدد'}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -377,14 +398,13 @@
                 const badgeClass = getBadgeClass(category);
 
                 tableRows += `<tr>
-                    <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
-                    <td>${(idxDay !== -1 && row[idxDay]) ? row[idxDay] : '-'}</td>
-                    <td>${(idxProperty !== -1 && row[idxProperty]) ? row[idxProperty] : '-'}</td>
-                    <td><span class="badge-expense badge-${badgeClass}">${category}</span></td>
-                    <td>${(idxDescription !== -1 && row[idxDescription]) ? row[idxDescription] : '-'}</td>
-                    <td>${(idxQuantity !== -1 && row[idxQuantity]) ? row[idxQuantity] : '-'}</td>
-                    <td>${(idxDailyCost !== -1 && row[idxDailyCost]) ? row[idxDailyCost] : '-'}</td>
-                    <td style="font-weight:600;color:#1a3a4a;">${total.toLocaleString()} ر.س</td>
+                    ${headers.map((h, i) => {
+                        const value = (row[i] !== undefined && row[i] !== null) ? row[i] : '';
+                        // تنسيق الأعمدة الرقمية
+                        const num = cleanNumber(value);
+                        const isNumber = num !== 0 && !isNaN(num) && String(value).replace(/[^0-9.]/g, '') !== '';
+                        return `<td style="${isNumber ? 'font-weight:600;color:#1a3a4a;' : ''}">${value}</td>`;
+                    }).join('')}
                 </tr>`;
             });
 
@@ -392,16 +412,9 @@
                 <div class="table-wrapper">
                     <table>
                         <thead><tr>
-                            <th>التاريخ</th>
-                            <th>اليوم</th>
-                            <th>العقار المعني</th>
-                            <th>قسم النفقات</th>
-                            <th>البيان</th>
-                            <th>الكمية</th>
-                            <th>التكلفة اليومية</th>
-                            <th>المبلغ الإجمالي</th>
+                            ${headers.map(h => `<th>${h}</th>`).join('')}
                         </tr></thead>
-                        <tbody>${tableRows || '<tr><td colspan="8" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد مصاريف</td></tr>'}</tbody>
+                        <tbody>${tableRows || '<tr><td colspan="999" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد بيانات</td></tr>'}</tbody>
                     </table>
                 </div>
                 <div class="table-note">يعرض آخر 50 سجل · إجمالي المصاريف: ${totalExpenses.toLocaleString()} ر.س</div>
