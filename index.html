@@ -319,8 +319,11 @@
     </div>
 
     <script>
+        // =============================================
+        // 🔑 بيانات الشيت (تم التعديل)
+        // =============================================
         const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
-        const SHEET_NAME = 'Sheet1';
+        const SHEET_NAME = 'سجل الحجوزات'; // <- تم التغيير من Sheet1 إلى سجل الحجوزات
 
         async function fetchSheetData() {
             try {
@@ -478,7 +481,7 @@
             const data = await fetchSheetData();
             if (data && data.length > 0) displayData(data);
             else {
-                document.getElementById('kpiContainer').innerHTML = `<div class="error">❌ حدث خطأ في تحميل البيانات<small>تأكد من أن الشيت عام للقراءة</small></div>`;
+                document.getElementById('kpiContainer').innerHTML = `<div class="error">❌ حدث خطأ في تحميل البيانات<small>تأكد من أن الشيت عام للقراءة<br>وأن اسم التبويب "${SHEET_NAME}" صحيح</small></div>`;
                 document.getElementById('tableContainer').innerHTML = '';
             }
         }
