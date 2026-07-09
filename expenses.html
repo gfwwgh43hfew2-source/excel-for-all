@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>المصاريف والتشغيل - منتجع حياله</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
@@ -114,7 +117,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.75rem;
-            min-width: 900px;
+            min-width: 700px;
         }
         th {
             background: #1a3a4a;
@@ -133,19 +136,6 @@
         }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #f8f9fa; }
-        .badge-expense {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 30px;
-            font-size: 0.6rem;
-            font-weight: 600;
-        }
-        .badge-رواتب { background: #e3f2fd; color: #0d47a1; }
-        .badge-صيانة { background: #fff3e0; color: #e65100; }
-        .badge-مشتريات { background: #e8f5e9; color: #1b5e20; }
-        .badge-تشغيل { background: #fce4ec; color: #880e4f; }
-        .badge-أصول { background: #f3e5f5; color: #4a148c; }
-        .badge-أخرى { background: #e0f7fa; color: #00695c; }
 
         .footer {
             text-align: center;
@@ -192,12 +182,12 @@
             .header-main .meta { text-align: right; width: 100%; }
             .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             .kpi-card .number { font-size: 1.5rem; }
-            table { font-size: 0.6rem; min-width: 700px; }
+            table { font-size: 0.6rem; min-width: 550px; }
             th, td { padding: 5px 4px; }
         }
         @media (max-width: 480px) {
             .kpi-grid { grid-template-columns: 1fr; }
-            table { min-width: 550px; }
+            table { min-width: 400px; }
         }
     </style>
 </head>
@@ -223,7 +213,7 @@
 
         <div class="footer">
             <div>© 2026 منتجع حياله - القصيم · تصميم محمد خلاف</div>
-            <div class="version">🔵 الإصدار: v2.3 (يجمع العمود رقم 7 فقط - "المبلغ الإجمالي المصروف")</div>
+            <div class="version">🔵 الإصدار: v3.1 (مع منع الكاش)</div>
         </div>
     </div>
 
@@ -237,7 +227,13 @@
         async function fetchSheetData() {
             try {
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const csvText = await response.text();
                 const lines = csvText.split('\n').filter(line => line.trim() !== '');
@@ -281,16 +277,15 @@
             const rows = data.slice(1);
 
             // =============================================
-            // 🔑 نحدد رقم عمود "المبلغ الإجمالي المصروف" (العمود رقم 7)
+            // 🔑 العمود رقم 6 هو "المبلغ الإجمالي المصروف"
             // =============================================
-            // الأعمدة: 0=التاريخ, 1=اليوم, 2=العقار, 3=قسم النفقات, 4=البيان, 5=التكلفة اليومية, 6=المبلغ الإجمالي
-            const idxTotal = 6; // العمود رقم 7 (يبدأ العد من 0)
+            const idxTotal = 6;
             const idxCategory = 3;
             const idxProperty = 2;
 
             if (idxTotal === -1 || idxTotal >= headers.length) {
                 kpiContainer.innerHTML = `
-                    <div class="error">❌ لم يتم العثور على العمود رقم 7
+                    <div class="error">❌ لم يتم العثور على العمود رقم 6
                         <small>عدد الأعمدة: ${headers.length}</small>
                     </div>
                 `;
@@ -309,6 +304,7 @@
             let totalAssets = 0;
             let totalOther = 0;
             const propertyExpenses = {};
+            const dayExpenses = {};
 
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
@@ -328,9 +324,13 @@
 
                 const property = (idxProperty !== -1 && row[idxProperty]) ? String(row[idxProperty]).trim() : 'غير محدد';
                 propertyExpenses[property] = (propertyExpenses[property] || 0) + total;
+
+                const day = (row[1] !== undefined && row[1] !== null) ? String(row[1]).trim() : 'غير محدد';
+                dayExpenses[day] = (dayExpenses[day] || 0) + total;
             });
 
             const sortedProps = Object.entries(propertyExpenses).sort((a, b) => b[1] - a[1]);
+            const sortedDays = Object.entries(dayExpenses).sort((a, b) => b[1] - a[1]);
 
             kpiContainer.innerHTML = `
                 <div class="kpi-grid">
@@ -371,7 +371,15 @@
                     </div>
                 </div>
                 <div class="kpi-grid" style="margin-top:10px;">
-                    ${sortedProps.slice(0, 4).map(([name, amount]) => `
+                    ${sortedProps.slice(0, 3).map(([name, amount]) => `
+                        <div class="kpi-card">
+                            <div class="number">${amount.toLocaleString()} ر.س</div>
+                            <div class="label">${name || 'غير محدد'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="kpi-grid" style="margin-top:5px;">
+                    ${sortedDays.slice(0, 3).map(([name, amount]) => `
                         <div class="kpi-card">
                             <div class="number">${amount.toLocaleString()} ر.س</div>
                             <div class="label">${name || 'غير محدد'}</div>
