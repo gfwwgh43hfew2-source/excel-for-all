@@ -254,6 +254,9 @@
             return parseFloat(cleaned) || 0;
         }
 
+        // =============================================
+        // دالة البحث عن العمود (مرنة)
+        // =============================================
         function findColumnIndex(headers, targetNames) {
             const clean = s => String(s).trim().replace(/\s+/g, ' ');
             for (const target of targetNames) {
@@ -294,7 +297,8 @@
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
-            // ===== البحث عن عمود المبلغ الإجمالي فقط =====
+            // ===== البحث عن الأعمدة المهمة =====
+            // 🔑 نحدد بدقة عمود المبلغ الإجمالي فقط
             const idxTotal = findColumnIndex(headers, ['المبلغ الإجمالي المصروف', 'الإجمالي', 'المبلغ']);
             const idxCategory = findColumnIndex(headers, ['قسم النفقات', 'النفقات', 'قسم']);
             const idxProperty = findColumnIndex(headers, ['العقار المعني', 'العقار']);
