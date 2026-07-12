@@ -1337,6 +1337,7 @@
             const idxNumber = findColumnIndex(headers, 'رقم الحجز');
             const idxInvoiceDate = findColumnIndex(headers, 'تاريخ الفاتورة');
             const idxCheckIn = findColumnIndex(headers, 'تاريخ الدخول');
+            const idxCheckOut = findColumnIndex(headers, 'تاريخ الخروج');
             const idxName = findColumnIndex(headers, 'اسم الحجز');
             const idxType = findColumnIndex(headers, 'نوع الحجز (العقار)');
             const idxNights = findColumnIndex(headers, 'عدد أيام المبيت');
@@ -1407,6 +1408,7 @@
                 }
 
                 const checkInDate = (idxCheckIn !== -1 && row[idxCheckIn]) ? row[idxCheckIn] : '-';
+                const checkOutDate = (idxCheckOut !== -1 && row[idxCheckOut]) ? row[idxCheckOut] : '-';
                 let isFuture = false;
                 if (idxCheckIn !== -1 && row[idxCheckIn]) {
                     const d = parseDate(row[idxCheckIn]);
@@ -1417,6 +1419,7 @@
                     <td>${(idxNumber !== -1 && row[idxNumber]) ? row[idxNumber] : '-'}</td>
                     <td>${(idxInvoiceDate !== -1 && row[idxInvoiceDate]) ? row[idxInvoiceDate] : '-'}</td>
                     <td>${checkInDate} ${isFuture ? '⭐' : ''}</td>
+                    <td>${checkOutDate}</td>
                     <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
                     <td><span class="badge badge-type">${(idxType !== -1 && row[idxType]) ? row[idxType] : '-'}</span></td>
                     <td>${(idxNights !== -1 && row[idxNights]) ? row[idxNights] : '0'}</td>
@@ -1434,6 +1437,7 @@
                             <th>رقم الحجز</th>
                             <th>تاريخ الفاتورة</th>
                             <th>تاريخ الدخول</th>
+                            <th>تاريخ الخروج</th>
                             <th>اسم الحجز</th>
                             <th>نوع العقار</th>
                             <th>عدد الأيام</th>
@@ -1442,14 +1446,14 @@
                             <th>الإجمالي</th>
                             <th>الحالة</th>
                         </tr></thead>
-                        <tbody>${tableRows || '<tr><td colspan="10" style="text-align:center;color:rgba(255,255,255,0.15);padding:25px;">لا توجد حجوزات</td></tr>'}</tbody>
+                        <tbody>${tableRows || '<tr><td colspan="11" style="text-align:center;color:rgba(255,255,255,0.15);padding:25px;">لا توجد حجوزات</td></tr>'}</tbody>
                     </table>
                 </div>
                 <div class="table-note">⭐ حجوزات مستقبلية · يعرض آخر 30 حجز</div>
             `;
 
             // =============================================
-            // CARDS (Mobile)
+            // CARDS (Mobile) - مع إضافة تاريخ الخروج
             // =============================================
             let cardsHTML = '<div class="cards-container">';
             const cardRows = rows.slice(0, 30);
@@ -1461,6 +1465,7 @@
                 const name = (idxName !== -1 && row[idxName]) ? row[idxName] : '-';
                 const number = (idxNumber !== -1 && row[idxNumber]) ? row[idxNumber] : '-';
                 const checkIn = (idxCheckIn !== -1 && row[idxCheckIn]) ? row[idxCheckIn] : '-';
+                const checkOut = (idxCheckOut !== -1 && row[idxCheckOut]) ? row[idxCheckOut] : '-';
                 const type = (idxType !== -1 && row[idxType]) ? row[idxType] : '-';
                 const nights = (idxNights !== -1 && row[idxNights]) ? row[idxNights] : '0';
                 const paid = (idxPaid !== -1 && row[idxPaid]) ? cleanNumber(row[idxPaid]).toLocaleString() : '0';
@@ -1495,6 +1500,10 @@
                         <div class="card-row">
                             <span class="card-label">تاريخ الدخول</span>
                             <span class="card-value">${checkIn} ${isFuture ? '⭐' : ''}</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">تاريخ الخروج</span>
+                            <span class="card-value">${checkOut}</span>
                         </div>
                         <div class="card-row">
                             <span class="card-label">نوع العقار</span>
