@@ -175,7 +175,7 @@
 
     <script>
         // =============================================
-        // 🔑 رابط الإصدار 7
+        // 🔑 رابط الـ Web App (الإصدار 7)
         // =============================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwGaZtUlpONIv4JeN5UEhCI0cdwbo5Bklo-1lnnfUIWVLFaUh6xRTNXi315qtZYTk7EHA/exec';
 
@@ -185,12 +185,6 @@
         const messageDiv = document.getElementById('message');
         const loginBtn = document.getElementById('loginBtn');
         const loadingSpinner = document.getElementById('loadingSpinner');
-
-        // التحقق من وجود مستخدم مسجل دخول بالفعل
-        const currentUser = JSON.parse(localStorage.getItem('user'));
-        if (currentUser && currentUser.email) {
-            window.location.href = 'index.html';
-        }
 
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -232,15 +226,17 @@
             iframe.onload = function() {
                 try {
                     const responseText = iframe.contentDocument.body.textContent;
-                    console.log('Response:', responseText);
+                    console.log('Raw Response:', responseText);
 
+                    // تنظيف الرد
                     let cleanJson = responseText;
                     const jsonStart = responseText.indexOf('{');
                     const jsonEnd = responseText.lastIndexOf('}') + 1;
                     if (jsonStart !== -1 && jsonEnd !== -1) {
                         cleanJson = responseText.substring(jsonStart, jsonEnd);
                     }
-
+                    
+                    console.log('Clean JSON:', cleanJson);
                     const response = JSON.parse(cleanJson);
 
                     if (response.success) {
@@ -250,9 +246,12 @@
                             name: response.name
                         }));
                         showMessage('✅ ' + response.message, 'success');
-                        // تحويل للصفحة الرئيسية بعد 1 ثانية
+                        
+                        // =============================================
+                        // 🔑 التحويل للصفحة الرئيسية
+                        // =============================================
                         setTimeout(() => {
-                           window.location.href = '/index.html';
+                            window.location.href = '/index.html';
                         }, 1000);
                     } else {
                         showMessage('❌ ' + response.message, 'error');
