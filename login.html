@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل الدخول - منتجع حياله</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #0a0f1f;
+            color: #eee;
+            direction: rtl;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-container {
+            background: linear-gradient(145deg, #121a2e, #0e1525);
+            border-radius: 24px;
+            padding: 40px 35px;
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid rgba(245, 200, 66, 0.06);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-container .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-container .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f5c842, #d4a020);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .login-container .logo p {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.03);
+            color: #fff;
+            font-size: 0.95rem;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+        .form-group input:focus {
+            border-color: rgba(245, 200, 66, 0.3);
+            outline: none;
+            background: rgba(255,255,255,0.05);
+        }
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.2);
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #f5c842, #d4a020);
+            color: #0a0f1f;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(245,200,66,0.25);
+        }
+        .message {
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .message.success {
+            display: block;
+            background: rgba(43, 138, 62, 0.15);
+            color: #4caf50;
+            border: 1px solid rgba(43, 138, 62, 0.1);
+        }
+        .message.error {
+            display: block;
+            background: rgba(201, 42, 42, 0.12);
+            color: #ef5350;
+            border: 1px solid rgba(201, 42, 42, 0.08);
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .links a {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .links a:hover {
+            color: #f5c842;
+        }
+        .links .sep {
+            color: rgba(255,255,255,0.1);
+            margin: 0 8px;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 10px;
+        }
+        .loading-spinner i {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo">
+            <h1>🏕️ منتجع حياله</h1>
+            <p>تسجيل الدخول إلى النظام</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>📧 البريد الإلكتروني</label>
+                <input type="email" id="email" placeholder="admin@test.com" required />
+            </div>
+            <div class="form-group">
+                <label>🔑 كلمة المرور</label>
+                <input type="password" id="password" placeholder="********" required />
+            </div>
+
+            <button type="submit" class="btn-primary" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+            </button>
+            <div class="loading-spinner" id="loadingSpinner">
+                <i class="fas fa-spinner"></i> جاري التحقق...
+            </div>
+            <div id="message" class="message"></div>
+        </form>
+
+        <div class="links">
+            <a href="#">إنشاء حساب جديد</a>
+            <span class="sep">|</span>
+            <a href="index.html">العودة للرئيسية</a>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // 🔑 ضع رابط الـ Web App هنا (اللي نسخته)
+        // =============================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyrzG-VgRgWlYCIqCfW03Oyn8smnpf_l1al_du-U65FCrAkwTrUudwWA3tgD9pG0QXNEg/exec';
+
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const messageDiv = document.getElementById('message');
+        const loginBtn = document.getElementById('loginBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email || !password) {
+                showMessage('⚠️ الرجاء ملء جميع الحقول', 'error');
+                return;
+            }
+
+            loginBtn.style.display = 'none';
+            loadingSpinner.style.display = 'block';
+            hideMessage();
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'login',
+                        email: email,
+                        password: password
+                    })
+                });
+
+                // بما أننا استخدمنا no-cors، بنستخدم iframe عشان نقرأ الرد
+                sendLoginViaIframe(email, password);
+
+            } catch (error) {
+                showMessage('❌ حدث خطأ في الاتصال بالخادم', 'error');
+                loginBtn.style.display = 'block';
+                loadingSpinner.style.display = 'none';
+            }
+        });
+
+        function sendLoginViaIframe(email, password) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = SCRIPT_URL;
+            form.target = 'hiddenFrame';
+
+            const dataInput = document.createElement('input');
+            dataInput.type = 'hidden';
+            dataInput.name = 'data';
+            dataInput.value = JSON.stringify({
+                action: 'login',
+                email: email,
+                password: password
+            });
+            form.appendChild(dataInput);
+
+            const iframe = document.createElement('iframe');
+            iframe.name = 'hiddenFrame';
+            iframe.style.display = 'none';
+            iframe.onload = function() {
+                try {
+                    const response = JSON.parse(iframe.contentDocument.body.textContent);
+                    if (response.success) {
+                        localStorage.setItem('user', JSON.stringify({
+                            email: response.email,
+                            name: response.name
+                        }));
+                        showMessage('✅ ' + response.message, 'success');
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    } else {
+                        showMessage('❌ ' + response.message, 'error');
+                    }
+                } catch (e) {
+                    showMessage('❌ حدث خطأ في معالجة البيانات', 'error');
+                }
+                loginBtn.style.display = 'block';
+                loadingSpinner.style.display = 'none';
+                document.body.removeChild(iframe);
+                document.body.removeChild(form);
+            };
+
+            document.body.appendChild(iframe);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = 'message ' + type;
+        }
+
+        function hideMessage() {
+            messageDiv.className = 'message';
+            messageDiv.textContent = '';
+        }
+    </script>
+
+</body>
+</html>
