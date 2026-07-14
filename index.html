@@ -593,7 +593,7 @@
             border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        /* ===== CARDS (Mobile) ===== */
+        /* ===== CARDS (Mobile) - مرتبة من الأحدث إلى الأقدم ===== */
         .cards-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -1383,14 +1383,14 @@
             const today = new Date();
             const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-            // ===== ترتيب الصفوف من الأحدث إلى الأقدم حسب تاريخ الدخول =====
+            // ===== ترتيب الصفوف حسب تاريخ الفاتورة (الأحدث أولاً) =====
             const sortedRows = [...rows].filter(row => {
                 if (!row || row.length === 0) return false;
                 const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
                 return !(total === 0 && !row[idxName]);
             }).sort((a, b) => {
-                const dateA = parseDate(a[idxCheckIn]);
-                const dateB = parseDate(b[idxCheckIn]);
+                const dateA = parseDate(a[idxInvoiceDate]);
+                const dateB = parseDate(b[idxInvoiceDate]);
                 if (!dateA && !dateB) return 0;
                 if (!dateA) return 1;
                 if (!dateB) return -1;
@@ -1428,7 +1428,7 @@
             document.getElementById('kpiFuture').textContent = futureBookings;
 
             // =============================================
-            // TABLE (Desktop) - مرتبة من الأحدث إلى الأقدم
+            // TABLE (Desktop) - مرتبة من الأحدث إلى الأقدم حسب تاريخ الفاتورة
             // =============================================
             let tableRows = '';
             const displayRows = sortedRows.slice(0, 30);
@@ -1445,6 +1445,7 @@
                     }
                 }
 
+                const invoiceDate = (idxInvoiceDate !== -1 && row[idxInvoiceDate]) ? row[idxInvoiceDate] : '-';
                 const checkInDate = (idxCheckIn !== -1 && row[idxCheckIn]) ? row[idxCheckIn] : '-';
                 const checkOutDate = (idxCheckOut !== -1 && row[idxCheckOut]) ? row[idxCheckOut] : '-';
                 let isFuture = false;
@@ -1455,7 +1456,7 @@
 
                 tableRows += `<tr style="${isFuture ? 'background: rgba(245,200,66,0.03);' : ''}">
                     <td>${(idxNumber !== -1 && row[idxNumber]) ? row[idxNumber] : '-'}</td>
-                    <td>${(idxInvoiceDate !== -1 && row[idxInvoiceDate]) ? row[idxInvoiceDate] : '-'}</td>
+                    <td>${invoiceDate}</td>
                     <td>${checkInDate} ${isFuture ? '⭐' : ''}</td>
                     <td>${checkOutDate}</td>
                     <td>${(idxName !== -1 && row[idxName]) ? row[idxName] : '-'}</td>
@@ -1487,11 +1488,11 @@
                         <tbody>${tableRows || '<tr><td colspan="11" style="text-align:center;color:rgba(255,255,255,0.15);padding:25px;">لا توجد حجوزات</td></tr>'}</tbody>
                     </table>
                 </div>
-                <div class="table-note">⭐ حجوزات مستقبلية · يعرض آخر 30 حجز (الأحدث أولاً)</div>
+                <div class="table-note">⭐ حجوزات مستقبلية · مرتب حسب تاريخ الفاتورة (الأحدث أولاً)</div>
             `;
 
             // =============================================
-            // CARDS (Mobile) - مرتبة من الأحدث إلى الأقدم
+            // CARDS (Mobile) - مرتبة حسب تاريخ الفاتورة (الأحدث أولاً)
             // =============================================
             let cardsHTML = '<div class="cards-container">';
             const cardRows = sortedRows.slice(0, 30);
@@ -1502,6 +1503,7 @@
 
                 const name = (idxName !== -1 && row[idxName]) ? row[idxName] : '-';
                 const number = (idxNumber !== -1 && row[idxNumber]) ? row[idxNumber] : '-';
+                const invoiceDate = (idxInvoiceDate !== -1 && row[idxInvoiceDate]) ? row[idxInvoiceDate] : '-';
                 const checkIn = (idxCheckIn !== -1 && row[idxCheckIn]) ? row[idxCheckIn] : '-';
                 const checkOut = (idxCheckOut !== -1 && row[idxCheckOut]) ? row[idxCheckOut] : '-';
                 const type = (idxType !== -1 && row[idxType]) ? row[idxType] : '-';
@@ -1509,7 +1511,6 @@
                 const paid = (idxPaid !== -1 && row[idxPaid]) ? cleanNumber(row[idxPaid]).toLocaleString() : '0';
                 const remaining = (idxRemaining !== -1 && row[idxRemaining]) ? cleanNumber(row[idxRemaining])
                     .toLocaleString() : '0';
-                const invoice = (idxInvoiceDate !== -1 && row[idxInvoiceDate]) ? row[idxInvoiceDate] : '-';
 
                 let statusBadge = `<span class="badge badge-balance">متبقي</span>`;
                 if (idxStatus !== -1) {
@@ -1534,7 +1535,7 @@
                         </div>
                         <div class="card-row">
                             <span class="card-label">تاريخ الفاتورة</span>
-                            <span class="card-value">${invoice}</span>
+                            <span class="card-value">${invoiceDate}</span>
                         </div>
                         <div class="card-row">
                             <span class="card-label">تاريخ الدخول</span>
