@@ -1356,6 +1356,7 @@
             const headers = data[0].map(h => String(h).trim());
             const rows = data.slice(1);
 
+            // ===== البحث عن الأعمدة =====
             const idxNumber = findColumnIndex(headers, 'رقم الحجز');
             const idxInvoiceDate = findColumnIndex(headers, 'تاريخ الفاتورة');
             const idxCheckIn = findColumnIndex(headers, 'تاريخ الدخول');
@@ -1373,6 +1374,7 @@
                 return;
             }
 
+            // ===== حساب المؤشرات =====
             let totalRevenue = 0,
                 totalPaid = 0,
                 totalRemaining = 0;
@@ -1381,6 +1383,21 @@
             const today = new Date();
             const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
+            // ===== ترتيب الصفوف من الأحدث إلى الأقدم حسب تاريخ الدخول =====
+            const sortedRows = [...rows].filter(row => {
+                if (!row || row.length === 0) return false;
+                const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
+                return !(total === 0 && !row[idxName]);
+            }).sort((a, b) => {
+                const dateA = parseDate(a[idxCheckIn]);
+                const dateB = parseDate(b[idxCheckIn]);
+                if (!dateA && !dateB) return 0;
+                if (!dateA) return 1;
+                if (!dateB) return -1;
+                return dateB - dateA; // الأحدث أولاً
+            });
+
+            // ===== حساب الإحصائيات الكلية (من جميع الصفوف) =====
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
                 const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
@@ -1400,22 +1417,21 @@
             const totalExpenses = 3046;
             const netProfit = totalRevenue - totalExpenses;
 
-            // Update Hero Stats
+            // ===== تحديث الإحصائيات =====
             animateNumber('statBookings', validRows);
             animateNumber('statRevenue', totalRevenue);
             animateNumber('statFuture', futureBookings);
 
-            // Update KPI
             document.getElementById('kpiRevenue').textContent = totalRevenue.toLocaleString() + ' ر.س';
             document.getElementById('kpiProfit').textContent = netProfit.toLocaleString() + ' ر.س';
             document.getElementById('kpiExpenses').textContent = totalExpenses.toLocaleString() + ' ر.س';
             document.getElementById('kpiFuture').textContent = futureBookings;
 
             // =============================================
-            // TABLE (Desktop)
+            // TABLE (Desktop) - مرتبة من الأحدث إلى الأقدم
             // =============================================
             let tableRows = '';
-            const displayRows = rows.slice(0, 30);
+            const displayRows = sortedRows.slice(0, 30);
             displayRows.forEach(row => {
                 if (!row || row.length === 0) return;
                 const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
@@ -1471,14 +1487,14 @@
                         <tbody>${tableRows || '<tr><td colspan="11" style="text-align:center;color:rgba(255,255,255,0.15);padding:25px;">لا توجد حجوزات</td></tr>'}</tbody>
                     </table>
                 </div>
-                <div class="table-note">⭐ حجوزات مستقبلية · يعرض آخر 30 حجز</div>
+                <div class="table-note">⭐ حجوزات مستقبلية · يعرض آخر 30 حجز (الأحدث أولاً)</div>
             `;
 
             // =============================================
-            // CARDS (Mobile) - مع إضافة تاريخ الخروج
+            // CARDS (Mobile) - مرتبة من الأحدث إلى الأقدم
             // =============================================
             let cardsHTML = '<div class="cards-container">';
-            const cardRows = rows.slice(0, 30);
+            const cardRows = sortedRows.slice(0, 30);
             cardRows.forEach(row => {
                 if (!row || row.length === 0) return;
                 const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
@@ -1514,6 +1530,7 @@
                         <div class="card-header">
                             <span class="name">${name}</span>
                             <span class="number">#${number}</span>
+                            ${isFuture ? '<span class="future-badge">⭐ مستقبلي</span>' : ''}
                         </div>
                         <div class="card-row">
                             <span class="card-label">تاريخ الفاتورة</span>
@@ -1521,7 +1538,7 @@
                         </div>
                         <div class="card-row">
                             <span class="card-label">تاريخ الدخول</span>
-                            <span class="card-value">${checkIn} ${isFuture ? '⭐' : ''}</span>
+                            <span class="card-value">${checkIn}</span>
                         </div>
                         <div class="card-row">
                             <span class="card-label">تاريخ الخروج</span>
@@ -1557,7 +1574,7 @@
             cardsHTML += '</div>';
 
             // =============================================
-            // Combine
+            // دمج الجدول والبطاقات
             // =============================================
             container.innerHTML = tableHTML + cardsHTML;
         }
