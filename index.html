@@ -1000,6 +1000,15 @@
     </style>
 </head>
 <body>
+    <script>
+        // =============================================
+        // التحقق من تسجيل الدخول
+        // =============================================
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || !user.email) {
+            window.location.href = 'login.html';
+        }
+    </script>
 
     <!-- ===== HEADER ===== -->
     <header id="header">
@@ -1021,6 +1030,9 @@
             <div class="header-actions">
                 <button aria-label="بحث"><i class="fas fa-search"></i></button>
                 <button aria-label="إشعارات"><i class="fas fa-bell"></i></button>
+                <button onclick="logoutUser()" style="background:rgba(255,0,0,0.1);border-color:rgba(255,0,0,0.2);color:#ff6b6b;" title="تسجيل الخروج">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
                 <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
             </div>
         </div>
@@ -1203,6 +1215,16 @@
     </footer>
 
     <script>
+        // =============================================
+        // تسجيل الخروج
+        // =============================================
+        function logoutUser() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            }
+        }
+
         // =============================================
         // HEADER SCROLL
         // =============================================
