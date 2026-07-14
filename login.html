@@ -147,14 +147,14 @@
             <p>تسجيل الدخول إلى النظام</p>
         </div>
 
-        <form id="loginForm">
+        <form id="loginForm" method="POST" action="https://script.google.com/macros/s/AKfycbwGaZtUlpONIv4JeN5UEhCI0cdwbo5Bklo-1lnnfUIWVLFaUh6xRTNXi315qtZYTk7EHA/exec">
             <div class="form-group">
                 <label>📧 البريد الإلكتروني</label>
-                <input type="email" id="email" placeholder="admin@test.com" required />
+                <input type="email" id="email" name="email" placeholder="admin@test.com" required />
             </div>
             <div class="form-group">
                 <label>🔑 كلمة المرور</label>
-                <input type="password" id="password" placeholder="********" required />
+                <input type="password" id="password" name="password" placeholder="********" required />
             </div>
 
             <button type="submit" class="btn-primary" id="loginBtn">
@@ -175,49 +175,45 @@
 
     <script>
         // =============================================
-        // 🔑 رابط الـ Web App
+        // 🔑 التحكم في النموذج
         // =============================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwGaZtUlpONIv4JeN5UEhCI0cdwbo5Bklo-1lnnfUIWVLFaUh6xRTNXi315qtZYTk7EHA/exec';
-
         const loginForm = document.getElementById('loginForm');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
         const messageDiv = document.getElementById('message');
         const loginBtn = document.getElementById('loginBtn');
         const loadingSpinner = document.getElementById('loadingSpinner');
 
-        loginForm.addEventListener('submit', async (e) => {
+        loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
 
             if (!email || !password) {
                 showMessage('⚠️ الرجاء ملء جميع الحقول', 'error');
                 return;
             }
 
+            // إظهار التحميل
             loginBtn.style.display = 'none';
             loadingSpinner.style.display = 'block';
             hideMessage();
 
-            try {
-                // =============================================
-                // 🔥 طريقة الإرسال الجديدة (بدون iframe)
-                // =============================================
-                const formData = new FormData();
-                formData.append('data', JSON.stringify({
-                    action: 'login',
-                    email: email,
-                    password: password
-                }));
+            // =============================================
+            // إرسال البيانات عبر Fetch
+            // =============================================
+            const formData = new FormData();
+            formData.append('data', JSON.stringify({
+                action: 'login',
+                email: email,
+                password: password
+            }));
 
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const responseText = await response.text();
+            fetch(loginForm.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(responseText => {
                 console.log('Response:', responseText);
 
                 // تنظيف الرد
@@ -237,20 +233,22 @@
                     }));
                     showMessage('✅ ' + result.message, 'success');
                     
-                    // 🔥 التحويل للصفحة الرئيسية
+                    // 🔥 التحويل إلى الصفحة الرئيسية
                     setTimeout(() => {
-                        window.location.replace('/index.html');
-                    }, 1000);
+                        window.location.href = 'index.html';
+                    }, 1500);
                 } else {
                     showMessage('❌ ' + result.message, 'error');
                 }
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Error:', error);
-                showMessage('❌ حدث خطأ في الاتصال: ' + error.message, 'error');
-            }
-
-            loginBtn.style.display = 'block';
-            loadingSpinner.style.display = 'none';
+                showMessage('❌ حدث خطأ في الاتصال', 'error');
+            })
+            .finally(() => {
+                loginBtn.style.display = 'block';
+                loadingSpinner.style.display = 'none';
+            });
         });
 
         function showMessage(text, type) {
