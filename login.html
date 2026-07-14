@@ -167,7 +167,7 @@
         </form>
 
         <div class="links">
-            <a href="#">إنشاء حساب جديد</a>
+            <a href="register.html">إنشاء حساب جديد</a>
             <span class="sep">|</span>
             <a href="index.html">العودة للرئيسية</a>
         </div>
@@ -175,9 +175,9 @@
 
     <script>
         // =============================================
-        // 🔑 ضع رابط الـ Web App هنا (اللي نسخته)
+        // 🔑 رابط الإصدار 7
         // =============================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyrzG-VgRgWlYCIqCfW03Oyn8smnpf_l1al_du-U65FCrAkwTrUudwWA3tgD9pG0QXNEg/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwGaZtUlpONIv4JeN5UEhCI0cdwbo5Bklo-1lnnfUIWVLFaUh6xRTNXi315qtZYTk7EHA/exec';
 
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
@@ -186,7 +186,13 @@
         const loginBtn = document.getElementById('loginBtn');
         const loadingSpinner = document.getElementById('loadingSpinner');
 
-        loginForm.addEventListener('submit', async (e) => {
+        // التحقق من وجود مستخدم مسجل دخول بالفعل
+        const currentUser = JSON.parse(localStorage.getItem('user'));
+        if (currentUser && currentUser.email) {
+            window.location.href = 'index.html';
+        }
+
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
             const email = emailInput.value.trim();
@@ -201,29 +207,9 @@
             loadingSpinner.style.display = 'block';
             hideMessage();
 
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'login',
-                        email: email,
-                        password: password
-                    })
-                });
-
-                // بما أننا استخدمنا no-cors، بنستخدم iframe عشان نقرأ الرد
-                sendLoginViaIframe(email, password);
-
-            } catch (error) {
-                showMessage('❌ حدث خطأ في الاتصال بالخادم', 'error');
-                loginBtn.style.display = 'block';
-                loadingSpinner.style.display = 'none';
-            }
-        });
-
-        function sendLoginViaIframe(email, password) {
+            // =============================================
+            // إرسال البيانات عبر iframe
+            // =============================================
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = SCRIPT_URL;
@@ -242,22 +228,37 @@
             const iframe = document.createElement('iframe');
             iframe.name = 'hiddenFrame';
             iframe.style.display = 'none';
+
             iframe.onload = function() {
                 try {
-                    const response = JSON.parse(iframe.contentDocument.body.textContent);
+                    const responseText = iframe.contentDocument.body.textContent;
+                    console.log('Response:', responseText);
+
+                    let cleanJson = responseText;
+                    const jsonStart = responseText.indexOf('{');
+                    const jsonEnd = responseText.lastIndexOf('}') + 1;
+                    if (jsonStart !== -1 && jsonEnd !== -1) {
+                        cleanJson = responseText.substring(jsonStart, jsonEnd);
+                    }
+
+                    const response = JSON.parse(cleanJson);
+
                     if (response.success) {
+                        // حفظ بيانات المستخدم
                         localStorage.setItem('user', JSON.stringify({
                             email: response.email,
                             name: response.name
                         }));
                         showMessage('✅ ' + response.message, 'success');
+                        // تحويل للصفحة الرئيسية بعد 1 ثانية
                         setTimeout(() => {
                             window.location.href = 'index.html';
-                        }, 1500);
+                        }, 1000);
                     } else {
                         showMessage('❌ ' + response.message, 'error');
                     }
                 } catch (e) {
+                    console.error('Error:', e);
                     showMessage('❌ حدث خطأ في معالجة البيانات', 'error');
                 }
                 loginBtn.style.display = 'block';
@@ -269,7 +270,7 @@
             document.body.appendChild(iframe);
             document.body.appendChild(form);
             form.submit();
-        }
+        });
 
         function showMessage(text, type) {
             messageDiv.textContent = text;
