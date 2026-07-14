@@ -175,7 +175,7 @@
 
     <script>
         // =============================================
-        // 🔑 رابط الـ Web App (الإصدار 7)
+        // 🔑 رابط الـ Web App
         // =============================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwGaZtUlpONIv4JeN5UEhCI0cdwbo5Bklo-1lnnfUIWVLFaUh6xRTNXi315qtZYTk7EHA/exec';
 
@@ -186,7 +186,7 @@
         const loginBtn = document.getElementById('loginBtn');
         const loadingSpinner = document.getElementById('loadingSpinner');
 
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const email = emailInput.value.trim();
@@ -201,74 +201,56 @@
             loadingSpinner.style.display = 'block';
             hideMessage();
 
-            // =============================================
-            // إرسال البيانات عبر iframe
-            // =============================================
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = SCRIPT_URL;
-            form.target = 'hiddenFrame';
+            try {
+                // =============================================
+                // 🔥 طريقة الإرسال الجديدة (بدون iframe)
+                // =============================================
+                const formData = new FormData();
+                formData.append('data', JSON.stringify({
+                    action: 'login',
+                    email: email,
+                    password: password
+                }));
 
-            const dataInput = document.createElement('input');
-            dataInput.type = 'hidden';
-            dataInput.name = 'data';
-            dataInput.value = JSON.stringify({
-                action: 'login',
-                email: email,
-                password: password
-            });
-            form.appendChild(dataInput);
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
 
-            const iframe = document.createElement('iframe');
-            iframe.name = 'hiddenFrame';
-            iframe.style.display = 'none';
+                const responseText = await response.text();
+                console.log('Response:', responseText);
 
-            iframe.onload = function() {
-                try {
-                    const responseText = iframe.contentDocument.body.textContent;
-                    console.log('Raw Response:', responseText);
-
-                    // تنظيف الرد
-                    let cleanJson = responseText;
-                    const jsonStart = responseText.indexOf('{');
-                    const jsonEnd = responseText.lastIndexOf('}') + 1;
-                    if (jsonStart !== -1 && jsonEnd !== -1) {
-                        cleanJson = responseText.substring(jsonStart, jsonEnd);
-                    }
-                    
-                    console.log('Clean JSON:', cleanJson);
-                    const response = JSON.parse(cleanJson);
-
-                    if (response.success) {
-                        // حفظ بيانات المستخدم
-                        localStorage.setItem('user', JSON.stringify({
-                            email: response.email,
-                            name: response.name
-                        }));
-                        showMessage('✅ ' + response.message, 'success');
-                        
-                        // =============================================
-                        // 🔑 التحويل للصفحة الرئيسية
-                        // =============================================
-                        setTimeout(() => {
-                            window.location.href = '/index.html';
-                        }, 1000);
-                    } else {
-                        showMessage('❌ ' + response.message, 'error');
-                    }
-                } catch (e) {
-                    console.error('Error:', e);
-                    showMessage('❌ حدث خطأ في معالجة البيانات', 'error');
+                // تنظيف الرد
+                let cleanJson = responseText;
+                const jsonStart = responseText.indexOf('{');
+                const jsonEnd = responseText.lastIndexOf('}') + 1;
+                if (jsonStart !== -1 && jsonEnd !== -1) {
+                    cleanJson = responseText.substring(jsonStart, jsonEnd);
                 }
-                loginBtn.style.display = 'block';
-                loadingSpinner.style.display = 'none';
-                document.body.removeChild(iframe);
-                document.body.removeChild(form);
-            };
 
-            document.body.appendChild(iframe);
-            document.body.appendChild(form);
-            form.submit();
+                const result = JSON.parse(cleanJson);
+
+                if (result.success) {
+                    localStorage.setItem('user', JSON.stringify({
+                        email: result.email,
+                        name: result.name
+                    }));
+                    showMessage('✅ ' + result.message, 'success');
+                    
+                    // 🔥 التحويل للصفحة الرئيسية
+                    setTimeout(() => {
+                        window.location.replace('/index.html');
+                    }, 1000);
+                } else {
+                    showMessage('❌ ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('❌ حدث خطأ في الاتصال: ' + error.message, 'error');
+            }
+
+            loginBtn.style.display = 'block';
+            loadingSpinner.style.display = 'none';
         });
 
         function showMessage(text, type) {
