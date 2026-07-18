@@ -189,11 +189,12 @@
         <div class="header-main">
             <div class="brand">
                 <h1>💰 المصاريف والتشغيل</h1>
-                <div class="sub">سجل المصاريف، المشتريات، الرواتب، والصيانة الكلي</div>
+                <div class="sub">منتجع وشاليهات حيالة القصيم</div>
             </div>
             <div class="meta">
-                <div>📱 <span>+201010422057</span></div>
-                <div class="gold">آخر تحديث: <span id="updateTime">جاري التحميل...</span></div>
+                <div>📍 القصيم/ بريدة - حي الخليج</div>
+                <div class="gold">📱 +966509982400</div>
+                <div>آخر تحديث: <span id="updateTime">جاري التحميل...</span></div>
             </div>
         </div>
 
@@ -215,7 +216,7 @@
         // 🔑 بيانات الشيت - المصاريف
         // =============================================
         const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
-        const SHEET_NAME = 'المصاريف والتشغيل'; // اسم التبويب الجديد
+        const SHEET_NAME = 'المصاريف والتشغيل';
 
         async function fetchSheetData() {
             try {
@@ -261,6 +262,33 @@
                 'تشغيل': 'تشغيل'
             };
             return map[category] || '';
+        }
+
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            try {
+                let cleaned = String(dateStr).trim().replace(/\s+/g, ' ');
+                cleaned = cleaned.split(' ')[0];
+                let parts = cleaned.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]) - 1;
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        return new Date(year, month, day);
+                    }
+                }
+                parts = cleaned.split('-');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]) - 1;
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        return new Date(year, month, day);
+                    }
+                }
+                return null;
+            } catch (e) { return null; }
         }
 
         function displayData(data) {
@@ -311,19 +339,16 @@
 
                 totalExpenses += total;
 
-                // التصنيف حسب قسم النفقات
                 const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : '';
                 if (category.includes('رواتب')) totalSalaries += total;
                 else if (category.includes('صيانة')) totalMaintenance += total;
                 else if (category.includes('مشتريات')) totalPurchases += total;
                 else if (category.includes('تشغيل')) totalOperations += total;
 
-                // حسب العقار
                 const property = (idxProperty !== -1 && row[idxProperty]) ? String(row[idxProperty]).trim() : 'غير محدد';
                 propertyExpenses[property] = (propertyExpenses[property] || 0) + total;
             });
 
-            // ترتيب العقارات تنازلياً
             const sortedProps = Object.entries(propertyExpenses).sort((a, b) => b[1] - a[1]);
 
             // ===== عرض بطاقات KPI =====
@@ -376,10 +401,10 @@
                 if (!dateA && !dateB) return 0;
                 if (!dateA) return 1;
                 if (!dateB) return -1;
-                return dateB - dateA; // الأحدث أولاً
+                return dateB - dateA;
             });
 
-            // ===== عرض الجدول (مرتب) =====
+            // ===== عرض الجدول =====
             let tableRows = '';
             const displayRows = sortedRows.slice(0, 50);
             displayRows.forEach(row => {
@@ -420,34 +445,6 @@
                 </div>
                 <div class="table-note">يعرض آخر 50 سجل · مرتب حسب التاريخ (الأحدث أولاً) · إجمالي المصاريف: ${totalExpenses.toLocaleString()} ر.س</div>
             `;
-        }
-
-        // ===== دالة لتحويل التاريخ =====
-        function parseDate(dateStr) {
-            if (!dateStr) return null;
-            try {
-                let cleaned = String(dateStr).trim().replace(/\s+/g, ' ');
-                cleaned = cleaned.split(' ')[0];
-                let parts = cleaned.split('/');
-                if (parts.length === 3) {
-                    const day = parseInt(parts[0]);
-                    const month = parseInt(parts[1]) - 1;
-                    const year = parseInt(parts[2]);
-                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
-                        return new Date(year, month, day);
-                    }
-                }
-                parts = cleaned.split('-');
-                if (parts.length === 3) {
-                    const day = parseInt(parts[0]);
-                    const month = parseInt(parts[1]) - 1;
-                    const year = parseInt(parts[2]);
-                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
-                        return new Date(year, month, day);
-                    }
-                }
-                return null;
-            } catch (e) { return null; }
         }
 
         async function loadData() {
