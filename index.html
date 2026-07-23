@@ -99,6 +99,15 @@
                 opacity: 1;
             }
         }
+        @keyframes glowGreen {
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(0, 255, 100, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 100, 0.7);
+            }
+        }
         .animate-fade-up {
             opacity: 0;
             animation: fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
@@ -122,6 +131,9 @@
         }
         .delay-4 {
             animation-delay: 0.4s;
+        }
+        .delay-5 {
+            animation-delay: 0.5s;
         }
 
         /* ===== HEADER ===== */
@@ -376,6 +388,15 @@
             border-radius: 50px;
             border: 1px solid rgba(245, 200, 66, 0.05);
         }
+        .sidebar .sidebar-nav a .commission-badge {
+            margin-right: auto;
+            background: rgba(0, 255, 100, 0.1);
+            color: #00ff64;
+            font-size: 0.5rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 255, 100, 0.1);
+        }
         .sidebar .sidebar-divider {
             height: 1px;
             background: rgba(255, 255, 255, 0.04);
@@ -472,6 +493,15 @@
         .mobile-nav ul li:hover,
         .mobile-nav ul li.active {
             color: #f5c842;
+        }
+        .mobile-nav ul li .commission-dot {
+            width: 6px;
+            height: 6px;
+            background: #00ff64;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+            animation: glowGreen 2s ease-in-out infinite;
         }
 
         /* ===== HERO ===== */
@@ -704,6 +734,23 @@
             color: #ffffff;
             margin-top: 3px;
             font-weight: 600;
+            opacity: 0.8;
+        }
+        .kpi-card.commission-card {
+            border-color: rgba(0, 255, 100, 0.15);
+            background: linear-gradient(145deg, #0e1f17, #0a1510);
+        }
+        .kpi-card.commission-card::before {
+            background: linear-gradient(90deg, transparent, #00ff64, transparent);
+        }
+        .kpi-card.commission-card .icon {
+            color: #00ff64;
+        }
+        .kpi-card.commission-card .number {
+            color: #00ff64;
+        }
+        .kpi-card.commission-card .label {
+            color: #00ff64;
             opacity: 0.8;
         }
 
@@ -1036,14 +1083,14 @@
         }
 
         /* =============================================
-                   FLOATING BUTTON (أزرق فاتح - ساطع)
+                   FLOATING BUTTON (أخضر فسفوري - ساطع)
                 ============================================= */
         .floating-btn {
             position: fixed;
             bottom: 100px;
             left: 24px;
             z-index: 999;
-            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            background: linear-gradient(135deg, #00e676, #00c853);
             color: #ffffff;
             padding: 16px 28px;
             border-radius: 60px;
@@ -1054,13 +1101,14 @@
             font-size: 1rem;
             font-weight: 700;
             font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
-            box-shadow: 0 8px 32px rgba(26, 115, 232, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 230, 118, 0.5);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             border: none;
             text-decoration: none;
             border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
+            animation: glowGreen 3s ease-in-out infinite;
         }
         .floating-btn::before {
             content: '';
@@ -1068,7 +1116,7 @@
             inset: -2px;
             border-radius: 62px;
             padding: 2px;
-            background: linear-gradient(135deg, #1a73e8, #90caf9, #0d47a1);
+            background: linear-gradient(135deg, #00e676, #69f0ae, #00c853);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -1080,7 +1128,7 @@
         }
         .floating-btn:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 12px 48px rgba(26, 115, 232, 0.7);
+            box-shadow: 0 12px 48px rgba(0, 230, 118, 0.8);
         }
         .floating-btn:active {
             transform: scale(0.95);
@@ -1378,7 +1426,7 @@
         }
     </script>
 
-    <!-- ===== FLOATING BUTTON (أزرق فاتح - ساطع) ===== -->
+    <!-- ===== FLOATING BUTTON (أخضر فسفوري - ساطع) ===== -->
     <a href="add-invoice.html" class="floating-btn">
         <i class="fas fa-plus"></i>
         <span class="btn-text">حجز جديد</span>
@@ -1451,6 +1499,11 @@
                 <i class="fas fa-phone"></i>
                 <span>تواصل</span>
             </a>
+            <a href="#" style="border-color: rgba(0,255,100,0.1);">
+                <i class="fas fa-hand-holding-heart" style="color:#00ff64;"></i>
+                <span style="color:#00ff64;">عمولة أبو زيد</span>
+                <span class="commission-badge" id="sidebarCommission">0 ر.س</span>
+            </a>
         </div>
         <div class="sidebar-divider"></div>
         <div class="sidebar-nav">
@@ -1486,6 +1539,11 @@
             <li><i class="fas fa-money-bill-wave"></i><span>المصاريف</span></li>
             <li><i class="fas fa-chart-pie"></i><span>التقارير</span></li>
             <li><i class="fas fa-phone"></i><span>تواصل</span></li>
+            <li style="color:#00ff64;">
+                <i class="fas fa-hand-holding-heart"></i>
+                <span>العمولة <span class="commission-dot"></span></span>
+                <span id="mobileCommission" style="font-size:0.5rem;color:#00ff64;">0</span>
+            </li>
         </ul>
     </nav>
 
@@ -1563,12 +1621,12 @@
                     <div class="number" id="kpiFuture">0</div>
                     <div class="label">حجوزات مستقبلية</div>
                 </div>
-                <!-- ===== كارد عمولة أبو زيد (الجديد) ===== -->
-                <div class="kpi-card animate-fade-up delay-4" style="border-bottom-color: #d4a020;">
+                <!-- ===== كارد عمولة أبو زيد (الجديد - أخضر فسفوري) ===== -->
+                <div class="kpi-card commission-card animate-fade-up delay-5">
                     <div class="icon"><i class="fas fa-hand-holding-heart"></i></div>
                     <div class="number" id="kpiCommission">0</div>
                     <div class="label">عمولة أبو زيد</div>
-                    <div style="font-size:0.6rem;color:#d4a020;margin-top:2px;">20% من صافي الربح</div>
+                    <div style="font-size:0.6rem;color:#69f0ae;margin-top:2px;">20% من صافي الربح</div>
                 </div>
             </div>
         </div>
@@ -1610,7 +1668,7 @@
                 <div class="row"><span class="label">العنوان / الموقع</span><span class="value">القصيم / بريدة - حي الخليج</span></div>
                 <div class="row"><span class="label">جوال المنشأة</span><span class="value">📱 +966509982400</span></div>
                 <div class="row"><span class="label">الرقم الضريبي</span><span class="value" style="color:rgba(255,255,255,0.15);">(اختياري)</span></div>
-                <div class="row"><span class="label">نسبة عمولة أبو زيد</span><span class="value" style="color:#f5c842;">20%</span></div>
+                <div class="row"><span class="label">نسبة عمولة أبو زيد</span><span class="value" style="color:#00ff64;">20%</span></div>
             </div>
         </div>
     </section>
@@ -1866,7 +1924,20 @@
             document.getElementById('kpiExpenses').textContent = totalExpenses.toLocaleString() + ' ر.س';
             document.getElementById('kpiFuture').textContent = futureBookings;
             // ===== تحديث كارد عمولة أبو زيد =====
-            document.getElementById('kpiCommission').textContent = commission.toLocaleString() + ' ر.س';
+            const commissionText = commission.toLocaleString() + ' ر.س';
+            document.getElementById('kpiCommission').textContent = commissionText;
+
+            // ===== تحديث العمولة في السايدبار =====
+            const sidebarCommission = document.getElementById('sidebarCommission');
+            if (sidebarCommission) {
+                sidebarCommission.textContent = commissionText;
+            }
+
+            // ===== تحديث العمولة في الموبايل ناف =====
+            const mobileCommission = document.getElementById('mobileCommission');
+            if (mobileCommission) {
+                mobileCommission.textContent = commission.toLocaleString();
+            }
 
             // =============================================
             // TABLE (Desktop) - مرتبة من الأحدث إلى الأقدم حسب تاريخ الفاتورة
