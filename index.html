@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
-        /* ===== RESET & BASE ===== */
+        /* ===== RESET ===== */
         * {
             margin: 0;
             padding: 0;
@@ -69,24 +69,6 @@
             }
             100% {
                 background-position: 200% center;
-            }
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-        @keyframes glow {
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(45, 106, 79, 0.2);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(45, 106, 79, 0.5);
             }
         }
         .animate-fade-up {
@@ -830,14 +812,14 @@
         }
 
         /* =============================================
-                   FLOATING BUTTON (أخضر زمردي - خرافي)
+                   FLOATING BUTTON (أزرق فاتح - ساطع)
                 ============================================= */
         .floating-btn {
             position: fixed;
-            bottom: 30px;
-            left: 30px;
+            bottom: 100px;
+            left: 24px;
             z-index: 999;
-            background: linear-gradient(135deg, #2d6a4f, #1b4332);
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
             color: #ffffff;
             padding: 16px 28px;
             border-radius: 60px;
@@ -848,14 +830,13 @@
             font-size: 1rem;
             font-weight: 700;
             font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
-            box-shadow: 0 8px 32px rgba(45, 106, 79, 0.4);
+            box-shadow: 0 8px 32px rgba(26, 115, 232, 0.5);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             border: none;
             text-decoration: none;
-            animation: glow 3s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .floating-btn::before {
             content: '';
@@ -863,7 +844,7 @@
             inset: -2px;
             border-radius: 62px;
             padding: 2px;
-            background: linear-gradient(135deg, #2d6a4f, #a8e6cf, #1b4332);
+            background: linear-gradient(135deg, #1a73e8, #90caf9, #0d47a1);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -875,7 +856,7 @@
         }
         .floating-btn:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 12px 48px rgba(45, 106, 79, 0.6);
+            box-shadow: 0 12px 48px rgba(26, 115, 232, 0.7);
         }
         .floating-btn:active {
             transform: scale(0.95);
@@ -883,7 +864,7 @@
         .floating-btn i {
             font-size: 1.4rem;
             transition: 0.3s;
-            color: #a8e6cf;
+            color: #ffffff;
         }
         .floating-btn:hover i {
             transform: rotate(90deg);
@@ -892,23 +873,24 @@
             letter-spacing: 0.5px;
         }
         .floating-btn .btn-badge {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             padding: 2px 10px;
             border-radius: 50px;
             font-size: 0.6rem;
             font-weight: 600;
-            color: #a8e6cf;
+            color: #ffffff;
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @media (max-width: 768px) {
             .floating-btn {
-                bottom: 20px;
-                left: 20px;
-                padding: 14px 20px;
+                bottom: 80px;
+                left: 16px;
+                padding: 12px 18px;
                 font-size: 0.85rem;
-                gap: 10px;
+                gap: 8px;
+                z-index: 1000;
             }
             .floating-btn i {
                 font-size: 1.2rem;
@@ -1117,7 +1099,7 @@
         }
     </script>
 
-    <!-- ===== FLOATING BUTTON (أخضر زمردي) ===== -->
+    <!-- ===== FLOATING BUTTON (أزرق فاتح - ساطع) ===== -->
     <a href="add-invoice.html" class="floating-btn">
         <i class="fas fa-plus"></i>
         <span class="btn-text">حجز جديد</span>
