@@ -5,181 +5,370 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>المصاريف والتشغيل - منتجع حياله</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', 'Tahoma', Arial, sans-serif;
-            background: #f8f9fa;
-            color: #1e2a3a;
-            padding: 30px 20px;
-            direction: rtl;
-        }
-        .container { max-width: 1400px; margin: 0 auto; }
+        /* ============================================================
+                   ROOT VARIABLES - نفس الثيم العصري النيلي
+                ============================================================ */
+        :root {
+            --primary: #0EA5E9;
+            --primary-dark: #0284C7;
+            --primary-gradient: linear-gradient(135deg, #0EA5E9, #3B82F6, #0EA5E9);
 
+            --secondary: #FCD34D;
+            --secondary-gradient: linear-gradient(135deg, #FCD34D, #F59E0B);
+
+            --bg-dark: #0F172A;
+            --bg-card: #1E293B;
+            --bg-card-hover: #2D3B52;
+
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+
+            --glow-primary: 0 0 30px rgba(14, 165, 233, 0.15);
+            --glow-secondary: 0 0 30px rgba(252, 211, 77, 0.15);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            direction: rtl;
+            padding: 30px 20px;
+            min-height: 100vh;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+        }
+
+        /* ===== HEADER ===== */
         .header-main {
-            background: #ffffff;
-            padding: 25px 30px;
-            border-radius: 8px;
-            border-right: 5px solid #1a3a4a;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            background: linear-gradient(145deg, #1E293B, #0F172A);
+            padding: 28px 32px;
+            border-radius: 16px;
+            border-right: 5px solid var(--secondary);
+            box-shadow: var(--shadow-card);
             margin-bottom: 30px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
+            border: 1px solid rgba(14, 165, 233, 0.06);
         }
         .header-main .brand h1 {
             font-size: 1.8rem;
-            font-weight: 700;
-            color: #1a3a4a;
+            font-weight: 800;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-main .brand h1 i {
+            color: var(--primary);
+            font-size: 1.6rem;
         }
         .header-main .brand .sub {
-            color: #5a6a7a;
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
             font-weight: 400;
             margin-top: 2px;
+            padding-right: 10px;
         }
         .header-main .meta {
             text-align: left;
             font-size: 0.75rem;
-            color: #6a7a8a;
-            line-height: 1.6;
+            color: var(--text-muted);
+            line-height: 1.8;
         }
-        .header-main .meta span { color: #1a3a4a; font-weight: 600; }
-        .header-main .meta .gold { color: #a67c52; }
+        .header-main .meta span {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+        .header-main .meta .gold {
+            color: var(--secondary);
+        }
 
+        /* ===== زر العودة ===== */
         .btn-back {
-            display: inline-block;
-            background: #1a3a4a;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-gradient);
             color: #fff;
-            padding: 10px 25px;
-            border-radius: 6px;
+            padding: 12px 28px;
+            border-radius: 12px;
             text-decoration: none;
             font-size: 0.85rem;
-            transition: 0.2s;
-            margin-bottom: 20px;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.2);
         }
-        .btn-back:hover { background: #2a5a6a; }
+        .btn-back:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(14, 165, 233, 0.4);
+        }
 
+        /* ===== KPI ===== */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+            gap: 16px;
             margin-bottom: 25px;
         }
         .kpi-card {
-            background: #ffffff;
-            padding: 18px 16px;
-            border-radius: 8px;
-            border-bottom: 3px solid #a67c52;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.02);
+            background: linear-gradient(145deg, #1E293B, #0F172A);
+            padding: 20px 16px;
+            border-radius: 14px;
+            border-bottom: 3px solid var(--primary);
+            box-shadow: var(--shadow-card);
             text-align: center;
+            border: 1px solid rgba(14, 165, 233, 0.04);
+            transition: 0.3s;
+        }
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            border-bottom-color: var(--secondary);
+            box-shadow: var(--glow-primary);
         }
         .kpi-card .number {
             font-size: 2rem;
-            font-weight: 700;
-            color: #1a3a4a;
+            font-weight: 900;
+            color: var(--secondary);
         }
         .kpi-card .label {
-            font-size: 0.75rem;
-            color: #6a7a8a;
+            font-size: 0.7rem;
+            color: var(--text-muted);
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
             margin-top: 4px;
+            letter-spacing: 0.3px;
         }
         .kpi-card .icon {
-            font-size: 1.4rem;
-            color: #a67c52;
-            margin-bottom: 4px;
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 6px;
         }
 
+        /* ===== SECTION TITLE ===== */
         .section-title {
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #1a3a4a;
-            margin: 30px 0 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #e8edf0;
+            color: var(--secondary);
+            margin: 30px 0 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(252, 211, 77, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--secondary-gradient);
+            border-radius: 10px;
         }
 
+        /* ===== TABLE ===== */
         .table-wrapper {
-            background: #ffffff;
-            border-radius: 8px;
+            background: linear-gradient(145deg, #1E293B, #0F172A);
+            border-radius: 16px;
             overflow-x: auto;
-            border: 1px solid #e8edf0;
+            border: 1px solid rgba(14, 165, 233, 0.04);
+            box-shadow: var(--shadow-card);
             margin-top: 8px;
         }
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0 4px;
             font-size: 0.8rem;
             min-width: 900px;
         }
         th {
-            background: #1a3a4a;
-            color: #ffffff;
-            padding: 12px 10px;
+            background: linear-gradient(145deg, rgba(14, 165, 233, 0.1), rgba(14, 165, 233, 0.05));
+            color: var(--primary);
+            padding: 14px 12px;
             text-align: right;
             white-space: nowrap;
-            font-weight: 600;
-            font-size: 0.75rem;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(14, 165, 233, 0.08);
         }
         td {
-            padding: 10px 10px;
-            border-bottom: 1px solid #f0f3f5;
-            color: #1e2a3a;
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            color: var(--text-secondary);
             font-size: 0.75rem;
+            background: rgba(30, 41, 59, 0.3);
         }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #f8f9fa; }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background: rgba(14, 165, 233, 0.04);
+        }
+
+        /* ===== BADGES ===== */
         .badge-expense {
             display: inline-block;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 0.65rem;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 0.6rem;
             font-weight: 600;
+            letter-spacing: 0.3px;
         }
-        .badge-رواتب { background: #e3f2fd; color: #0d47a1; }
-        .badge-صيانة { background: #fff3e0; color: #e65100; }
-        .badge-مشتريات { background: #e8f5e9; color: #1b5e20; }
-        .badge-تشغيل { background: #fce4ec; color: #880e4f; }
+        .badge-رواتب {
+            background: rgba(14, 165, 233, 0.12);
+            color: #60A5FA;
+            border: 1px solid rgba(14, 165, 233, 0.08);
+        }
+        .badge-صيانة {
+            background: rgba(252, 211, 77, 0.1);
+            color: #FCD34D;
+            border: 1px solid rgba(252, 211, 77, 0.06);
+        }
+        .badge-مشتريات {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.06);
+        }
+        .badge-تشغيل {
+            background: rgba(244, 114, 182, 0.1);
+            color: #F472B6;
+            border: 1px solid rgba(244, 114, 182, 0.06);
+        }
 
+        /* ===== TABLE NOTE ===== */
+        .table-note {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            padding: 14px 0 4px;
+            opacity: 0.6;
+        }
+
+        /* ===== FOOTER ===== */
         .footer {
             text-align: center;
-            color: #8a9aaa;
+            color: var(--text-muted);
             margin-top: 40px;
-            padding-top: 18px;
-            border-top: 1px solid #e8edf0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
             font-size: 0.7rem;
+            opacity: 0.5;
         }
 
-        .loading, .error {
+        /* ===== LOADING & ERROR ===== */
+        .loading,
+        .error {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
             font-size: 0.95rem;
         }
-        .loading { color: #1a3a4a; }
-        .error { color: #b33a3a; }
+        .loading {
+            color: var(--secondary);
+        }
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .error {
+            color: #ef5350;
+        }
         .error small {
             display: block;
             margin-top: 10px;
-            color: #6a7a8a;
+            color: var(--text-muted);
             font-size: 0.75rem;
         }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            body { padding: 15px 10px; }
-            .header-main { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .header-main .meta { text-align: right; width: 100%; }
-            .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .kpi-card .number { font-size: 1.5rem; }
-            table { font-size: 0.7rem; min-width: 700px; }
-            th, td { padding: 6px; }
+            body {
+                padding: 15px 10px;
+            }
+            .header-main {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                padding: 20px;
+            }
+            .header-main .meta {
+                text-align: right;
+                width: 100%;
+            }
+            .header-main .brand h1 {
+                font-size: 1.4rem;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .kpi-card .number {
+                font-size: 1.5rem;
+            }
+            table {
+                font-size: 0.7rem;
+                min-width: 700px;
+            }
+            th,
+            td {
+                padding: 8px 6px;
+            }
+            .btn-back {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
         }
+
         @media (max-width: 480px) {
-            .kpi-grid { grid-template-columns: 1fr; }
-            table { min-width: 550px; }
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            table {
+                min-width: 550px;
+            }
+            .header-main .brand h1 {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -188,27 +377,29 @@
         <!-- HEADER -->
         <div class="header-main">
             <div class="brand">
-                <h1>💰 المصاريف والتشغيل</h1>
-                <div class="sub">منتجع وشاليهات حيالة القصيم</div>
+                <h1><i class="fas fa-wallet"></i> المصاريف والتشغيل</h1>
+                <div class="sub">🏕️ منتجع وشاليهات حيالة القصيم</div>
             </div>
             <div class="meta">
-                <div>📍 القصيم/ بريدة - حي الخليج</div>
+                <div>📍 القصيم / بريدة - حي الخليج</div>
                 <div class="gold">📱 +966509982400</div>
-                <div>آخر تحديث: <span id="updateTime">جاري التحميل...</span></div>
+                <div>🔄 آخر تحديث: <span id="updateTime">جاري التحميل...</span></div>
             </div>
         </div>
 
-        <a href="index.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للوحة الرئيسية</a>
+        <a href="index.html" class="btn-back">
+            <i class="fas fa-arrow-right"></i> العودة للوحة الرئيسية
+        </a>
 
         <!-- KPI -->
-        <div id="kpiContainer"><div class="loading">⏳ جاري تحميل المؤشرات...</div></div>
+        <div id="kpiContainer"><div class="loading"><i class="fas fa-spinner"></i> جاري تحميل المؤشرات...</div></div>
 
         <!-- TABLE -->
-        <div class="section-title">📋 سجل المصاريف</div>
-        <div id="tableContainer"><div class="loading">⏳ جاري تحميل البيانات...</div></div>
+        <div class="section-title"><i class="fas fa-list-ul"></i> سجل المصاريف</div>
+        <div id="tableContainer"><div class="loading"><i class="fas fa-spinner"></i> جاري تحميل البيانات...</div></div>
 
         <!-- FOOTER -->
-        <div class="footer">© 2026 منتجع حياله - القصيم · تصميم محمد خلاف</div>
+        <div class="footer">© 2026 منتجع حياله - القصيم · جميع الحقوق محفوظة · تصميم محمد خلاف</div>
     </div>
 
     <script>
@@ -220,19 +411,21 @@
 
         async function fetchSheetData() {
             try {
-                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const url =
+                    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const csvText = await response.text();
                 const lines = csvText.split('\n').filter(line => line.trim() !== '');
                 return lines.map(line => {
                     const row = [];
-                    let current = '', insideQuotes = false;
+                    let current = '',
+                        insideQuotes = false;
                     for (let i = 0; i < line.length; i++) {
                         const char = line[i];
                         if (char === '"') insideQuotes = !insideQuotes;
-                        else if (char === ',' && !insideQuotes) { row.push(current.trim()); current = ''; }
-                        else current += char;
+                        else if (char === ',' && !insideQuotes) { row.push(current.trim());
+                            current = ''; } else current += char;
                     }
                     row.push(current.trim());
                     return row;
@@ -345,11 +538,15 @@
                 else if (category.includes('مشتريات')) totalPurchases += total;
                 else if (category.includes('تشغيل')) totalOperations += total;
 
-                const property = (idxProperty !== -1 && row[idxProperty]) ? String(row[idxProperty]).trim() : 'غير محدد';
+                const property = (idxProperty !== -1 && row[idxProperty]) ? String(row[idxProperty]).trim() :
+                'غير محدد';
                 propertyExpenses[property] = (propertyExpenses[property] || 0) + total;
             });
 
             const sortedProps = Object.entries(propertyExpenses).sort((a, b) => b[1] - a[1]);
+
+            // ===== حفظ المصاريف في localStorage للصفحة الرئيسية =====
+            localStorage.setItem('expensesTotal', JSON.stringify(totalExpenses));
 
             // ===== عرض بطاقات KPI =====
             kpiContainer.innerHTML = `
@@ -384,7 +581,7 @@
                     ${sortedProps.slice(0, 4).map(([name, amount]) => `
                         <div class="kpi-card">
                             <div class="number">${amount.toLocaleString()} ر.س</div>
-                            <div class="label">${name}</div>
+                            <div class="label">🏠 ${name}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -423,7 +620,7 @@
                     <td>${(idxDescription !== -1 && row[idxDescription]) ? row[idxDescription] : '-'}</td>
                     <td>${(idxQuantity !== -1 && row[idxQuantity]) ? row[idxQuantity] : '-'}</td>
                     <td>${(idxDailyCost !== -1 && row[idxDailyCost]) ? row[idxDailyCost] : '-'}</td>
-                    <td style="font-weight:600;color:#1a3a4a;">${total.toLocaleString()} ر.س</td>
+                    <td style="font-weight:600;color:var(--secondary);">${total.toLocaleString()} ر.س</td>
                 </tr>`;
             });
 
@@ -440,10 +637,10 @@
                             <th>التكلفة اليومية</th>
                             <th>المبلغ الإجمالي</th>
                         </tr></thead>
-                        <tbody>${tableRows || '<tr><td colspan="8" style="text-align:center;color:#8a9aaa;padding:20px;">لا توجد مصاريف</td></tr>'}</tbody>
+                        <tbody>${tableRows || '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:30px;">📭 لا توجد مصاريف مسجلة</td></tr>'}</tbody>
                     </table>
                 </div>
-                <div class="table-note">يعرض آخر 50 سجل · مرتب حسب التاريخ (الأحدث أولاً) · إجمالي المصاريف: ${totalExpenses.toLocaleString()} ر.س</div>
+                <div class="table-note">📌 يعرض آخر 50 سجل · مرتب حسب التاريخ (الأحدث أولاً) · إجمالي المصاريف: ${totalExpenses.toLocaleString()} ر.س</div>
             `;
         }
 
