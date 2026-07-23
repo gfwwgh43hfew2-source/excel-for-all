@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>لوحة الكهرباء - منتجع حياله</title>
+    <title>المصاريف والتشغيل - منتجع حياله</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
@@ -242,6 +242,36 @@
             background: rgba(14, 165, 233, 0.04);
         }
 
+        /* ===== BADGES ===== */
+        .badge-expense {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .badge-رواتب {
+            background: rgba(14, 165, 233, 0.12);
+            color: #60A5FA;
+            border: 1px solid rgba(14, 165, 233, 0.08);
+        }
+        .badge-صيانة {
+            background: rgba(252, 211, 77, 0.1);
+            color: #FCD34D;
+            border: 1px solid rgba(252, 211, 77, 0.06);
+        }
+        .badge-مشتريات {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.06);
+        }
+        .badge-تشغيل {
+            background: rgba(244, 114, 182, 0.1);
+            color: #F472B6;
+            border: 1px solid rgba(244, 114, 182, 0.06);
+        }
+
         /* ===== STATUS BADGES ===== */
         .status-badge {
             display: inline-flex;
@@ -318,6 +348,34 @@
             opacity: 0.5;
         }
 
+        /* ===== LOADING & ERROR ===== */
+        .loading,
+        .error {
+            text-align: center;
+            padding: 50px 20px;
+            font-size: 0.95rem;
+        }
+        .loading {
+            color: var(--secondary);
+        }
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .error {
+            color: #ef5350;
+        }
+        .error small {
+            display: block;
+            margin-top: 10px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             body {
@@ -381,7 +439,7 @@
         <!-- HEADER -->
         <div class="header-main">
             <div class="brand">
-                <h1><i class="fas fa-bolt"></i> لوحة الكهرباء</h1>
+                <h1><i class="fas fa-wallet"></i> المصاريف والتشغيل</h1>
                 <div class="sub">🏕️ منتجع وشاليهات حيالة القصيم</div>
             </div>
             <div class="meta">
@@ -395,55 +453,64 @@
             <i class="fas fa-arrow-right"></i> العودة للوحة الرئيسية
         </a>
 
-        <!-- KPI -->
-        <div id="kpiContainer">
-            <div class="kpi-grid">
-                <div class="kpi-card">
-                    <div class="icon">⚡</div>
-                    <div class="number" id="totalConsumption">0</div>
-                    <div class="label">إجمالي الاستهلاك (كيلوواط/ساعة)</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="icon">💰</div>
-                    <div class="number" id="totalCost">0</div>
-                    <div class="label">إجمالي التكلفة (ر.س)</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="icon">🏠</div>
-                    <div class="number" id="activeUnits">0</div>
-                    <div class="label">الوحدات النشطة</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="icon">⚠️</div>
-                    <div class="number" id="maintenanceUnits">0</div>
-                    <div class="label">وحدات تحت الصيانة</div>
-                </div>
+        <!-- KPI المصاريف -->
+        <div id="kpiContainer"><div class="loading"><i class="fas fa-spinner"></i> جاري تحميل المؤشرات...</div></div>
+
+        <!-- TABLE المصاريف -->
+        <div class="section-title"><i class="fas fa-list-ul"></i> سجل المصاريف</div>
+        <div id="tableContainer"><div class="loading"><i class="fas fa-spinner"></i> جاري تحميل البيانات...</div></div>
+
+        <!-- ============================================================
+        🔌 لوحة الكهرباء - قسم جديد
+        ============================================================ -->
+        <div class="section-title" style="margin-top:40px;">
+            <i class="fas fa-bolt" style="color:var(--primary);"></i> لوحة استهلاك الكهرباء
+        </div>
+
+        <!-- KPI الكهرباء -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="icon">⚡</div>
+                <div class="number" id="totalConsumption">0</div>
+                <div class="label">إجمالي الاستهلاك (ك.و/س)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="icon">💰</div>
+                <div class="number" id="totalCost">0</div>
+                <div class="label">إجمالي التكلفة (ر.س)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="icon">🏠</div>
+                <div class="number" id="activeUnits">0</div>
+                <div class="label">الوحدات النشطة</div>
+            </div>
+            <div class="kpi-card">
+                <div class="icon">⚠️</div>
+                <div class="number" id="maintenanceUnits">0</div>
+                <div class="label">وحدات تحت الصيانة</div>
             </div>
         </div>
 
-        <!-- TABLE -->
-        <div class="section-title"><i class="fas fa-table"></i> سجل استهلاك الكهرباء</div>
-        <div id="tableContainer">
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>الوحدة</th>
-                            <th>الاستهلاك (ك.و/س)</th>
-                            <th>التكلفة (ر.س)</th>
-                            <th>نسبة الاستهلاك</th>
-                            <th>الحالة</th>
-                            <th>آخر قراءة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- سيتم تعبئته بواسطة JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="table-note">📌 يعرض آخر 50 سجل · مرتب حسب الاستهلاك (الأعلى أولاً)</div>
+        <!-- TABLE الكهرباء -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الوحدة</th>
+                        <th>الاستهلاك (ك.و/س)</th>
+                        <th>التكلفة (ر.س)</th>
+                        <th>نسبة الاستهلاك</th>
+                        <th>الحالة</th>
+                        <th>آخر قراءة</th>
+                    </tr>
+                </thead>
+                <tbody id="electricityTableBody">
+                    <!-- سيتم تعبئته بواسطة JavaScript -->
+                </tbody>
+            </table>
         </div>
+        <div class="table-note">📌 مرتب حسب الاستهلاك (الأعلى أولاً) · يتم تحديث البيانات تلقائياً</div>
 
         <!-- FOOTER -->
         <div class="footer">© 2026 منتجع حياله - القصيم · جميع الحقوق محفوظة · تصميم محمد خلاف</div>
@@ -451,7 +518,13 @@
 
     <script>
         // =============================================
-        // بيانات الكهرباء التجريبية
+        // 🔑 بيانات الشيت - المصاريف
+        // =============================================
+        const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
+        const SHEET_NAME = 'المصاريف والتشغيل';
+
+        // =============================================
+        // 🔌 بيانات الكهرباء التجريبية
         // =============================================
         const electricityData = [{
             id: 1,
@@ -540,56 +613,283 @@
         }];
 
         // =============================================
-        // حساب المؤشرات
+        // دالة جلب بيانات المصاريف
         // =============================================
-        function calculateStats(data) {
+        async function fetchSheetData() {
+            try {
+                const url =
+                    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const csvText = await response.text();
+                const lines = csvText.split('\n').filter(line => line.trim() !== '');
+                return lines.map(line => {
+                    const row = [];
+                    let current = '',
+                        insideQuotes = false;
+                    for (let i = 0; i < line.length; i++) {
+                        const char = line[i];
+                        if (char === '"') insideQuotes = !insideQuotes;
+                        else if (char === ',' && !insideQuotes) { row.push(current.trim());
+                            current = ''; } else current += char;
+                    }
+                    row.push(current.trim());
+                    return row;
+                });
+            } catch (error) { console.error(error); return null; }
+        }
+
+        function cleanNumber(value) {
+            if (!value) return 0;
+            if (typeof value === 'number') return value;
+            const cleaned = String(value).replace(/[^0-9.]/g, '');
+            return parseFloat(cleaned) || 0;
+        }
+
+        function findColumnIndex(headers, target) {
+            const clean = s => String(s).trim().replace(/\s+/g, ' ');
+            let idx = headers.findIndex(h => clean(h) === clean(target));
+            if (idx !== -1) return idx;
+            return headers.findIndex(h => clean(h).includes(clean(target)));
+        }
+
+        function getBadgeClass(category) {
+            const map = {
+                'رواتب': 'رواتب',
+                'صيانة': 'صيانة',
+                'مشتريات': 'مشتريات',
+                'تشغيل': 'تشغيل'
+            };
+            return map[category] || '';
+        }
+
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            try {
+                let cleaned = String(dateStr).trim().replace(/\s+/g, ' ');
+                cleaned = cleaned.split(' ')[0];
+                let parts = cleaned.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]) - 1;
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        return new Date(year, month, day);
+                    }
+                }
+                parts = cleaned.split('-');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]) - 1;
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        return new Date(year, month, day);
+                    }
+                }
+                return null;
+            } catch (e) { return null; }
+        }
+
+        // =============================================
+        // دالة عرض بيانات المصاريف
+        // =============================================
+        function displayData(data) {
+            const kpiContainer = document.getElementById('kpiContainer');
+            const tableContainer = document.getElementById('tableContainer');
+            const timeEl = document.getElementById('updateTime');
+
+            if (!data || data.length < 2) {
+                kpiContainer.innerHTML = `<div class="error">❌ لا توجد بيانات</div>`;
+                tableContainer.innerHTML = `<div class="error">❌ لا توجد بيانات</div>`;
+                return;
+            }
+
+            const now = new Date();
+            timeEl.textContent = now.toLocaleString('ar-EG');
+
+            const headers = data[0].map(h => String(h).trim());
+            const rows = data.slice(1);
+
+            // ===== البحث عن الأعمدة =====
+            const idxDate = findColumnIndex(headers, 'التاريخ ميلادي');
+            const idxDay = findColumnIndex(headers, 'اليوم');
+            const idxProperty = findColumnIndex(headers, 'العقار المعني');
+            const idxCategory = findColumnIndex(headers, 'قسم النفقات');
+            const idxDescription = findColumnIndex(headers, 'البيان / التفصيل التفصيلي');
+            const idxQuantity = findColumnIndex(headers, 'الكمية / المدة');
+            const idxDailyCost = findColumnIndex(headers, 'التكلفة اليومية/الفرعية');
+            const idxTotal = findColumnIndex(headers, 'المبلغ الإجمالي المصروف');
+
+            if (idxTotal === -1) {
+                kpiContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
+                tableContainer.innerHTML = `<div class="error">❌ لم يتم العثور على أعمدة البيانات</div>`;
+                return;
+            }
+
+            // ===== حساب المؤشرات =====
+            let totalExpenses = 0;
+            let totalSalaries = 0;
+            let totalMaintenance = 0;
+            let totalPurchases = 0;
+            let totalOperations = 0;
+            const propertyExpenses = {};
+
+            rows.forEach(row => {
+                if (!row || row.length === 0) return;
+                const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
+                if (total === 0) return;
+
+                totalExpenses += total;
+
+                const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : '';
+                if (category.includes('رواتب')) totalSalaries += total;
+                else if (category.includes('صيانة')) totalMaintenance += total;
+                else if (category.includes('مشتريات')) totalPurchases += total;
+                else if (category.includes('تشغيل')) totalOperations += total;
+
+                const property = (idxProperty !== -1 && row[idxProperty]) ? String(row[idxProperty]).trim() :
+                'غير محدد';
+                propertyExpenses[property] = (propertyExpenses[property] || 0) + total;
+            });
+
+            const sortedProps = Object.entries(propertyExpenses).sort((a, b) => b[1] - a[1]);
+
+            // ===== حفظ المصاريف في localStorage للصفحة الرئيسية =====
+            localStorage.setItem('expensesTotal', JSON.stringify(totalExpenses));
+
+            // ===== عرض بطاقات KPI =====
+            kpiContainer.innerHTML = `
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="icon">💰</div>
+                        <div class="number">${totalExpenses.toLocaleString()} ر.س</div>
+                        <div class="label">إجمالي المصاريف</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">👤</div>
+                        <div class="number">${totalSalaries.toLocaleString()} ر.س</div>
+                        <div class="label">الرواتب</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">🔧</div>
+                        <div class="number">${totalMaintenance.toLocaleString()} ر.س</div>
+                        <div class="label">الصيانة</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">🛒</div>
+                        <div class="number">${totalPurchases.toLocaleString()} ر.س</div>
+                        <div class="label">المشتريات</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="icon">⚡</div>
+                        <div class="number">${totalOperations.toLocaleString()} ر.س</div>
+                        <div class="label">التشغيل</div>
+                    </div>
+                </div>
+                <div class="kpi-grid" style="margin-top:10px;">
+                    ${sortedProps.slice(0, 4).map(([name, amount]) => `
+                        <div class="kpi-card">
+                            <div class="number">${amount.toLocaleString()} ر.س</div>
+                            <div class="label">🏠 ${name}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // ===== ترتيب الصفوف حسب التاريخ (الأحدث أولاً) =====
+            const sortedRows = [...rows].filter(row => {
+                if (!row || row.length === 0) return false;
+                const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
+                return total !== 0;
+            }).sort((a, b) => {
+                const dateA = a[idxDate] ? parseDate(a[idxDate]) : null;
+                const dateB = b[idxDate] ? parseDate(b[idxDate]) : null;
+                if (!dateA && !dateB) return 0;
+                if (!dateA) return 1;
+                if (!dateB) return -1;
+                return dateB - dateA;
+            });
+
+            // ===== عرض الجدول =====
+            let tableRows = '';
+            const displayRows = sortedRows.slice(0, 50);
+            displayRows.forEach(row => {
+                if (!row || row.length === 0) return;
+                const total = row[idxTotal] ? cleanNumber(row[idxTotal]) : 0;
+                if (total === 0) return;
+
+                const category = (idxCategory !== -1 && row[idxCategory]) ? String(row[idxCategory]).trim() : '-';
+                const badgeClass = getBadgeClass(category);
+
+                tableRows += `<tr>
+                    <td>${(idxDate !== -1 && row[idxDate]) ? row[idxDate] : '-'}</td>
+                    <td>${(idxDay !== -1 && row[idxDay]) ? row[idxDay] : '-'}</td>
+                    <td>${(idxProperty !== -1 && row[idxProperty]) ? row[idxProperty] : '-'}</td>
+                    <td><span class="badge-expense badge-${badgeClass}">${category}</span></td>
+                    <td>${(idxDescription !== -1 && row[idxDescription]) ? row[idxDescription] : '-'}</td>
+                    <td>${(idxQuantity !== -1 && row[idxQuantity]) ? row[idxQuantity] : '-'}</td>
+                    <td>${(idxDailyCost !== -1 && row[idxDailyCost]) ? row[idxDailyCost] : '-'}</td>
+                    <td style="font-weight:600;color:var(--secondary);">${total.toLocaleString()} ر.س</td>
+                </tr>`;
+            });
+
+            tableContainer.innerHTML = `
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr>
+                            <th>التاريخ</th>
+                            <th>اليوم</th>
+                            <th>العقار المعني</th>
+                            <th>قسم النفقات</th>
+                            <th>البيان</th>
+                            <th>الكمية</th>
+                            <th>التكلفة اليومية</th>
+                            <th>المبلغ الإجمالي</th>
+                        </tr></thead>
+                        <tbody>${tableRows || '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:30px;">📭 لا توجد مصاريف مسجلة</td></tr>'}</tbody>
+                    </table>
+                </div>
+                <div class="table-note">📌 يعرض آخر 50 سجل · مرتب حسب التاريخ (الأحدث أولاً) · إجمالي المصاريف: ${totalExpenses.toLocaleString()} ر.س</div>
+            `;
+        }
+
+        // =============================================
+        // 🔌 دالة عرض بيانات الكهرباء
+        // =============================================
+        function displayElectricity() {
+            // حساب المؤشرات
             let totalConsumption = 0;
             let totalCost = 0;
             let activeUnits = 0;
             let maintenanceUnits = 0;
 
-            data.forEach(item => {
+            electricityData.forEach(item => {
                 totalConsumption += item.consumption;
                 totalCost += item.cost;
                 if (item.status === 'on') activeUnits++;
                 if (item.status === 'maintenance') maintenanceUnits++;
             });
 
-            return { totalConsumption, totalCost, activeUnits, maintenanceUnits };
-        }
-
-        // =============================================
-        // عرض البيانات
-        // =============================================
-        function displayData() {
-            const now = new Date();
-            document.getElementById('updateTime').textContent = now.toLocaleString('ar-EG');
-
-            // حساب المؤشرات
-            const stats = calculateStats(electricityData);
-            document.getElementById('totalConsumption').textContent = stats.totalConsumption.toLocaleString();
-            document.getElementById('totalCost').textContent = stats.totalCost.toLocaleString() + ' ر.س';
-            document.getElementById('activeUnits').textContent = stats.activeUnits;
-            document.getElementById('maintenanceUnits').textContent = stats.maintenanceUnits;
+            document.getElementById('totalConsumption').textContent = totalConsumption.toLocaleString();
+            document.getElementById('totalCost').textContent = totalCost.toLocaleString() + ' ر.س';
+            document.getElementById('activeUnits').textContent = activeUnits;
+            document.getElementById('maintenanceUnits').textContent = maintenanceUnits;
 
             // ترتيب البيانات حسب الاستهلاك (الأعلى أولاً)
             const sortedData = [...electricityData].sort((a, b) => b.consumption - a.consumption);
 
             // عرض الجدول
-            const tbody = document.getElementById('tableBody');
+            const tbody = document.getElementById('electricityTableBody');
             let rows = '';
+            const maxConsumption = sortedData[0]?.consumption || 1;
 
             sortedData.forEach((item, index) => {
-                // حساب نسبة الاستهلاك
-                const maxConsumption = sortedData[0]?.consumption || 1;
                 const percentage = Math.round((item.consumption / maxConsumption) * 100);
 
-                // تحديد لون شريط الاستهلاك
                 let barClass = 'low';
                 if (percentage > 70) barClass = 'high';
                 else if (percentage > 40) barClass = 'medium';
 
-                // تحديد حالة الوحدة
                 let statusHtml = '';
                 if (item.status === 'on') {
                     statusHtml = `<span class="status-badge status-on"><i class="fas fa-circle"></i> نشط</span>`;
@@ -630,10 +930,28 @@
         // =============================================
         // تحميل البيانات
         // =============================================
-        displayData();
+        async function loadData() {
+            const data = await fetchSheetData();
+            if (data && data.length > 0) displayData(data);
+            else {
+                document.getElementById('kpiContainer').innerHTML = `
+                    <div class="error">❌ حدث خطأ في تحميل البيانات
+                        <small>تأكد من:
+                            <br>1. أن الشيت عام للقراءة
+                            <br>2. أن اسم التبويب "${SHEET_NAME}" صحيح
+                            <br>3. أن هناك بيانات في الشيت
+                        </small>
+                    </div>
+                `;
+                document.getElementById('tableContainer').innerHTML = '';
+            }
 
-        // تحديث كل 5 دقائق
-        setInterval(displayData, 300000);
+            // عرض بيانات الكهرباء
+            displayElectricity();
+        }
+
+        loadData();
+        setInterval(loadData, 300000);
     </script>
 </body>
 </html>
