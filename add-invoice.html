@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إضافة فاتورة جديدة - منتجع حياله</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== GENERAL ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #0a0f1f;
+            color: #eee;
+            direction: rtl;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        /* ===== FORM CARD ===== */
+        .form-card {
+            background: linear-gradient(145deg, #121a2e, #0e1525);
+            border-radius: 24px;
+            padding: 40px 35px;
+            border: 1px solid rgba(245, 200, 66, 0.06);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .form-card .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .form-card .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f5c842, #d4a020);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .form-card .logo p {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+        }
+        
+        /* ===== FORM ===== */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .form-group label .required {
+            color: #ef5350;
+            margin-right: 2px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.03);
+            color: #fff;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: rgba(245, 200, 66, 0.3);
+            outline: none;
+            background: rgba(255,255,255,0.05);
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.2);
+        }
+        .form-group select option {
+            background: #121a2e;
+            color: #fff;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .form-group input[readonly] {
+            color: #f5c842;
+            font-weight: 600;
+            cursor: not-allowed;
+        }
+        
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #f5c842, #d4a020);
+            color: #0a0f1f;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+            margin-top: 10px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(245,200,66,0.25);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(245, 200, 66, 0.15);
+            color: rgba(255,255,255,0.4);
+            background: transparent;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+            margin-top: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-secondary:hover {
+            background: rgba(245, 200, 66, 0.05);
+            border-color: rgba(245, 200, 66, 0.3);
+            color: #f5c842;
+        }
+        
+        /* ===== MESSAGES ===== */
+        .message {
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .message.success {
+            display: block;
+            background: rgba(43, 138, 62, 0.15);
+            color: #4caf50;
+            border: 1px solid rgba(43, 138, 62, 0.1);
+        }
+        .message.error {
+            display: block;
+            background: rgba(201, 42, 42, 0.12);
+            color: #ef5350;
+            border: 1px solid rgba(201, 42, 42, 0.08);
+        }
+        
+        /* ===== PRINT DIALOG ===== */
+        .print-dialog {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .print-dialog.show {
+            display: flex;
+        }
+        .print-dialog .dialog-box {
+            background: #121a2e;
+            border-radius: 24px;
+            padding: 40px 35px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(245, 200, 66, 0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .print-dialog .dialog-box .icon {
+            font-size: 4rem;
+            color: #4caf50;
+            margin-bottom: 15px;
+        }
+        .print-dialog .dialog-box h2 {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .print-dialog .dialog-box p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+        .print-dialog .dialog-box .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+        .print-dialog .dialog-box .btn-group button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+        .print-dialog .dialog-box .btn-group .btn-yes {
+            background: linear-gradient(135deg, #f5c842, #d4a020);
+            color: #0a0f1f;
+        }
+        .print-dialog .dialog-box .btn-group .btn-yes:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(245,200,66,0.25);
+        }
+        .print-dialog .dialog-box .btn-group .btn-no {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .print-dialog .dialog-box .btn-group .btn-no:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 10px;
+        }
+        .loading-spinner i {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* ===== LINKS ===== */
+        .links {
+            text-align: center;
+            margin-top: 16px;
+        }
+        .links a {
+            color: rgba(255,255,255,0.25);
+            font-size: 0.8rem;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .links a:hover {
+            color: #f5c842;
+        }
+        .links .sep {
+            color: rgba(255,255,255,0.06);
+            margin: 0 6px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        /* =============================================
+                   INVOICE PRINT STYLES
+                ============================================= */
+        .invoice-container {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .invoice-container .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #1a3a4a;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .invoice-container .invoice-header .brand h2 {
+            color: #1a3a4a;
+            font-size: 1.5rem;
+        }
+        .invoice-container .invoice-header .brand p {
+            color: #5a6a7a;
+            font-size: 0.8rem;
+        }
+        .invoice-container .invoice-header .invoice-number {
+            text-align: left;
+        }
+        .invoice-container .invoice-header .invoice-number h3 {
+            color: #1a3a4a;
+            font-size: 1.2rem;
+        }
+        .invoice-container .invoice-header .invoice-number p {
+            color: #6a7a8a;
+            font-size: 0.7rem;
+        }
+        
+        .invoice-container .invoice-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .invoice-container .invoice-details .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .invoice-container .invoice-details .detail-item .label {
+            font-size: 0.7rem;
+            color: #6a7a8a;
+            font-weight: 600;
+        }
+        .invoice-container .invoice-details .detail-item .value {
+            font-size: 1rem;
+            color: #1a3a4a;
+            font-weight: 700;
+        }
+        
+        .invoice-container .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .invoice-container .invoice-table th {
+            background: #1a3a4a;
+            color: #fff;
+            padding: 10px;
+            text-align: right;
+            font-size: 0.75rem;
+        }
+        .invoice-container .invoice-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e8edf0;
+            color: #1e2a3a;
+            font-size: 0.8rem;
+        }
+        .invoice-container .invoice-table .total-row td {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .invoice-container .invoice-table .total-row .label {
+            color: #1a3a4a;
+        }
+        .invoice-container .invoice-table .total-row .value {
+            color: #a67c52;
+            font-size: 1.2rem;
+        }
+        
+        .invoice-container .invoice-footer {
+            border-top: 1px solid #e8edf0;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #6a7a8a;
+        }
+        .invoice-container .invoice-footer .signature {
+            text-align: left;
+        }
+        .invoice-container .invoice-footer .signature .line {
+            width: 150px;
+            border-bottom: 1px solid #1a3a4a;
+            margin-top: 5px;
+        }
+        
+        .print-btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .print-btn-container .btn-print-invoice {
+            background: #1a3a4a;
+            color: #fff;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .print-btn-container .btn-print-invoice:hover {
+            background: #2a5a6a;
+            transform: translateY(-2px);
+        }
+        
+        /* =============================================
+                   PRINT MEDIA QUERY
+                ============================================= */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .invoice-container, .invoice-container * {
+                visibility: visible;
+            }
+            .invoice-container {
+                display: block !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                margin: 0 auto;
+                padding: 20px;
+                background: #fff;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+        
+        /* =============================================
+                   RESPONSIVE
+                ============================================= */
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-card {
+                padding: 20px 16px;
+            }
+            .invoice-container .invoice-details {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .invoice-container .invoice-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            .invoice-container .invoice-header .invoice-number {
+                text-align: center;
+            }
+            .print-dialog .dialog-box {
+                padding: 30px 20px;
+                margin: 0 15px;
+            }
+            .print-dialog .dialog-box .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- ===== FORM CARD ===== -->
+        <div class="form-card no-print">
+            <div class="logo">
+                <h1>🏕️ منتجع حياله</h1>
+                <p>إضافة فاتورة جديدة</p>
+            </div>
+
+            <form id="invoiceForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📋 رقم الحجز <span class="required">*</span></label>
+                        <input type="number" id="bookingNumber" placeholder="مثال: 16" required />
+                    </div>
+                    <div class="form-group">
+                        <label>📅 تاريخ الفاتورة <span class="required">*</span></label>
+                        <input type="date" id="invoiceDate" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📅 تاريخ الدخول <span class="required">*</span></label>
+                        <input type="date" id="checkIn" required />
+                    </div>
+                    <div class="form-group">
+                        <label>📅 تاريخ الخروج <span class="required">*</span></label>
+                        <input type="date" id="checkOut" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📆 اليوم <span class="required">*</span></label>
+                        <select id="day" required>
+                            <option value="">اختر اليوم</option>
+                            <option value="الأحد">الأحد</option>
+                            <option value="الإثنين">الإثنين</option>
+                            <option value="الثلاثاء">الثلاثاء</option>
+                            <option value="الأربعاء">الأربعاء</option>
+                            <option value="الخميس">الخميس</option>
+                            <option value="الجمعة">الجمعة</option>
+                            <option value="السبت">السبت</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>👤 اسم الحجز <span class="required">*</span></label>
+                        <input type="text" id="guestName" placeholder="مثال: ابو خالد" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📱 رقم الجوال</label>
+                        <input type="text" id="phone" placeholder="مثال: 0501234567" />
+                    </div>
+                    <div class="form-group">
+                        <label>🏠 نوع الحجز (العقار) <span class="required">*</span></label>
+                        <select id="propertyType" required>
+                            <option value="">اختر العقار</option>
+                            <option value="شاليه رقم 1">شاليه رقم 1</option>
+                            <option value="شاليه رقم 2">شاليه رقم 2</option>
+                            <option value="شاليه رقم 3">شاليه رقم 3</option>
+                            <option value="شاليه رقم 4">شاليه رقم 4</option>
+                            <option value="المزرعة">المزرعة</option>
+                            <option value="عام لكافة العقارات">عام لكافة العقارات</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📊 عدد أيام المبيت <span class="required">*</span></label>
+                        <input type="number" id="nights" placeholder="مثال: 2" required />
+                    </div>
+                    <div class="form-group">
+                        <label>💰 السعر اليومي <span class="required">*</span></label>
+                        <input type="number" id="dailyPrice" placeholder="مثال: 500" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>🏷️ الخصم</label>
+                        <input type="number" id="discount" placeholder="مثال: 0" value="0" />
+                    </div>
+                    <div class="form-group">
+                        <label>💵 المدفوع <span class="required">*</span></label>
+                        <input type="number" id="paid" placeholder="مثال: 500" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>⏳ المتبقي</label>
+                        <input type="number" id="remaining" placeholder="يحسب تلقائياً" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label>💰 الإجمالي (صافي الإيراد) <span class="required">*</span></label>
+                        <input type="number" id="total" placeholder="مثال: 1000" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📌 حالة السداد <span class="required">*</span></label>
+                        <select id="paymentStatus" required>
+                            <option value="Balance Due">Balance Due (متبقي)</option>
+                            <option value="Fully Paid">Fully Paid (مدفوع بالكامل)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>🏨 نوع الإقامة <span class="required">*</span></label>
+                        <select id="stayType" required>
+                            <option value="مبيت">مبيت</option>
+                            <option value="بدون مبيت">بدون مبيت</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>⏰ وقت الدخول</label>
+                        <input type="time" id="checkInTime" />
+                    </div>
+                    <div class="form-group">
+                        <label>⏰ وقت الخروج</label>
+                        <input type="time" id="checkOutTime" />
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>📝 ملاحظة الوقت</label>
+                    <textarea id="timeNote" placeholder="أي ملاحظات إضافية..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <i class="fas fa-save"></i> حفظ الفاتورة
+                </button>
+                <div class="loading-spinner" id="loadingSpinner">
+                    <i class="fas fa-spinner"></i> جاري الحفظ...
+                </div>
+                <div id="message" class="message"></div>
+            </form>
+
+            <div class="links">
+                <a href="index.html">🏠 العودة للرئيسية</a>
+                <span class="sep">|</span>
+                <a href="login.html">🚪 تسجيل الخروج</a>
+            </div>
+        </div>
+
+        <!-- =============================================
+        PRINT DIALOG
+        ============================================= -->
+        <div class="print-dialog" id="printDialog">
+            <div class="dialog-box">
+                <div class="icon">✅</div>
+                <h2>تم حفظ الفاتورة بنجاح!</h2>
+                <p>هل تريد طباعة الفاتورة الآن؟</p>
+                <div class="btn-group">
+                    <button class="btn-yes" id="printYes">🖨️ نعم، طباعة</button>
+                    <button class="btn-no" id="printNo">لا، شكراً</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- =============================================
+        INVOICE PREVIEW
+        ============================================= -->
+        <div class="invoice-container" id="invoicePreview">
+            <div class="invoice-header">
+                <div class="brand">
+                    <h2>🏕️ منتجع حياله - القصيم</h2>
+                    <p>النظام المالي والإداري لإدارة منتجع وشاليهات حيالة القصيم</p>
+                    <p style="font-size:0.7rem;color:#8a9aaa;">📍 القصيم/ بريدة - حي الخليج · 📱 +966509982400</p>
+                </div>
+                <div class="invoice-number">
+                    <h3>فاتورة رقم: <span id="invNumber">0001</span></h3>
+                    <p>التاريخ: <span id="invDate">-</span></p>
+                </div>
+            </div>
+
+            <div class="invoice-details">
+                <div class="detail-item">
+                    <span class="label">اسم العميل</span>
+                    <span class="value" id="invGuestName">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">رقم الجوال</span>
+                    <span class="value" id="invPhone">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">نوع العقار</span>
+                    <span class="value" id="invProperty">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">نوع الإقامة</span>
+                    <span class="value" id="invStayType">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">تاريخ الدخول</span>
+                    <span class="value" id="invCheckIn">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">تاريخ الخروج</span>
+                    <span class="value" id="invCheckOut">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">عدد أيام المبيت</span>
+                    <span class="value" id="invNights">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label">السعر اليومي</span>
+                    <span class="value" id="invDailyPrice">-</span>
+                </div>
+            </div>
+
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th>البيان</th>
+                        <th>العدد</th>
+                        <th>السعر</th>
+                        <th>الإجمالي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="invDescription">إقامة في منتجع حياله</td>
+                        <td id="invQty">-</td>
+                        <td id="invUnitPrice">-</td>
+                        <td id="invSubTotal">-</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align:left;"><strong>الخصم</strong></td>
+                        <td id="invDiscount">-</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align:left;"><strong>الإجمالي</strong></td>
+                        <td class="value" id="invTotal">-</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align:left;"><strong>المدفوع</strong></td>
+                        <td class="value" id="invPaid">-</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align:left;"><strong>المتبقي</strong></td>
+                        <td class="value" id="invRemaining">-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="invoice-footer">
+                <div>
+                    <p>حالة السداد: <span id="invStatus">-</span></p>
+                    <p style="font-size:0.65rem;color:#8a9aaa;" id="invNote">-</p>
+                </div>
+                <div class="signature">
+                    <p>توقيع المستلم</p>
+                    <div class="line"></div>
+                    <p style="font-size:0.6rem;color:#8a9aaa;">شكراً لثقتكم بنا</p>
+                </div>
+            </div>
+
+            <div class="print-btn-container no-print">
+                <button class="btn-print-invoice" onclick="window.print()">
+                    <i class="fas fa-print"></i> طباعة الفاتورة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // 🔑 رابط سكريبت الفواتير (الإصدار 8)
+        // =============================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfojssy8iAlpko9YAJ5jSiDyyGuQ_3k_OlwZTHa3nOhK0JbWtoj-sCVhSe_KIkYBm9Cw/exec';
+
+        // =============================================
+        // حساب المتبقي تلقائياً
+        // =============================================
+        const totalInput = document.getElementById('total');
+        const paidInput = document.getElementById('paid');
+        const remainingInput = document.getElementById('remaining');
+
+        function calculateRemaining() {
+            const total = parseFloat(totalInput.value) || 0;
+            const paid = parseFloat(paidInput.value) || 0;
+            remainingInput.value = (total - paid).toFixed(2);
+        }
+
+        totalInput.addEventListener('input', calculateRemaining);
+        paidInput.addEventListener('input', calculateRemaining);
+
+        // =============================================
+        // المتغيرات
+        // =============================================
+        let lastSavedData = null;
+        const printDialog = document.getElementById('printDialog');
+        const invoicePreview = document.getElementById('invoicePreview');
+
+        // =============================================
+        // عرض الفاتورة للطباعة
+        // =============================================
+        function showInvoice(data) {
+            // تعبئة الفاتورة
+            document.getElementById('invNumber').textContent = data.bookingNumber.padStart(4, '0');
+            document.getElementById('invDate').textContent = data.invoiceDate;
+            document.getElementById('invGuestName').textContent = data.guestName;
+            document.getElementById('invPhone').textContent = data.phone || '-';
+            document.getElementById('invProperty').textContent = data.propertyType;
+            document.getElementById('invStayType').textContent = data.stayType;
+            document.getElementById('invCheckIn').textContent = data.checkIn + (data.checkInTime ? ' (' + data.checkInTime + ')' : '');
+            document.getElementById('invCheckOut').textContent = data.checkOut + (data.checkOutTime ? ' (' + data.checkOutTime + ')' : '');
+            document.getElementById('invNights').textContent = data.nights;
+            document.getElementById('invDailyPrice').textContent = data.dailyPrice + ' ر.س';
+            document.getElementById('invDescription').textContent = 'إقامة في ' + data.propertyType;
+            document.getElementById('invQty').textContent = data.nights;
+            document.getElementById('invUnitPrice').textContent = data.dailyPrice + ' ر.س';
+            document.getElementById('invSubTotal').textContent = (parseFloat(data.nights) * parseFloat(data.dailyPrice)).toFixed(2) + ' ر.س';
+            document.getElementById('invDiscount').textContent = data.discount + ' ر.س';
+            document.getElementById('invTotal').textContent = data.total + ' ر.س';
+            document.getElementById('invPaid').textContent = data.paid + ' ر.س';
+            document.getElementById('invRemaining').textContent = data.remaining + ' ر.س';
+            document.getElementById('invStatus').textContent = data.paymentStatus === 'Fully Paid' ? 'مدفوع بالكامل ✅' : 'متبقي ⏳';
+            document.getElementById('invNote').textContent = data.timeNote || 'لا توجد ملاحظات';
+
+            // إظهار الفاتورة
+            invoicePreview.style.display = 'block';
+            invoicePreview.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // =============================================
+        // إرسال البيانات
+        // =============================================
+        const form = document.getElementById('invoiceForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const messageDiv = document.getElementById('message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // جمع البيانات
+            const formData = {
+                action: 'addInvoice',
+                bookingNumber: document.getElementById('bookingNumber').value,
+                invoiceDate: document.getElementById('invoiceDate').value,
+                checkIn: document.getElementById('checkIn').value,
+                checkOut: document.getElementById('checkOut').value,
+                day: document.getElementById('day').value,
+                guestName: document.getElementById('guestName').value,
+                phone: document.getElementById('phone').value,
+                propertyType: document.getElementById('propertyType').value,
+                nights: document.getElementById('nights').value,
+                dailyPrice: document.getElementById('dailyPrice').value,
+                discount: document.getElementById('discount').value || 0,
+                paid: document.getElementById('paid').value,
+                remaining: document.getElementById('remaining').value,
+                total: document.getElementById('total').value,
+                paymentStatus: document.getElementById('paymentStatus').value,
+                stayType: document.getElementById('stayType').value,
+                checkInTime: document.getElementById('checkInTime').value,
+                checkOutTime: document.getElementById('checkOutTime').value,
+                timeNote: document.getElementById('timeNote').value
+            };
+
+            // التحقق من الحقول المطلوبة
+            const requiredFields = ['bookingNumber', 'invoiceDate', 'checkIn', 'checkOut', 'day', 'guestName', 'propertyType', 'nights', 'dailyPrice', 'paid', 'total', 'paymentStatus', 'stayType'];
+            for (const field of requiredFields) {
+                if (!formData[field]) {
+                    showMessage(`⚠️ الرجاء ملء جميع الحقول المطلوبة`, 'error');
+                    return;
+                }
+            }
+
+            // إظهار التحميل
+            submitBtn.disabled = true;
+            submitBtn.style.display = 'none';
+            loadingSpinner.style.display = 'block';
+            hideMessage();
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                sendViaIframe(formData);
+
+            } catch (error) {
+                showMessage('❌ حدث خطأ في الاتصال بالخادم', 'error');
+                submitBtn.disabled = false;
+                submitBtn.style.display = 'block';
+                loadingSpinner.style.display = 'none';
+            }
+        });
+
+        function sendViaIframe(data) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = SCRIPT_URL;
+            form.target = 'hiddenFrame';
+
+            const dataInput = document.createElement('input');
+            dataInput.type = 'hidden';
+            dataInput.name = 'data';
+            dataInput.value = JSON.stringify(data);
+            form.appendChild(dataInput);
+
+            const iframe = document.createElement('iframe');
+            iframe.name = 'hiddenFrame';
+            iframe.style.display = 'none';
+            iframe.onload = function() {
+                try {
+                    const responseText = iframe.contentDocument.body.textContent;
+                    const response = JSON.parse(responseText);
+                    if (response.success) {
+                        showMessage('✅ ' + response.message, 'success');
+                        lastSavedData = data;
+                        
+                        // =============================================
+                        // عرض نافذة الطباعة
+                        // =============================================
+                        printDialog.classList.add('show');
+                        
+                        // إعادة تعيين النموذج
+                        form.reset();
+                        remainingInput.value = '0';
+                    } else {
+                        showMessage('❌ ' + response.message, 'error');
+                    }
+                } catch (e) {
+                    showMessage('✅ تم إرسال الفاتورة بنجاح!', 'success');
+                    lastSavedData = data;
+                    printDialog.classList.add('show');
+                    form.reset();
+                    remainingInput.value = '0';
+                }
+                submitBtn.disabled = false;
+                submitBtn.style.display = 'block';
+                loadingSpinner.style.display = 'none';
+                document.body.removeChild(iframe);
+                document.body.removeChild(form);
+            };
+
+            document.body.appendChild(iframe);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // =============================================
+        // أزرار نافذة الطباعة
+        // =============================================
+        document.getElementById('printYes').addEventListener('click', function() {
+            printDialog.classList.remove('show');
+            if (lastSavedData) {
+                showInvoice(lastSavedData);
+                setTimeout(() => {
+                    window.print();
+                }, 500);
+            }
+        });
+
+        document.getElementById('printNo').addEventListener('click', function() {
+            printDialog.classList.remove('show');
+        });
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = 'message ' + type;
+        }
+
+        function hideMessage() {
+            messageDiv.className = 'message';
+            messageDiv.textContent = '';
+        }
+
+        // =============================================
+        // ضبط التاريخ الافتراضي لليوم
+        // =============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = today;
+            document.getElementById('checkIn').value = today;
+            document.getElementById('checkOut').value = today;
+        });
+    </script>
+
+</body>
+</html>
