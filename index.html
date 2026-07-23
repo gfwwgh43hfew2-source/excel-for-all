@@ -812,7 +812,7 @@
         }
 
         /* =============================================
-                   FLOATING BUTTON
+                   FLOATING BUTTON (مع نص + علامة)
                 ============================================= */
         .floating-btn {
             position: fixed;
@@ -821,64 +821,38 @@
             z-index: 999;
             background: linear-gradient(135deg, #f5c842, #d4a020);
             color: #0a0f1f;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            padding: 14px 24px;
+            border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 700;
             box-shadow: 0 4px 25px rgba(245, 200, 66, 0.3);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
             border: none;
             text-decoration: none;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
         }
         .floating-btn:hover {
-            transform: scale(1.1) translateY(-3px);
+            transform: translateY(-3px) scale(1.05);
             box-shadow: 0 8px 40px rgba(245, 200, 66, 0.5);
         }
-        .floating-btn .tooltip {
-            position: absolute;
-            left: 70px;
-            background: rgba(10, 15, 31, 0.95);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            white-space: nowrap;
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: all 0.3s ease;
-            pointer-events: none;
-            border: 1px solid rgba(245, 200, 66, 0.1);
-        }
-        .floating-btn:hover .tooltip {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .floating-btn .tooltip::after {
-            content: '';
-            position: absolute;
-            right: -6px;
-            top: 50%;
-            transform: translateY(-50%);
-            border: 6px solid transparent;
-            border-right-color: rgba(10, 15, 31, 0.95);
+        .floating-btn i {
+            font-size: 1.2rem;
         }
 
         @media (max-width: 768px) {
             .floating-btn {
                 bottom: 80px;
                 left: 16px;
-                width: 54px;
-                height: 54px;
-                font-size: 1.5rem;
+                padding: 12px 18px;
+                font-size: 0.85rem;
             }
-            .floating-btn .tooltip {
-                display: none;
+            .floating-btn i {
+                font-size: 1rem;
             }
         }
 
@@ -1081,10 +1055,10 @@
         }
     </script>
 
-    <!-- ===== FLOATING BUTTON "حجز جديد" ===== -->
-    <a href="add-invoice.html" class="floating-btn" title="إضافة حجز جديد">
+    <!-- ===== FLOATING BUTTON مع نص + علامة ===== -->
+    <a href="add-invoice.html" class="floating-btn">
         <i class="fas fa-plus"></i>
-        <span class="tooltip">📝 حجز جديد</span>
+        حجز جديد
     </a>
 
     <!-- ===== HEADER ===== -->
