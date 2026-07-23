@@ -100,24 +100,6 @@
                 opacity: 1;
             }
         }
-        @keyframes glowGreen {
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(0, 255, 100, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 50px rgba(0, 255, 100, 0.7), 0 0 80px rgba(0, 255, 100, 0.15);
-            }
-        }
-        @keyframes pulseGreen {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.02);
-            }
-        }
         @keyframes glowGold {
             0%,
             100% {
@@ -432,15 +414,6 @@
             border-radius: 50px;
             border: 1px solid rgba(255, 215, 0, 0.05);
         }
-        .sidebar .sidebar-nav a .commission-badge {
-            margin-right: auto;
-            background: rgba(0, 255, 100, 0.1);
-            color: #00ff64;
-            font-size: 0.5rem;
-            padding: 2px 8px;
-            border-radius: 50px;
-            border: 1px solid rgba(0, 255, 100, 0.1);
-        }
         .sidebar .sidebar-divider {
             height: 1px;
             background: rgba(255, 255, 255, 0.04);
@@ -537,15 +510,6 @@
         .mobile-nav ul li:hover,
         .mobile-nav ul li.active {
             color: #ffd700;
-        }
-        .mobile-nav ul li .commission-dot {
-            width: 6px;
-            height: 6px;
-            background: #00ff64;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 4px;
-            animation: glowGreen 2s ease-in-out infinite;
         }
 
         /* ===== HERO ===== */
@@ -676,8 +640,8 @@
 
         /* ===== HERO COMMISSION CARD ===== */
         .hero-commission-card {
-            background: linear-gradient(145deg, rgba(0, 230, 118, 0.06), rgba(0, 200, 83, 0.02));
-            border: 1px solid rgba(0, 255, 100, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
             padding: 16px 24px;
             display: flex;
@@ -688,18 +652,17 @@
             margin-bottom: 30px;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
-            animation: pulseGreen 3s ease-in-out infinite, glowGreen 4s ease-in-out infinite;
             max-width: 460px;
         }
         .hero-commission-card:hover {
-            border-color: rgba(0, 255, 100, 0.25);
-            box-shadow: 0 0 40px rgba(0, 255, 100, 0.05);
+            border-color: rgba(255, 215, 0, 0.15);
             transform: translateY(-2px);
+            background: rgba(255, 215, 0, 0.02);
         }
         .hero-commission-card .commission-icon {
             font-size: 2rem;
-            color: #00ff64;
-            background: rgba(0, 255, 100, 0.08);
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.06);
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -707,7 +670,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            border: 1px solid rgba(0, 255, 100, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.06);
         }
         .hero-commission-card .commission-info {
             flex: 1;
@@ -720,22 +683,20 @@
         .hero-commission-card .commission-info .value {
             font-size: 1.6rem;
             font-weight: 900;
-            color: #00ff64;
+            color: #ffd700;
             line-height: 1.2;
-            text-shadow: 0 0 30px rgba(0, 255, 100, 0.1);
         }
         .hero-commission-card .commission-info .sub {
             font-size: 0.55rem;
-            color: #69f0ae;
-            opacity: 0.7;
+            color: rgba(255, 255, 255, 0.3);
         }
         .hero-commission-card .commission-percent {
-            background: rgba(0, 255, 100, 0.08);
-            border: 1px solid rgba(0, 255, 100, 0.08);
+            background: rgba(255, 215, 0, 0.06);
+            border: 1px solid rgba(255, 215, 0, 0.06);
             padding: 4px 12px;
             border-radius: 50px;
             font-size: 0.65rem;
-            color: #69f0ae;
+            color: #ffd700;
             font-weight: 600;
             white-space: nowrap;
         }
@@ -850,22 +811,6 @@
             color: rgba(255, 255, 255, 0.35);
             margin-top: 3px;
             font-weight: 600;
-        }
-        .kpi-card.commission-card {
-            border-color: rgba(0, 255, 100, 0.1);
-            background: linear-gradient(145deg, #0c1a12, #080c1a);
-        }
-        .kpi-card.commission-card::before {
-            background: linear-gradient(90deg, transparent, #00ff64, transparent);
-        }
-        .kpi-card.commission-card .icon {
-            color: #00ff64;
-        }
-        .kpi-card.commission-card .number {
-            color: #00ff64;
-        }
-        .kpi-card.commission-card .label {
-            color: #00ff64;
         }
 
         /* ===== QUICK NAV ===== */
@@ -1192,14 +1137,14 @@
         }
 
         /* =============================================
-                   FLOATING BUTTON (أخضر فسفوري - ساطع)
+                   FLOATING BUTTON (أزرق - ساطع)
                 ============================================= */
         .floating-btn {
             position: fixed;
             bottom: 100px;
             left: 24px;
             z-index: 999;
-            background: linear-gradient(135deg, #00e676, #00c853);
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
             color: #ffffff;
             padding: 16px 28px;
             border-radius: 60px;
@@ -1210,14 +1155,13 @@
             font-size: 1rem;
             font-weight: 700;
             font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
-            box-shadow: 0 8px 32px rgba(0, 230, 118, 0.5);
+            box-shadow: 0 8px 32px rgba(26, 115, 232, 0.5);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             border: none;
             text-decoration: none;
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            animation: glowGreen 3s ease-in-out infinite;
         }
         .floating-btn::before {
             content: '';
@@ -1225,7 +1169,7 @@
             inset: -2px;
             border-radius: 62px;
             padding: 2px;
-            background: linear-gradient(135deg, #00e676, #69f0ae, #00c853);
+            background: linear-gradient(135deg, #1a73e8, #90caf9, #0d47a1);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -1237,7 +1181,7 @@
         }
         .floating-btn:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 12px 48px rgba(0, 230, 118, 0.7);
+            box-shadow: 0 12px 48px rgba(26, 115, 232, 0.7);
         }
         .floating-btn:active {
             transform: scale(0.95);
@@ -1561,7 +1505,7 @@
         }
     </script>
 
-    <!-- ===== FLOATING BUTTON (أخضر فسفوري - ساطع) ===== -->
+    <!-- ===== FLOATING BUTTON (أزرق - ساطع) ===== -->
     <a href="add-invoice.html" class="floating-btn">
         <i class="fas fa-plus"></i>
         <span class="btn-text">حجز جديد</span>
@@ -1634,11 +1578,6 @@
                 <i class="fas fa-phone"></i>
                 <span>تواصل</span>
             </a>
-            <a href="#" style="border-color: rgba(0,255,100,0.06);">
-                <i class="fas fa-hand-holding-heart" style="color:#00ff64;"></i>
-                <span style="color:#00ff64;">عمولة أبو زيد</span>
-                <span class="commission-badge" id="sidebarCommission">0 ر.س</span>
-            </a>
         </div>
         <div class="sidebar-divider"></div>
         <div class="sidebar-nav">
@@ -1674,11 +1613,6 @@
             <li><i class="fas fa-money-bill-wave"></i><span>المصاريف</span></li>
             <li><i class="fas fa-chart-pie"></i><span>التقارير</span></li>
             <li><i class="fas fa-phone"></i><span>تواصل</span></li>
-            <li style="color:#00ff64;">
-                <i class="fas fa-hand-holding-heart"></i>
-                <span>العمولة <span class="commission-dot"></span></span>
-                <span id="mobileCommission" style="font-size:0.5rem;color:#00ff64;">0</span>
-            </li>
         </ul>
     </nav>
 
@@ -1771,11 +1705,11 @@
                     <div class="label">حجوزات مستقبلية</div>
                 </div>
                 <!-- ===== كارد عمولة أبو زيد ===== -->
-                <div class="kpi-card commission-card animate-fade-up delay-5">
+                <div class="kpi-card animate-fade-up delay-5">
                     <div class="icon"><i class="fas fa-hand-holding-heart"></i></div>
                     <div class="number" id="kpiCommission">0</div>
                     <div class="label">عمولة أبو زيد</div>
-                    <div style="font-size:0.6rem;color:#69f0ae;margin-top:2px;">20% من صافي الربح</div>
+                    <div style="font-size:0.6rem;color:rgba(255,255,255,0.3);margin-top:2px;">20% من صافي الربح</div>
                 </div>
             </div>
         </div>
@@ -1817,7 +1751,7 @@
                 <div class="row"><span class="label">العنوان / الموقع</span><span class="value">القصيم / بريدة - حي الخليج</span></div>
                 <div class="row"><span class="label">جوال المنشأة</span><span class="value">📱 +966509982400</span></div>
                 <div class="row"><span class="label">الرقم الضريبي</span><span class="value" style="color:rgba(255,255,255,0.1);">(اختياري)</span></div>
-                <div class="row"><span class="label">نسبة عمولة أبو زيد</span><span class="value" style="color:#00ff64;">20%</span></div>
+                <div class="row"><span class="label">نسبة عمولة أبو زيد</span><span class="value" style="color:#ffd700;">20%</span></div>
             </div>
         </div>
     </section>
@@ -1919,7 +1853,34 @@
         });
 
         // =============================================
-        // DATA FETCH
+        // DATA FETCH - جلب بيانات المصاريف من localStorage
+        // =============================================
+        function getTotalExpenses() {
+            try {
+                // محاولة جلب بيانات المصاريف من localStorage
+                const expensesData = localStorage.getItem('expenses');
+                if (expensesData) {
+                    const expenses = JSON.parse(expensesData);
+                    if (Array.isArray(expenses) && expenses.length > 0) {
+                        // حساب مجموع المصاريف
+                        let total = 0;
+                        expenses.forEach(item => {
+                            const amount = parseFloat(item.amount) || 0;
+                            total += amount;
+                        });
+                        return total;
+                    }
+                }
+                // إذا لم توجد بيانات، نستخدم القيمة الافتراضية
+                return 3046;
+            } catch (e) {
+                console.error('Error reading expenses:', e);
+                return 3046;
+            }
+        }
+
+        // =============================================
+        // DATA FETCH - جلب بيانات الحجوزات من Google Sheets
         // =============================================
         const SHEET_ID = '1u6SM7bWGk2fdiBJLS-N9BO7XXb45QnAp2OqYIw0STpg';
         const SHEET_NAME = 'سجل الحجوزات';
@@ -2058,7 +2019,9 @@
                 }
             });
 
-            const totalExpenses = 3046;
+            // ===== جلب قيمة المصاريف من localStorage =====
+            const totalExpenses = getTotalExpenses();
+
             const netProfit = totalRevenue - totalExpenses;
             // ===== حساب عمولة أبو زيد (20% من صافي الربح) =====
             const commission = netProfit * 0.2;
@@ -2081,18 +2044,6 @@
             const heroCommission = document.getElementById('heroCommissionValue');
             if (heroCommission) {
                 heroCommission.textContent = commissionText;
-            }
-
-            // ===== تحديث العمولة في السايدبار =====
-            const sidebarCommission = document.getElementById('sidebarCommission');
-            if (sidebarCommission) {
-                sidebarCommission.textContent = commissionText;
-            }
-
-            // ===== تحديث العمولة في الموبايل ناف =====
-            const mobileCommission = document.getElementById('mobileCommission');
-            if (mobileCommission) {
-                mobileCommission.textContent = commission.toLocaleString();
             }
 
             // =============================================
