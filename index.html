@@ -71,6 +71,24 @@
                 background-position: 200% center;
             }
         }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        @keyframes glow {
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(45, 106, 79, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(45, 106, 79, 0.5);
+            }
+        }
         .animate-fade-up {
             opacity: 0;
             animation: fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
@@ -1195,25 +1213,36 @@
     <section class="kpi-section" id="kpi">
         <div class="container">
             <div class="kpi-grid" id="kpiGrid">
+                <!-- كارد إجمالي الإيرادات -->
                 <div class="kpi-card animate-fade-up delay-1">
                     <div class="icon"><i class="fas fa-coins"></i></div>
                     <div class="number" id="kpiRevenue">0</div>
                     <div class="label">إجمالي الإيرادات</div>
                 </div>
+                <!-- كارد صافي الربح -->
                 <div class="kpi-card animate-fade-up delay-2">
                     <div class="icon"><i class="fas fa-hand-holding-usd"></i></div>
                     <div class="number" id="kpiProfit">0</div>
                     <div class="label">صافي الربح</div>
                 </div>
+                <!-- كارد إجمالي المصاريف -->
                 <div class="kpi-card animate-fade-up delay-3">
                     <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
                     <div class="number" id="kpiExpenses">0</div>
                     <div class="label">إجمالي المصاريف</div>
                 </div>
+                <!-- كارد حجوزات مستقبلية -->
                 <div class="kpi-card animate-fade-up delay-4">
                     <div class="icon"><i class="fas fa-calendar-check"></i></div>
                     <div class="number" id="kpiFuture">0</div>
                     <div class="label">حجوزات مستقبلية</div>
+                </div>
+                <!-- ===== كارد عمولة أبو زيد (الجديد) ===== -->
+                <div class="kpi-card animate-fade-up delay-4" style="border-bottom-color: #d4a020;">
+                    <div class="icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <div class="number" id="kpiCommission">0</div>
+                    <div class="label">عمولة أبو زيد</div>
+                    <div style="font-size:0.6rem;color:#d4a020;margin-top:2px;">20% من صافي الربح</div>
                 </div>
             </div>
         </div>
@@ -1512,6 +1541,8 @@
 
             const totalExpenses = 3046;
             const netProfit = totalRevenue - totalExpenses;
+            // ===== حساب عمولة أبو زيد (20% من صافي الربح) =====
+            const commission = netProfit * 0.2;
 
             // ===== تحديث الإحصائيات =====
             animateNumber('statBookings', validRows);
@@ -1522,6 +1553,8 @@
             document.getElementById('kpiProfit').textContent = netProfit.toLocaleString() + ' ر.س';
             document.getElementById('kpiExpenses').textContent = totalExpenses.toLocaleString() + ' ر.س';
             document.getElementById('kpiFuture').textContent = futureBookings;
+            // ===== تحديث كارد عمولة أبو زيد =====
+            document.getElementById('kpiCommission').textContent = commission.toLocaleString() + ' ر.س';
 
             // =============================================
             // TABLE (Desktop) - مرتبة من الأحدث إلى الأقدم حسب تاريخ الفاتورة
