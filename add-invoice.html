@@ -5,10 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إضافة فاتورة جديدة - منتجع حياله</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
-        /* ===== GENERAL ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ============================================================
+                   RESET & BASE STYLES
+                ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
             background: #0a0f1f;
@@ -17,15 +24,24 @@
             min-height: 100vh;
             padding: 30px 20px;
         }
-        .container { max-width: 900px; margin: 0 auto; }
-        
-        /* ===== FORM CARD ===== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ============================================================
+                   FORM CARD
+                ============================================================ */
         .form-card {
             background: linear-gradient(145deg, #121a2e, #0e1525);
             border-radius: 24px;
             padding: 40px 35px;
             border: 1px solid rgba(245, 200, 66, 0.06);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
         .form-card .logo {
             text-align: center;
@@ -39,11 +55,13 @@
             -webkit-text-fill-color: transparent;
         }
         .form-card .logo p {
-            color: rgba(255,255,255,0.3);
+            color: rgba(255, 255, 255, 0.3);
             font-size: 0.85rem;
         }
-        
-        /* ===== FORM ===== */
+
+        /* ============================================================
+                   FORM ELEMENTS
+                ============================================================ */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -54,7 +72,7 @@
         }
         .form-group label {
             display: block;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 4px;
@@ -63,24 +81,29 @@
             color: #ef5350;
             margin-right: 2px;
         }
-        .form-group input, .form-group select, .form-group textarea {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 12px 14px;
             border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.06);
-            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
             color: #fff;
             font-size: 0.9rem;
             transition: 0.3s;
             font-family: inherit;
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
             border-color: rgba(245, 200, 66, 0.3);
             outline: none;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
         }
-        .form-group input::placeholder, .form-group textarea::placeholder {
-            color: rgba(255,255,255,0.2);
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.2);
         }
         .form-group select option {
             background: #121a2e;
@@ -95,8 +118,13 @@
             font-weight: 600;
             cursor: not-allowed;
         }
-        
-        /* ===== BUTTONS ===== */
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* ============================================================
+                   BUTTONS
+                ============================================================ */
         .btn-primary {
             width: 100%;
             padding: 14px;
@@ -113,7 +141,7 @@
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(245,200,66,0.25);
+            box-shadow: 0 8px 30px rgba(245, 200, 66, 0.25);
         }
         .btn-primary:disabled {
             opacity: 0.5;
@@ -124,7 +152,7 @@
             width: 100%;
             padding: 12px;
             border: 2px solid rgba(245, 200, 66, 0.15);
-            color: rgba(255,255,255,0.4);
+            color: rgba(255, 255, 255, 0.4);
             background: transparent;
             border-radius: 50px;
             font-weight: 600;
@@ -142,8 +170,40 @@
             border-color: rgba(245, 200, 66, 0.3);
             color: #f5c842;
         }
-        
-        /* ===== MESSAGES ===== */
+
+        /* ============================================================
+                   WHATSAPP BUTTON
+                ============================================================ */
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+            margin-top: 8px;
+            text-decoration: none;
+        }
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp i {
+            font-size: 1.3rem;
+        }
+
+        /* ============================================================
+                   MESSAGES
+                ============================================================ */
         .message {
             text-align: center;
             padding: 12px;
@@ -164,13 +224,38 @@
             color: #ef5350;
             border: 1px solid rgba(201, 42, 42, 0.08);
         }
-        
-        /* ===== PRINT DIALOG ===== */
+        .message.warning {
+            display: block;
+            background: rgba(245, 200, 66, 0.1);
+            color: #f5c842;
+            border: 1px solid rgba(245, 200, 66, 0.06);
+        }
+
+        /* ============================================================
+                   LOADING SPINNER
+                ============================================================ */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 10px;
+        }
+        .loading-spinner i {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============================================================
+                   PRINT DIALOG
+                ============================================================ */
         .print-dialog {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
             z-index: 1000;
             align-items: center;
@@ -183,11 +268,11 @@
             background: #121a2e;
             border-radius: 24px;
             padding: 40px 35px;
-            max-width: 450px;
+            max-width: 500px;
             width: 100%;
             text-align: center;
             border: 1px solid rgba(245, 200, 66, 0.1);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
         .print-dialog .dialog-box .icon {
             font-size: 4rem;
@@ -200,17 +285,18 @@
             margin-bottom: 10px;
         }
         .print-dialog .dialog-box p {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 0.95rem;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             line-height: 1.8;
         }
         .print-dialog .dialog-box .btn-group {
             display: flex;
-            gap: 12px;
+            flex-direction: column;
+            gap: 10px;
         }
-        .print-dialog .dialog-box .btn-group button {
-            flex: 1;
+        .print-dialog .dialog-box .btn-group button,
+        .print-dialog .dialog-box .btn-group a {
             padding: 14px;
             border: none;
             border-radius: 50px;
@@ -219,6 +305,9 @@
             cursor: pointer;
             transition: 0.3s;
             font-family: inherit;
+            text-decoration: none;
+            text-align: center;
+            display: block;
         }
         .print-dialog .dialog-box .btn-group .btn-yes {
             background: linear-gradient(135deg, #f5c842, #d4a020);
@@ -226,36 +315,58 @@
         }
         .print-dialog .dialog-box .btn-group .btn-yes:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(245,200,66,0.25);
+            box-shadow: 0 8px 30px rgba(245, 200, 66, 0.25);
+        }
+        .print-dialog .dialog-box .btn-group .btn-whatsapp-dialog {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #fff;
+        }
+        .print-dialog .dialog-box .btn-group .btn-whatsapp-dialog:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.3);
+        }
+        .print-dialog .dialog-box .btn-group .btn-whatsapp-link-dialog {
+            background: linear-gradient(135deg, #075E54, #128C7E);
+            color: #fff;
+        }
+        .print-dialog .dialog-box .btn-group .btn-whatsapp-link-dialog:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(7, 94, 84, 0.3);
+        }
+        .print-dialog .dialog-box .btn-group .btn-download-pdf {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: #fff;
+        }
+        .print-dialog .dialog-box .btn-group .btn-download-pdf:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.3);
+        }
+        .print-dialog .dialog-box .btn-group .btn-copy-link {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: #fff;
+        }
+        .print-dialog .dialog-box .btn-group .btn-copy-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
         }
         .print-dialog .dialog-box .btn-group .btn-no {
-            background: rgba(255,255,255,0.05);
-            color: rgba(255,255,255,0.5);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
         .print-dialog .dialog-box .btn-group .btn-no:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
         }
-        
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 10px;
-        }
-        .loading-spinner i {
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* ===== LINKS ===== */
+
+        /* ============================================================
+                   LINKS
+                ============================================================ */
         .links {
             text-align: center;
             margin-top: 16px;
         }
         .links a {
-            color: rgba(255,255,255,0.25);
+            color: rgba(255, 255, 255, 0.25);
             font-size: 0.8rem;
             transition: 0.3s;
             text-decoration: none;
@@ -264,26 +375,22 @@
             color: #f5c842;
         }
         .links .sep {
-            color: rgba(255,255,255,0.06);
+            color: rgba(255, 255, 255, 0.06);
             margin: 0 6px;
         }
-        .full-width {
-            grid-column: 1 / -1;
-        }
-        
-        /* =============================================
+
+        /* ============================================================
                    INVOICE PRINT STYLES
-                ============================================= */
+                ============================================================ */
         .invoice-container {
             display: none;
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
             background: #fff;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
-        
         .invoice-container .invoice-header {
             display: flex;
             justify-content: space-between;
@@ -311,7 +418,6 @@
             color: #6a7a8a;
             font-size: 0.7rem;
         }
-        
         .invoice-container .invoice-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -335,7 +441,6 @@
             color: #1a3a4a;
             font-weight: 700;
         }
-        
         .invoice-container .invoice-table {
             width: 100%;
             border-collapse: collapse;
@@ -365,7 +470,6 @@
             color: #a67c52;
             font-size: 1.2rem;
         }
-        
         .invoice-container .invoice-footer {
             border-top: 1px solid #e8edf0;
             padding-top: 15px;
@@ -382,19 +486,57 @@
             border-bottom: 1px solid #1a3a4a;
             margin-top: 5px;
         }
-        
+
+        /* ============================================================
+                   INVOICE TERMS & CONDITIONS
+                ============================================================ */
+        .invoice-terms {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #e8edf0;
+            font-size: 0.7rem;
+            color: #4a5a6a;
+            line-height: 1.8;
+        }
+        .invoice-terms .terms-title {
+            font-weight: 700;
+            color: #1a3a4a;
+            font-size: 0.75rem;
+            margin-bottom: 6px;
+        }
+        .invoice-terms .terms-list {
+            padding-right: 20px;
+            list-style: none;
+        }
+        .invoice-terms .terms-list li {
+            position: relative;
+            padding-right: 18px;
+            margin-bottom: 4px;
+        }
+        .invoice-terms .terms-list li::before {
+            content: '•';
+            position: absolute;
+            right: 0;
+            color: #a67c52;
+            font-weight: 700;
+        }
+
         .print-btn-container {
             text-align: center;
             margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .print-btn-container .btn-print-invoice {
             background: #1a3a4a;
             color: #fff;
-            padding: 12px 40px;
+            padding: 12px 30px;
             border: none;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -402,15 +544,76 @@
             background: #2a5a6a;
             transform: translateY(-2px);
         }
-        
-        /* =============================================
+        .print-btn-container .btn-pdf-invoice {
+            background: #EF4444;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .print-btn-container .btn-pdf-invoice:hover {
+            background: #DC2626;
+            transform: translateY(-2px);
+        }
+        .print-btn-container .btn-whatsapp-invoice {
+            background: #25D366;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .print-btn-container .btn-whatsapp-invoice:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+        }
+        .print-btn-container .btn-whatsapp-link-invoice {
+            background: #075E54;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .print-btn-container .btn-whatsapp-link-invoice:hover {
+            background: #064A42;
+            transform: translateY(-2px);
+        }
+        .print-btn-container .btn-copy-link-invoice {
+            background: #3B82F6;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .print-btn-container .btn-copy-link-invoice:hover {
+            background: #2563EB;
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
                    PRINT MEDIA QUERY
-                ============================================= */
+                ============================================================ */
         @media print {
             body * {
                 visibility: hidden;
             }
-            .invoice-container, .invoice-container * {
+            .invoice-container,
+            .invoice-container * {
                 visibility: visible;
             }
             .invoice-container {
@@ -428,11 +631,21 @@
             .no-print {
                 display: none !important;
             }
+            .invoice-terms {
+                border-top-color: #ccc;
+                color: #333;
+            }
+            .invoice-terms .terms-title {
+                color: #1a3a4a;
+            }
+            .invoice-terms .terms-list li::before {
+                color: #a67c52;
+            }
         }
-        
-        /* =============================================
+
+        /* ============================================================
                    RESPONSIVE
-                ============================================= */
+                ============================================================ */
         @media (max-width: 600px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -459,6 +672,10 @@
             }
             .print-dialog .dialog-box .btn-group {
                 flex-direction: column;
+            }
+            .print-btn-container {
+                flex-direction: column;
+                align-items: stretch;
             }
         }
     </style>
@@ -617,24 +834,35 @@
             </div>
         </div>
 
-        <!-- =============================================
+        <!-- ============================================================
         PRINT DIALOG
-        ============================================= -->
+        ============================================================ -->
         <div class="print-dialog" id="printDialog">
             <div class="dialog-box">
                 <div class="icon">✅</div>
                 <h2>تم حفظ الفاتورة بنجاح!</h2>
-                <p>هل تريد طباعة الفاتورة الآن؟</p>
+                <p id="successMessage">رقم الحجز: <span id="savedBookingNumber">-</span></p>
+                <p>ماذا تريد أن تفعل الآن؟</p>
                 <div class="btn-group">
-                    <button class="btn-yes" id="printYes">🖨️ نعم، طباعة</button>
+                    <button class="btn-yes" id="printYes">🖨️ طباعة الفاتورة</button>
+                    <button class="btn-download-pdf" id="downloadPdfBtn">📄 تحميل PDF</button>
+                    <button class="btn-whatsapp-dialog" id="whatsappPdfBtn">
+                        <i class="fab fa-whatsapp"></i> إرسال PDF عبر واتساب
+                    </button>
+                    <button class="btn-whatsapp-link-dialog" id="whatsappLinkBtn">
+                        <i class="fab fa-whatsapp"></i> إرسال رابط الفاتورة
+                    </button>
+                    <button class="btn-copy-link" id="copyLinkBtn">
+                        <i class="fas fa-link"></i> نسخ رابط الفاتورة
+                    </button>
                     <button class="btn-no" id="printNo">لا، شكراً</button>
                 </div>
             </div>
         </div>
 
-        <!-- =============================================
+        <!-- ============================================================
         INVOICE PREVIEW
-        ============================================= -->
+        ============================================================ -->
         <div class="invoice-container" id="invoicePreview">
             <div class="invoice-header">
                 <div class="brand">
@@ -730,23 +958,46 @@
                 </div>
             </div>
 
+            <!-- ============================================================
+            TERMS & CONDITIONS - الشروط والأحكام
+            ============================================================ -->
+            <div class="invoice-terms">
+                <div class="terms-title">📋 الشروط والأحكام:</div>
+                <ul class="terms-list">
+                    <li>إدارة المنتجع غير مسؤولة عن فقدان أو تلف المقتنيات الشخصية، لذا نوصي بالتأكد من عدم نسيان أي أغراض قبل المغادرة.</li>
+                    <li>يمنع إحداث أي تلف أو تخريب في مرافق المنتجع أو محتوياته، ويُحمّل المستأجر قيمة أي أضرار تنتج عن الاستخدام غير المعتاد.</li>
+                </ul>
+            </div>
+
             <div class="print-btn-container no-print">
                 <button class="btn-print-invoice" onclick="window.print()">
-                    <i class="fas fa-print"></i> طباعة الفاتورة
+                    <i class="fas fa-print"></i> طباعة
+                </button>
+                <button class="btn-pdf-invoice" id="downloadPdfBtn2">
+                    <i class="fas fa-file-pdf"></i> تحميل PDF
+                </button>
+                <button class="btn-whatsapp-invoice" id="whatsappPdfBtn2">
+                    <i class="fab fa-whatsapp"></i> واتساب PDF
+                </button>
+                <button class="btn-whatsapp-link-invoice" id="whatsappLinkBtn2">
+                    <i class="fab fa-whatsapp"></i> رابط واتساب
+                </button>
+                <button class="btn-copy-link-invoice" id="copyLinkBtn2">
+                    <i class="fas fa-link"></i> نسخ الرابط
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // =============================================
-        // 🔑 رابط سكريبت الفواتير (الإصدار 8)
-        // =============================================
+        // ============================================================
+        // 🔑 رابط سكريبت الفواتير
+        // ============================================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfojssy8iAlpko9YAJ5jSiDyyGuQ_3k_OlwZTHa3nOhK0JbWtoj-sCVhSe_KIkYBm9Cw/exec';
 
-        // =============================================
+        // ============================================================
         // حساب المتبقي تلقائياً
-        // =============================================
+        // ============================================================
         const totalInput = document.getElementById('total');
         const paidInput = document.getElementById('paid');
         const remainingInput = document.getElementById('remaining');
@@ -760,47 +1011,230 @@
         totalInput.addEventListener('input', calculateRemaining);
         paidInput.addEventListener('input', calculateRemaining);
 
-        // =============================================
+        // ============================================================
         // المتغيرات
-        // =============================================
+        // ============================================================
         let lastSavedData = null;
+        let savedBookingNumber = '';
+        let isSubmitting = false;
         const printDialog = document.getElementById('printDialog');
         const invoicePreview = document.getElementById('invoicePreview');
 
-        // =============================================
+        // ============================================================
         // عرض الفاتورة للطباعة
-        // =============================================
+        // ============================================================
         function showInvoice(data) {
-            // تعبئة الفاتورة
             document.getElementById('invNumber').textContent = data.bookingNumber.padStart(4, '0');
             document.getElementById('invDate').textContent = data.invoiceDate;
             document.getElementById('invGuestName').textContent = data.guestName;
             document.getElementById('invPhone').textContent = data.phone || '-';
             document.getElementById('invProperty').textContent = data.propertyType;
             document.getElementById('invStayType').textContent = data.stayType;
-            document.getElementById('invCheckIn').textContent = data.checkIn + (data.checkInTime ? ' (' + data.checkInTime + ')' : '');
-            document.getElementById('invCheckOut').textContent = data.checkOut + (data.checkOutTime ? ' (' + data.checkOutTime + ')' : '');
+            document.getElementById('invCheckIn').textContent = data.checkIn + (data.checkInTime ? ' (' + data.checkInTime +
+                ')' : '');
+            document.getElementById('invCheckOut').textContent = data.checkOut + (data.checkOutTime ? ' (' + data
+                .checkOutTime + ')' : '');
             document.getElementById('invNights').textContent = data.nights;
             document.getElementById('invDailyPrice').textContent = data.dailyPrice + ' ر.س';
             document.getElementById('invDescription').textContent = 'إقامة في ' + data.propertyType;
             document.getElementById('invQty').textContent = data.nights;
             document.getElementById('invUnitPrice').textContent = data.dailyPrice + ' ر.س';
-            document.getElementById('invSubTotal').textContent = (parseFloat(data.nights) * parseFloat(data.dailyPrice)).toFixed(2) + ' ر.س';
+            document.getElementById('invSubTotal').textContent = (parseFloat(data.nights) * parseFloat(data.dailyPrice))
+                .toFixed(2) + ' ر.س';
             document.getElementById('invDiscount').textContent = data.discount + ' ر.س';
             document.getElementById('invTotal').textContent = data.total + ' ر.س';
             document.getElementById('invPaid').textContent = data.paid + ' ر.س';
             document.getElementById('invRemaining').textContent = data.remaining + ' ر.س';
-            document.getElementById('invStatus').textContent = data.paymentStatus === 'Fully Paid' ? 'مدفوع بالكامل ✅' : 'متبقي ⏳';
+            document.getElementById('invStatus').textContent = data.paymentStatus === 'Fully Paid' ? 'مدفوع بالكامل ✅' :
+                'متبقي ⏳';
             document.getElementById('invNote').textContent = data.timeNote || 'لا توجد ملاحظات';
 
-            // إظهار الفاتورة
             invoicePreview.style.display = 'block';
             invoicePreview.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // =============================================
-        // إرسال البيانات
-        // =============================================
+        // ============================================================
+        // إنشاء رابط الفاتورة
+        // ============================================================
+        function generateInvoiceLink(data) {
+            const invoiceData = {
+                id: data.bookingNumber,
+                name: data.guestName,
+                date: data.invoiceDate,
+                total: data.total,
+                paid: data.paid,
+                remaining: data.remaining,
+                property: data.propertyType,
+                nights: data.nights,
+                dailyPrice: data.dailyPrice,
+                discount: data.discount || 0,
+                paymentStatus: data.paymentStatus,
+                stayType: data.stayType,
+                checkIn: data.checkIn,
+                checkOut: data.checkOut,
+                checkInTime: data.checkInTime || '',
+                checkOutTime: data.checkOutTime || '',
+                timeNote: data.timeNote || '',
+                phone: data.phone || ''
+            };
+            const encoded = btoa(JSON.stringify(invoiceData));
+            return `https://excel-for-all.pages.dev/invoice-view.html?data=${encoded}`;
+        }
+
+        // ============================================================
+        // نسخ الرابط
+        // ============================================================
+        function copyInvoiceLink() {
+            if (!lastSavedData) {
+                showMessage('⚠️ لا توجد فاتورة', 'error');
+                return;
+            }
+            const link = generateInvoiceLink(lastSavedData);
+            navigator.clipboard.writeText(link).then(() => {
+                showMessage('✅ تم نسخ رابط الفاتورة!', 'success');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = link;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showMessage('✅ تم نسخ رابط الفاتورة!', 'success');
+            });
+        }
+
+        // ============================================================
+        // إرسال رابط الفاتورة عبر واتساب
+        // ============================================================
+        function sendWhatsAppLink() {
+            if (!lastSavedData) {
+                showMessage('⚠️ لا توجد فاتورة', 'error');
+                return;
+            }
+
+            const phone = lastSavedData.phone;
+            if (!phone || phone.trim() === '') {
+                showMessage('⚠️ الرجاء إدخال رقم جوال العميل لإرسال رابط الفاتورة', 'error');
+                return;
+            }
+
+            const link = generateInvoiceLink(lastSavedData);
+
+            const message =
+                `🏕️ *منتجع حياله - القصيم*
+
+📋 *فاتورة رقم:* ${lastSavedData.bookingNumber}
+👤 *العميل:* ${lastSavedData.guestName}
+💰 *الإجمالي:* ${lastSavedData.total} ر.س
+📅 *التاريخ:* ${lastSavedData.invoiceDate}
+
+🔗 *رابط الفاتورة:*
+${link}
+
+📌 يمكنك فتح الرابط لمشاهدة الفاتورة أو طباعتها أو تحميلها كـ PDF.
+شكراً لثقتكم بنا 🙏`;
+
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+            showMessage('✅ تم فتح واتساب مع رابط الفاتورة!', 'success');
+        }
+
+        // ============================================================
+        // إرسال PDF عبر واتساب (طريقة النص)
+        // ============================================================
+        function sendWhatsAppPDF() {
+            if (!lastSavedData) {
+                showMessage('⚠️ لا توجد فاتورة للإرسال', 'error');
+                return;
+            }
+
+            const phone = lastSavedData.phone;
+            if (!phone || phone.trim() === '') {
+                showMessage('⚠️ الرجاء إدخال رقم جوال العميل لإرسال الفاتورة', 'error');
+                return;
+            }
+
+            const message = generateInvoiceMessage(lastSavedData);
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+            showMessage('✅ تم فتح واتساب مع تفاصيل الفاتورة!', 'success');
+        }
+
+        // ============================================================
+        // إنشاء نص رسالة الفاتورة
+        // ============================================================
+        function generateInvoiceMessage(data) {
+            const total = parseFloat(data.total).toFixed(2);
+            const paid = parseFloat(data.paid).toFixed(2);
+            const remaining = parseFloat(data.remaining).toFixed(2);
+            const nights = parseInt(data.nights);
+            const dailyPrice = parseFloat(data.dailyPrice).toFixed(2);
+            const subTotal = (nights * dailyPrice).toFixed(2);
+
+            let message = `🏕️ *منتجع حياله - القصيم*\n`;
+            message += `📋 *فاتورة رقم:* ${data.bookingNumber.padStart(4, '0')}\n`;
+            message += `📅 *التاريخ:* ${data.invoiceDate}\n`;
+            message += `━━━━━━━━━━━━━━━━\n`;
+            message += `👤 *العميل:* ${data.guestName}\n`;
+            message += `📱 *الجوال:* ${data.phone || '-'}\n`;
+            message += `🏠 *العقار:* ${data.propertyType}\n`;
+            message += `🏨 *نوع الإقامة:* ${data.stayType}\n`;
+            message += `━━━━━━━━━━━━━━━━\n`;
+            message += `📅 *الدخول:* ${data.checkIn} ${data.checkInTime ? '⏰ ' + data.checkInTime : ''}\n`;
+            message += `📅 *الخروج:* ${data.checkOut} ${data.checkOutTime ? '⏰ ' + data.checkOutTime : ''}\n`;
+            message += `📊 *عدد الأيام:* ${data.nights}\n`;
+            message += `━━━━━━━━━━━━━━━━\n`;
+            message += `💰 *السعر اليومي:* ${dailyPrice} ر.س\n`;
+            message += `💵 *الإجمالي قبل الخصم:* ${subTotal} ر.س\n`;
+            message += `🏷️ *الخصم:* ${data.discount} ر.س\n`;
+            message += `━ ━ ━ ━ ━ ━ ━ ━ ━ ━\n`;
+            message += `💰 *الإجمالي:* ${total} ر.س\n`;
+            message += `💵 *المدفوع:* ${paid} ر.س\n`;
+            message += `⏳ *المتبقي:* ${remaining} ر.س\n`;
+            message += `━━━━━━━━━━━━━━━━\n`;
+            message += `📌 *الحالة:* ${data.paymentStatus === 'Fully Paid' ? '✅ مدفوع بالكامل' : '⏳ متبقي'}\n`;
+            if (data.timeNote) {
+                message += `📝 *ملاحظة:* ${data.timeNote}\n`;
+            }
+            message += `━━━━━━━━━━━━━━━━\n`;
+            message += `📍 القصيم/ بريدة - حي الخليج\n`;
+            message += `📱 +966509982400\n`;
+            message += `*شكراً لثقتكم بنا* 🙏`;
+
+            return message;
+        }
+
+        // ============================================================
+        // تحميل PDF
+        // ============================================================
+        function downloadPDF() {
+            if (!lastSavedData) {
+                showMessage('⚠️ لا توجد فاتورة للتحميل', 'error');
+                return;
+            }
+
+            showInvoice(lastSavedData);
+
+            const element = document.getElementById('invoicePreview');
+            const opt = {
+                margin: 10,
+                filename: `فاتورة_${lastSavedData.bookingNumber}_${lastSavedData.guestName}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            showMessage('⏳ جاري تحويل الفاتورة إلى PDF...', 'success');
+
+            html2pdf().set(opt).from(element).save().then(function() {
+                showMessage('✅ تم تحميل PDF بنجاح!', 'success');
+            }).catch(function(err) {
+                showMessage('❌ حدث خطأ في تحويل PDF: ' + err.message, 'error');
+            });
+        }
+
+        // ============================================================
+        // إرسال البيانات - بدون تكرار
+        // ============================================================
         const form = document.getElementById('invoiceForm');
         const submitBtn = document.getElementById('submitBtn');
         const loadingSpinner = document.getElementById('loadingSpinner');
@@ -809,7 +1243,9 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // جمع البيانات
+            if (isSubmitting) return;
+            isSubmitting = true;
+
             const formData = {
                 action: 'addInvoice',
                 bookingNumber: document.getElementById('bookingNumber').value,
@@ -833,16 +1269,17 @@
                 timeNote: document.getElementById('timeNote').value
             };
 
-            // التحقق من الحقول المطلوبة
-            const requiredFields = ['bookingNumber', 'invoiceDate', 'checkIn', 'checkOut', 'day', 'guestName', 'propertyType', 'nights', 'dailyPrice', 'paid', 'total', 'paymentStatus', 'stayType'];
+            const requiredFields = ['bookingNumber', 'invoiceDate', 'checkIn', 'checkOut', 'day', 'guestName',
+                'propertyType', 'nights', 'dailyPrice', 'paid', 'total', 'paymentStatus', 'stayType'
+            ];
             for (const field of requiredFields) {
                 if (!formData[field]) {
                     showMessage(`⚠️ الرجاء ملء جميع الحقول المطلوبة`, 'error');
+                    isSubmitting = false;
                     return;
                 }
             }
 
-            // إظهار التحميل
             submitBtn.disabled = true;
             submitBtn.style.display = 'none';
             loadingSpinner.style.display = 'block';
@@ -851,21 +1288,36 @@
             try {
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify(formData)
                 });
 
-                sendViaIframe(formData);
+                const result = await response.json();
+
+                if (result.success) {
+                    handleSuccess(formData);
+                } else {
+                    showMessage(`❌ ${result.message || 'حدث خطأ في حفظ البيانات'}`, 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.style.display = 'block';
+                    loadingSpinner.style.display = 'none';
+                }
 
             } catch (error) {
-                showMessage('❌ حدث خطأ في الاتصال بالخادم', 'error');
-                submitBtn.disabled = false;
-                submitBtn.style.display = 'block';
-                loadingSpinner.style.display = 'none';
+                console.warn('Fetch failed, trying iframe fallback...');
+                sendViaIframe(formData);
             }
+
+            isSubmitting = false;
         });
 
+        // ============================================================
+        // الإرسال عبر iframe (حل بديل)
+        // ============================================================
         function sendViaIframe(data) {
             const form = document.createElement('form');
             form.method = 'POST';
@@ -881,35 +1333,28 @@
             const iframe = document.createElement('iframe');
             iframe.name = 'hiddenFrame';
             iframe.style.display = 'none';
+
+            let isProcessed = false;
+
             iframe.onload = function() {
+                if (isProcessed) return;
+                isProcessed = true;
+
                 try {
                     const responseText = iframe.contentDocument.body.textContent;
                     const response = JSON.parse(responseText);
                     if (response.success) {
-                        showMessage('✅ ' + response.message, 'success');
-                        lastSavedData = data;
-                        
-                        // =============================================
-                        // عرض نافذة الطباعة
-                        // =============================================
-                        printDialog.classList.add('show');
-                        
-                        // إعادة تعيين النموذج
-                        form.reset();
-                        remainingInput.value = '0';
+                        handleSuccess(data);
                     } else {
-                        showMessage('❌ ' + response.message, 'error');
+                        showMessage(`❌ ${response.message || 'حدث خطأ في حفظ البيانات'}`, 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.style.display = 'block';
+                        loadingSpinner.style.display = 'none';
                     }
                 } catch (e) {
-                    showMessage('✅ تم إرسال الفاتورة بنجاح!', 'success');
-                    lastSavedData = data;
-                    printDialog.classList.add('show');
-                    form.reset();
-                    remainingInput.value = '0';
+                    handleSuccess(data);
                 }
-                submitBtn.disabled = false;
-                submitBtn.style.display = 'block';
-                loadingSpinner.style.display = 'none';
+
                 document.body.removeChild(iframe);
                 document.body.removeChild(form);
             };
@@ -919,9 +1364,29 @@
             form.submit();
         }
 
-        // =============================================
+        // ============================================================
+        // دالة معالجة النجاح
+        // ============================================================
+        function handleSuccess(formData) {
+            lastSavedData = formData;
+            savedBookingNumber = formData.bookingNumber;
+
+            showMessage(`✅ تم حفظ الفاتورة بنجاح! رقم الحجز: ${formData.bookingNumber}`, 'success');
+
+            form.reset();
+            remainingInput.value = '0';
+
+            document.getElementById('savedBookingNumber').textContent = formData.bookingNumber;
+            printDialog.classList.add('show');
+
+            submitBtn.disabled = false;
+            submitBtn.style.display = 'block';
+            loadingSpinner.style.display = 'none';
+        }
+
+        // ============================================================
         // أزرار نافذة الطباعة
-        // =============================================
+        // ============================================================
         document.getElementById('printYes').addEventListener('click', function() {
             printDialog.classList.remove('show');
             if (lastSavedData) {
@@ -936,6 +1401,53 @@
             printDialog.classList.remove('show');
         });
 
+        document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+            printDialog.classList.remove('show');
+            setTimeout(() => {
+                downloadPDF();
+            }, 300);
+        });
+
+        document.getElementById('downloadPdfBtn2').addEventListener('click', function() {
+            downloadPDF();
+        });
+
+        document.getElementById('whatsappPdfBtn').addEventListener('click', function() {
+            printDialog.classList.remove('show');
+            setTimeout(() => {
+                sendWhatsAppPDF();
+            }, 300);
+        });
+
+        document.getElementById('whatsappPdfBtn2').addEventListener('click', function() {
+            sendWhatsAppPDF();
+        });
+
+        document.getElementById('whatsappLinkBtn').addEventListener('click', function() {
+            printDialog.classList.remove('show');
+            setTimeout(() => {
+                sendWhatsAppLink();
+            }, 300);
+        });
+
+        document.getElementById('whatsappLinkBtn2').addEventListener('click', function() {
+            sendWhatsAppLink();
+        });
+
+        document.getElementById('copyLinkBtn').addEventListener('click', function() {
+            printDialog.classList.remove('show');
+            setTimeout(() => {
+                copyInvoiceLink();
+            }, 300);
+        });
+
+        document.getElementById('copyLinkBtn2').addEventListener('click', function() {
+            copyInvoiceLink();
+        });
+
+        // ============================================================
+        // دوال الرسائل
+        // ============================================================
         function showMessage(text, type) {
             messageDiv.textContent = text;
             messageDiv.className = 'message ' + type;
@@ -946,9 +1458,9 @@
             messageDiv.textContent = '';
         }
 
-        // =============================================
-        // ضبط التاريخ الافتراضي لليوم
-        // =============================================
+        // ============================================================
+        // ضبط التاريخ الافتراضي
+        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('invoiceDate').value = today;
