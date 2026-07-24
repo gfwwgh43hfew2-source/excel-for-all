@@ -1066,49 +1066,75 @@
 
     <script>
         // ============================================================
-        // 🔑 رابط سكريبت الفواتير (الإصدار 13 - الرابط الجديد)
+        // 🔑 رابط سكريبت الفواتير (الإصدار 14 - الرابط الجديد)
         // ============================================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySk-xA8IQHpzJPyz3Rm-xzYfJRW-kuL5gaPAi6zNr2wdf8qwMEC-jXi40Y2g10AJceOg/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRm7sXPXwiYPaI2W1hmHvd1-q96VWCBq_a5uqEUtBsJj7roCMOD4zqwyNXxzk8tfcXiQ/exec';
 
         // ============================================================
-        // 📋 جلب آخر رقم حجز من Google Sheets (العمود الأول)
+        // 📋 جلب آخر رقم حجز باستخدام JSONP (بدون CORS)
         // ============================================================
-        async function getLastBookingNumber() {
-            try {
-                console.log('📤 جاري جلب آخر رقم حجز من Google Sheets...');
-
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'getLastBookingNumber'
-                    })
-                });
-
-                const result = await response.json();
-                console.log('📥 الرد من السكريبت:', result);
-
-                if (result.success) {
-                    // الرقم التالي = آخر رقم في العمود الأول + 1
-                    const lastNumber = result.lastNumber || 0;
-                    const nextNumber = lastNumber + 1;
-
-                    // حفظ في localStorage كنسخة احتياطية
-                    localStorage.setItem('lastBookingNumber', nextNumber.toString());
-
-                    console.log(`📋 آخر رقم: ${lastNumber} → الرقم الجديد: ${nextNumber}`);
-                    return nextNumber;
-                } else {
-                    console.warn('⚠️ فشل جلب الرقم من الشيت، استخدام localStorage');
-                    return getLocalBookingNumber();
+        function getLastBookingNumber() {
+            return new Promise((resolve) => {
+                // محاولة جلب من localStorage أولاً
+                let lastNumber = localStorage.getItem('lastBookingNumber');
+                if (lastNumber) {
+                    resolve(parseInt(lastNumber) + 1);
+                    return;
                 }
-            } catch (error) {
-                console.error('❌ خطأ في جلب آخر رقم حجز:', error);
-                return getLocalBookingNumber();
-            }
+                
+                console.log('📤 جاري جلب آخر رقم حجز عبر JSONP...');
+                
+                // استخدام JSONP
+                const script = document.createElement('script');
+                const callbackName = 'jsonp_callback_' + Date.now();
+                
+                window[callbackName] = function(response) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    
+                    console.log('📥 الرد:', response);
+                    
+                    if (response && response.success) {
+                        const nextNumber = response.lastNumber + 1;
+                        localStorage.setItem('lastBookingNumber', nextNumber.toString());
+                        console.log(`📋 آخر رقم: ${response.lastNumber} → الرقم الجديد: ${nextNumber}`);
+                        resolve(nextNumber);
+                    } else {
+                        console.warn('⚠️ فشل جلب الرقم، البدء من 1');
+                        resolve(1);
+                    }
+                };
+                
+                script.src = SCRIPT_URL + '?callback=' + callbackName;
+                script.onerror = function() {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    console.warn('⚠️ خطأ في تحميل السكريبت، استخدام localStorage');
+                    let num = localStorage.getItem('lastBookingNumber');
+                    if (num) {
+                        resolve(parseInt(num) + 1);
+                    } else {
+                        resolve(1);
+                    }
+                };
+                
+                document.body.appendChild(script);
+                
+                // مهلة 5 ثواني
+                setTimeout(() => {
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                        document.body.removeChild(script);
+                        console.warn('⏰ مهلة انتهت، استخدام localStorage');
+                        let num = localStorage.getItem('lastBookingNumber');
+                        if (num) {
+                            resolve(parseInt(num) + 1);
+                        } else {
+                            resolve(1);
+                        }
+                    }
+                }, 5000);
+            });
         }
 
         // ============================================================
@@ -1139,10 +1165,10 @@
             const bookingNumberInput = document.getElementById('bookingNumber');
             // إظهار حالة التحميل
             bookingNumberInput.value = '⏳ جاري التحميل...';
-
+            
             const nextNumber = await getLastBookingNumber();
             bookingNumberInput.value = nextNumber;
-
+            
             console.log(`✅ تم تعيين رقم الحجز: ${nextNumber}`);
         }
 
