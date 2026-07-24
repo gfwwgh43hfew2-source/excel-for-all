@@ -757,7 +757,7 @@
             </div>
 
             <form id="invoiceForm" target="hiddenFrame">
-                <!-- ===== رقم الحجز (تلقائي متسلسل من Google Sheets) ===== -->
+                <!-- ===== رقم الحجز (تلقائي متسلسل) ===== -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>📋 رقم الحجز <span class="required">*</span></label>
@@ -1066,9 +1066,23 @@
 
     <script>
         // ============================================================
-        // 🔑 رابط سكريبت الفواتير (الإصدار 10 - الرابط الجديد)
+        // 🔑 رابط سكريبت الفواتير
         // ============================================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkZ710HurmM2JpwYzpt2BC932K0rmfavK5wUvSEeTA2eaBDxdmjXQ1SV7Ab_fF_ceRaA/exec';
+
+        // ============================================================
+        // 📋 إدارة رقم الحجز (محلياً باستخدام localStorage)
+        // ============================================================
+        function getNextBookingNumber() {
+            let lastNumber = localStorage.getItem('lastBookingNumber');
+            if (lastNumber) {
+                lastNumber = parseInt(lastNumber) + 1;
+            } else {
+                lastNumber = 1;
+            }
+            localStorage.setItem('lastBookingNumber', lastNumber.toString());
+            return lastNumber;
+        }
 
         // ============================================================
         // 🚀 حساب عدد الأيام بين تاريخين
@@ -1120,66 +1134,6 @@
         dailyPriceInput.addEventListener('input', calculateTotal);
         discountInput.addEventListener('input', calculateTotal);
         paidInput.addEventListener('input', calculateRemaining);
-
-        // ============================================================
-        // 📋 جلب آخر رقم حجز من Google Sheets
-        // ============================================================
-        async function getLastBookingNumber() {
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'getLastBookingNumber'
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    const nextNumber = result.lastNumber + 1;
-                    localStorage.setItem('lastBookingNumber', nextNumber.toString());
-                    return nextNumber;
-                }
-                return getLocalBookingNumber();
-            } catch (error) {
-                console.error('خطأ في جلب آخر رقم حجز:', error);
-                return getLocalBookingNumber();
-            }
-        }
-
-        // ============================================================
-        // 📋 الحصول على رقم الحجز من localStorage (حل احتياطي)
-        // ============================================================
-        function getLocalBookingNumber() {
-            let lastNumber = localStorage.getItem('lastBookingNumber');
-            if (lastNumber) {
-                return parseInt(lastNumber) + 1;
-            }
-            return 1;
-        }
-
-        // ============================================================
-        // 🔄 تحديث رقم الحجز
-        // ============================================================
-        function updateBookingNumber() {
-            const bookingNumberInput = document.getElementById('bookingNumber');
-            const currentNumber = parseInt(bookingNumberInput.value) || 0;
-            const nextNumber = currentNumber + 1;
-            bookingNumberInput.value = nextNumber;
-            localStorage.setItem('lastBookingNumber', nextNumber.toString());
-        }
-
-        // ============================================================
-        // 📝 تهيئة رقم الحجز عند تحميل الصفحة
-        // ============================================================
-        async function initBookingNumber() {
-            const bookingNumberInput = document.getElementById('bookingNumber');
-            const nextNumber = await getLastBookingNumber();
-            bookingNumberInput.value = nextNumber;
-        }
 
         // ============================================================
         // المتغيرات
@@ -1509,7 +1463,7 @@ ${link}
         });
 
         // ============================================================
-        // دالة معالجة النجاح (معدلة)
+        // دالة معالجة النجاح
         // ============================================================
         function handleSuccess(formData) {
             isSubmitting = false;
@@ -1519,7 +1473,9 @@ ${link}
             showMessage(`✅ تم حفظ الفاتورة بنجاح! رقم الحجز: ${formData.bookingNumber}`, 'success');
 
             // تحديث رقم الحجز
-            updateBookingNumber();
+            const bookingNumberInput = document.getElementById('bookingNumber');
+            const nextNumber = getNextBookingNumber();
+            bookingNumberInput.value = nextNumber;
 
             // إعادة تعيين باقي الحقول
             form.reset();
@@ -1623,8 +1579,8 @@ ${link}
             document.getElementById('checkIn').value = today;
             document.getElementById('checkOut').value = today;
 
-            // تهيئة رقم الحجز من Google Sheets
-            initBookingNumber();
+            // تعيين رقم الحجز
+            document.getElementById('bookingNumber').value = getNextBookingNumber();
 
             nightsInput.value = 0;
             totalInput.value = 0;
