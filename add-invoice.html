@@ -1071,17 +1071,79 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkZ710HurmM2JpwYzpt2BC932K0rmfavK5wUvSEeTA2eaBDxdmjXQ1SV7Ab_fF_ceRaA/exec';
 
         // ============================================================
-        // 📋 إدارة رقم الحجز (محلياً باستخدام localStorage)
+        // 📋 جلب آخر رقم حجز من Google Sheets (العمود الأول)
         // ============================================================
-        function getNextBookingNumber() {
+        async function getLastBookingNumber() {
+            try {
+                console.log('📤 جاري جلب آخر رقم حجز من Google Sheets...');
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'getLastBookingNumber'
+                    })
+                });
+
+                const result = await response.json();
+                console.log('📥 الرد من السكريبت:', result);
+
+                if (result.success) {
+                    // الرقم التالي = آخر رقم في العمود الأول + 1
+                    const lastNumber = result.lastNumber || 0;
+                    const nextNumber = lastNumber + 1;
+
+                    // حفظ في localStorage كنسخة احتياطية
+                    localStorage.setItem('lastBookingNumber', nextNumber.toString());
+
+                    console.log(`📋 آخر رقم: ${lastNumber} → الرقم الجديد: ${nextNumber}`);
+                    return nextNumber;
+                } else {
+                    console.warn('⚠️ فشل جلب الرقم من الشيت، استخدام localStorage');
+                    return getLocalBookingNumber();
+                }
+            } catch (error) {
+                console.error('❌ خطأ في جلب آخر رقم حجز:', error);
+                return getLocalBookingNumber();
+            }
+        }
+
+        // ============================================================
+        // 📋 الحصول على رقم الحجز من localStorage (حل احتياطي)
+        // ============================================================
+        function getLocalBookingNumber() {
             let lastNumber = localStorage.getItem('lastBookingNumber');
             if (lastNumber) {
-                lastNumber = parseInt(lastNumber) + 1;
-            } else {
-                lastNumber = 1;
+                return parseInt(lastNumber) + 1;
             }
-            localStorage.setItem('lastBookingNumber', lastNumber.toString());
-            return lastNumber;
+            return 1;
+        }
+
+        // ============================================================
+        // 🔄 تحديث رقم الحجز في localStorage
+        // ============================================================
+        function updateBookingNumber() {
+            const bookingNumberInput = document.getElementById('bookingNumber');
+            const currentNumber = parseInt(bookingNumberInput.value) || 0;
+            const nextNumber = currentNumber + 1;
+            localStorage.setItem('lastBookingNumber', nextNumber.toString());
+        }
+
+        // ============================================================
+        // 📝 تهيئة رقم الحجز عند تحميل الصفحة
+        // ============================================================
+        async function initBookingNumber() {
+            const bookingNumberInput = document.getElementById('bookingNumber');
+            // إظهار حالة التحميل
+            bookingNumberInput.value = '⏳ جاري التحميل...';
+
+            const nextNumber = await getLastBookingNumber();
+            bookingNumberInput.value = nextNumber;
+
+            console.log(`✅ تم تعيين رقم الحجز: ${nextNumber}`);
         }
 
         // ============================================================
@@ -1472,10 +1534,10 @@ ${link}
 
             showMessage(`✅ تم حفظ الفاتورة بنجاح! رقم الحجز: ${formData.bookingNumber}`, 'success');
 
-            // تحديث رقم الحجز
+            // تحديث رقم الحجز في localStorage (للحل الاحتياطي)
             const bookingNumberInput = document.getElementById('bookingNumber');
-            const nextNumber = getNextBookingNumber();
-            bookingNumberInput.value = nextNumber;
+            const nextNumber = parseInt(bookingNumberInput.value) + 1;
+            localStorage.setItem('lastBookingNumber', nextNumber.toString());
 
             // إعادة تعيين باقي الحقول
             form.reset();
@@ -1579,8 +1641,8 @@ ${link}
             document.getElementById('checkIn').value = today;
             document.getElementById('checkOut').value = today;
 
-            // تعيين رقم الحجز
-            document.getElementById('bookingNumber').value = getNextBookingNumber();
+            // تهيئة رقم الحجز من Google Sheets
+            initBookingNumber();
 
             nightsInput.value = 0;
             totalInput.value = 0;
