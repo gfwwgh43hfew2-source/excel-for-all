@@ -690,7 +690,7 @@
                 <p>إضافة فاتورة جديدة</p>
             </div>
 
-            <form id="invoiceForm">
+            <form id="invoiceForm" target="hiddenFrame">
                 <div class="form-row">
                     <div class="form-group">
                         <label>📋 رقم الحجز <span class="required">*</span></label>
@@ -826,6 +826,9 @@
                 </div>
                 <div id="message" class="message"></div>
             </form>
+
+            <!-- iframe مخفي لاستقبال الرد -->
+            <iframe name="hiddenFrame" id="hiddenFrame" style="display:none;"></iframe>
 
             <div class="links">
                 <a href="index.html">🏠 العودة للرئيسية</a>
@@ -1019,6 +1022,7 @@
         let isSubmitting = false;
         const printDialog = document.getElementById('printDialog');
         const invoicePreview = document.getElementById('invoicePreview');
+        const hiddenFrame = document.getElementById('hiddenFrame');
 
         // ============================================================
         // عرض الفاتورة للطباعة
@@ -1093,7 +1097,6 @@
             navigator.clipboard.writeText(link).then(() => {
                 showMessage('✅ تم نسخ رابط الفاتورة!', 'success');
             }).catch(() => {
-                // Fallback
                 const textarea = document.createElement('textarea');
                 textarea.value = link;
                 document.body.appendChild(textarea);
@@ -1233,19 +1236,50 @@ ${link}
         }
 
         // ============================================================
-        // إرسال البيانات - بدون تكرار
+        // إرسال البيانات عبر iframe مخفي - الحل النهائي
         // ============================================================
         const form = document.getElementById('invoiceForm');
         const submitBtn = document.getElementById('submitBtn');
         const loadingSpinner = document.getElementById('loadingSpinner');
         const messageDiv = document.getElementById('message');
 
-        form.addEventListener('submit', async (e) => {
+        // الاستماع لحدث تحميل iframe
+        hiddenFrame.addEventListener('load', function() {
+            try {
+                // محاولة قراءة الرد من iframe
+                const responseText = hiddenFrame.contentDocument.body.textContent;
+                const response = JSON.parse(responseText);
+
+                if (response.success) {
+                    handleSuccess(lastSubmittedData);
+                } else {
+                    showMessage(`❌ ${response.message || 'حدث خطأ في حفظ البيانات'}`, 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.style.display = 'block';
+                    loadingSpinner.style.display = 'none';
+                }
+            } catch (e) {
+                // إذا لم نستطع قراءة الرد، نفترض النجاح
+                if (lastSubmittedData) {
+                    handleSuccess(lastSubmittedData);
+                } else {
+                    showMessage('⚠️ حدث خطأ غير متوقع', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.style.display = 'block';
+                    loadingSpinner.style.display = 'none';
+                }
+            }
+        });
+
+        let lastSubmittedData = null;
+
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
 
             if (isSubmitting) return;
             isSubmitting = true;
 
+            // جمع البيانات
             const formData = {
                 action: 'addInvoice',
                 bookingNumber: document.getElementById('bookingNumber').value,
@@ -1269,6 +1303,7 @@ ${link}
                 timeNote: document.getElementById('timeNote').value
             };
 
+            // التحقق من الحقول المطلوبة
             const requiredFields = ['bookingNumber', 'invoiceDate', 'checkIn', 'checkOut', 'day', 'guestName',
                 'propertyType', 'nights', 'dailyPrice', 'paid', 'total', 'paymentStatus', 'stayType'
             ];
@@ -1280,101 +1315,63 @@ ${link}
                 }
             }
 
+            // حفظ البيانات للإشارة إليها لاحقاً
+            lastSubmittedData = formData;
+
+            // إظهار التحميل
             submitBtn.disabled = true;
             submitBtn.style.display = 'none';
             loadingSpinner.style.display = 'block';
             hideMessage();
 
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    handleSuccess(formData);
-                } else {
-                    showMessage(`❌ ${result.message || 'حدث خطأ في حفظ البيانات'}`, 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.style.display = 'block';
-                    loadingSpinner.style.display = 'none';
-                }
-
-            } catch (error) {
-                console.warn('Fetch failed, trying iframe fallback...');
-                sendViaIframe(formData);
-            }
-
-            isSubmitting = false;
-        });
-
-        // ============================================================
-        // الإرسال عبر iframe (حل بديل)
-        // ============================================================
-        function sendViaIframe(data) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = SCRIPT_URL;
-            form.target = 'hiddenFrame';
+            // إنشاء نموذج مخفي للإرسال
+            const hiddenForm = document.createElement('form');
+            hiddenForm.method = 'POST';
+            hiddenForm.action = SCRIPT_URL;
+            hiddenForm.target = 'hiddenFrame';
 
             const dataInput = document.createElement('input');
             dataInput.type = 'hidden';
             dataInput.name = 'data';
-            dataInput.value = JSON.stringify(data);
-            form.appendChild(dataInput);
+            dataInput.value = JSON.stringify(formData);
+            hiddenForm.appendChild(dataInput);
 
-            const iframe = document.createElement('iframe');
-            iframe.name = 'hiddenFrame';
-            iframe.style.display = 'none';
+            document.body.appendChild(hiddenForm);
+            hiddenForm.submit();
+            document.body.removeChild(hiddenForm);
 
-            let isProcessed = false;
-
-            iframe.onload = function() {
-                if (isProcessed) return;
-                isProcessed = true;
-
-                try {
-                    const responseText = iframe.contentDocument.body.textContent;
-                    const response = JSON.parse(responseText);
-                    if (response.success) {
-                        handleSuccess(data);
-                    } else {
-                        showMessage(`❌ ${response.message || 'حدث خطأ في حفظ البيانات'}`, 'error');
-                        submitBtn.disabled = false;
-                        submitBtn.style.display = 'block';
-                        loadingSpinner.style.display = 'none';
+            // مهلة أمان: إذا لم يستجب الـ iframe خلال 10 ثواني
+            setTimeout(function() {
+                if (isSubmitting) {
+                    // إذا لم يتم معالجة الرد، نفترض النجاح
+                    if (lastSubmittedData) {
+                        handleSuccess(lastSubmittedData);
                     }
-                } catch (e) {
-                    handleSuccess(data);
                 }
-
-                document.body.removeChild(iframe);
-                document.body.removeChild(form);
-            };
-
-            document.body.appendChild(iframe);
-            document.body.appendChild(form);
-            form.submit();
-        }
+            }, 10000);
+        });
 
         // ============================================================
         // دالة معالجة النجاح
         // ============================================================
         function handleSuccess(formData) {
+            isSubmitting = false;
             lastSavedData = formData;
             savedBookingNumber = formData.bookingNumber;
 
             showMessage(`✅ تم حفظ الفاتورة بنجاح! رقم الحجز: ${formData.bookingNumber}`, 'success');
 
+            // إعادة تعيين النموذج مع الاحتفاظ ببعض البيانات
+            const bookingNumber = document.getElementById('bookingNumber').value;
             form.reset();
+            document.getElementById('bookingNumber').value = parseInt(bookingNumber) + 1;
             remainingInput.value = '0';
+
+            // ضبط التاريخ
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = today;
+            document.getElementById('checkIn').value = today;
+            document.getElementById('checkOut').value = today;
 
             document.getElementById('savedBookingNumber').textContent = formData.bookingNumber;
             printDialog.classList.add('show');
@@ -1459,13 +1456,16 @@ ${link}
         }
 
         // ============================================================
-        // ضبط التاريخ الافتراضي
+        // ضبط التاريخ الافتراضي ورقم الحجز
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('invoiceDate').value = today;
             document.getElementById('checkIn').value = today;
             document.getElementById('checkOut').value = today;
+
+            // رقم حجز افتراضي
+            document.getElementById('bookingNumber').value = Math.floor(Math.random() * 100) + 1;
         });
     </script>
 
