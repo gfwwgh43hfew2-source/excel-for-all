@@ -380,7 +380,7 @@
         }
 
         /* ============================================================
-                   INVOICE PRINT STYLES - تنسيق صفحة واحدة
+                   INVOICE PRINT STYLES
                 ============================================================ */
         .invoice-container {
             display: none;
@@ -489,7 +489,7 @@
         }
 
         /* ============================================================
-                   INVOICE TERMS & CONDITIONS - مضغوطة
+                   INVOICE TERMS & CONDITIONS
                 ============================================================ */
         .invoice-terms {
             margin-top: 10px;
@@ -607,7 +607,7 @@
         }
 
         /* ============================================================
-                   PRINT MEDIA QUERY - صفحة واحدة
+                   PRINT MEDIA QUERY
                 ============================================================ */
         @media print {
             * {
@@ -757,10 +757,11 @@
             </div>
 
             <form id="invoiceForm" target="hiddenFrame">
+                <!-- ===== رقم الحجز (تلقائي متسلسل) ===== -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>📋 رقم الحجز <span class="required">*</span></label>
-                        <input type="number" id="bookingNumber" placeholder="مثال: 16" required />
+                        <input type="number" id="bookingNumber" readonly required />
                     </div>
                     <div class="form-group">
                         <label>📅 تاريخ الفاتورة <span class="required">*</span></label>
@@ -768,17 +769,7 @@
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>📅 تاريخ الدخول <span class="required">*</span></label>
-                        <input type="date" id="checkIn" required />
-                    </div>
-                    <div class="form-group">
-                        <label>📅 تاريخ الخروج <span class="required">*</span></label>
-                        <input type="date" id="checkOut" required />
-                    </div>
-                </div>
-
+                <!-- ===== اليوم + اسم الحاجز ===== -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>📆 اليوم <span class="required">*</span></label>
@@ -794,15 +785,16 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>👤 اسم الحجز <span class="required">*</span></label>
+                        <label>👤 اسم الحاجز <span class="required">*</span></label>
                         <input type="text" id="guestName" placeholder="مثال: ابو خالد" required />
                     </div>
                 </div>
 
+                <!-- ===== رقم الجوال + نوع الحجز ===== -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label>📱 رقم الجوال</label>
-                        <input type="text" id="phone" placeholder="مثال: 0501234567" />
+                        <label>📱 رقم الجوال <span class="required">*</span></label>
+                        <input type="text" id="phone" placeholder="مثال: 0501234567" required />
                     </div>
                     <div class="form-group">
                         <label>🏠 نوع الحجز (العقار) <span class="required">*</span></label>
@@ -818,10 +810,23 @@
                     </div>
                 </div>
 
+                <!-- ===== تاريخ الدخول + تاريخ الخروج ===== -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📅 تاريخ الدخول <span class="required">*</span></label>
+                        <input type="date" id="checkIn" required />
+                    </div>
+                    <div class="form-group">
+                        <label>📅 تاريخ الخروج <span class="required">*</span></label>
+                        <input type="date" id="checkOut" required />
+                    </div>
+                </div>
+
+                <!-- ===== عدد أيام المبيت (تلقائي) + السعر اليومي ===== -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>📊 عدد أيام المبيت <span class="required">*</span></label>
-                        <input type="number" id="nights" placeholder="مثال: 2" required />
+                        <input type="number" id="nights" readonly required />
                     </div>
                     <div class="form-group">
                         <label>💰 السعر اليومي <span class="required">*</span></label>
@@ -829,6 +834,7 @@
                     </div>
                 </div>
 
+                <!-- ===== الخصم + المدفوع ===== -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>🏷️ الخصم</label>
@@ -840,17 +846,19 @@
                     </div>
                 </div>
 
+                <!-- ===== المتبقي (تلقائي) + الإجمالي (تلقائي) ===== -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>⏳ المتبقي</label>
-                        <input type="number" id="remaining" placeholder="يحسب تلقائياً" readonly />
+                        <input type="number" id="remaining" readonly />
                     </div>
                     <div class="form-group">
-                        <label>💰 الإجمالي (صافي الإيراد) <span class="required">*</span></label>
-                        <input type="number" id="total" placeholder="مثال: 1000" required />
+                        <label>💰 الإجمالي <span class="required">*</span></label>
+                        <input type="number" id="total" readonly required />
                     </div>
                 </div>
 
+                <!-- ===== حالة السداد + نوع الإقامة ===== -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>📌 حالة السداد <span class="required">*</span></label>
@@ -868,6 +876,7 @@
                     </div>
                 </div>
 
+                <!-- ===== وقت الدخول + وقت الخروج ===== -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>⏰ وقت الدخول</label>
@@ -879,6 +888,7 @@
                     </div>
                 </div>
 
+                <!-- ===== ملاحظة الوقت ===== -->
                 <div class="form-group full-width">
                     <label>📝 ملاحظة الوقت</label>
                     <textarea id="timeNote" placeholder="أي ملاحظات إضافية..."></textarea>
@@ -893,7 +903,6 @@
                 <div id="message" class="message"></div>
             </form>
 
-            <!-- iframe مخفي لاستقبال الرد -->
             <iframe name="hiddenFrame" id="hiddenFrame" style="display:none;"></iframe>
 
             <div class="links">
@@ -930,7 +939,7 @@
         </div>
 
         <!-- ============================================================
-        INVOICE PREVIEW - تنسيق صفحة واحدة
+        INVOICE PREVIEW
         ============================================================ -->
         <div class="invoice-container" id="invoicePreview">
             <div class="invoice-header">
@@ -1027,9 +1036,6 @@
                 </div>
             </div>
 
-            <!-- ============================================================
-            TERMS & CONDITIONS - مضغوطة
-            ============================================================ -->
             <div class="invoice-terms">
                 <div class="terms-title">📋 الشروط والأحكام:</div>
                 <ul class="terms-list">
@@ -1065,11 +1071,45 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfojssy8iAlpko9YAJ5jSiDyyGuQ_3k_OlwZTHa3nOhK0JbWtoj-sCVhSe_KIkYBm9Cw/exec';
 
         // ============================================================
-        // حساب المتبقي تلقائياً
+        // 🚀 حساب عدد الأيام بين تاريخين
         // ============================================================
+        const checkInInput = document.getElementById('checkIn');
+        const checkOutInput = document.getElementById('checkOut');
+        const nightsInput = document.getElementById('nights');
+
+        function calculateNights() {
+            const checkIn = new Date(checkInInput.value);
+            const checkOut = new Date(checkOutInput.value);
+            if (checkIn && checkOut && checkOut > checkIn) {
+                const diffTime = Math.abs(checkOut - checkIn);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                nightsInput.value = diffDays;
+            } else {
+                nightsInput.value = 0;
+            }
+            calculateTotal();
+        }
+
+        checkInInput.addEventListener('change', calculateNights);
+        checkOutInput.addEventListener('change', calculateNights);
+
+        // ============================================================
+        // 💰 حساب الإجمالي تلقائياً
+        // ============================================================
+        const dailyPriceInput = document.getElementById('dailyPrice');
+        const discountInput = document.getElementById('discount');
         const totalInput = document.getElementById('total');
         const paidInput = document.getElementById('paid');
         const remainingInput = document.getElementById('remaining');
+
+        function calculateTotal() {
+            const nights = parseInt(nightsInput.value) || 0;
+            const dailyPrice = parseFloat(dailyPriceInput.value) || 0;
+            const discount = parseFloat(discountInput.value) || 0;
+            const total = (nights * dailyPrice) - discount;
+            totalInput.value = total.toFixed(2);
+            calculateRemaining();
+        }
 
         function calculateRemaining() {
             const total = parseFloat(totalInput.value) || 0;
@@ -1077,8 +1117,23 @@
             remainingInput.value = (total - paid).toFixed(2);
         }
 
-        totalInput.addEventListener('input', calculateRemaining);
+        dailyPriceInput.addEventListener('input', calculateTotal);
+        discountInput.addEventListener('input', calculateTotal);
         paidInput.addEventListener('input', calculateRemaining);
+
+        // ============================================================
+        // 📋 جلب آخر رقم حجز من localStorage
+        // ============================================================
+        function getNextBookingNumber() {
+            let lastNumber = localStorage.getItem('lastBookingNumber');
+            if (lastNumber) {
+                lastNumber = parseInt(lastNumber) + 1;
+            } else {
+                lastNumber = 1;
+            }
+            localStorage.setItem('lastBookingNumber', lastNumber.toString());
+            return lastNumber;
+        }
 
         // ============================================================
         // المتغيرات
@@ -1145,7 +1200,8 @@
                 checkInTime: data.checkInTime || '',
                 checkOutTime: data.checkOutTime || '',
                 timeNote: data.timeNote || '',
-                phone: data.phone || ''
+                phone: data.phone || '',
+                day: data.day || ''
             };
             const encoded = btoa(JSON.stringify(invoiceData));
             return `https://excel-for-all.pages.dev/invoice-view.html?data=${encoded}`;
@@ -1184,7 +1240,7 @@
 
             const phone = lastSavedData.phone;
             if (!phone || phone.trim() === '') {
-                showMessage('⚠️ الرجاء إدخال رقم جوال العميل لإرسال رابط الفاتورة', 'error');
+                showMessage('⚠️ الرجاء إدخال رقم جوال العميل', 'error');
                 return;
             }
 
@@ -1219,7 +1275,7 @@ ${link}
 
             const phone = lastSavedData.phone;
             if (!phone || phone.trim() === '') {
-                showMessage('⚠️ الرجاء إدخال رقم جوال العميل لإرسال الفاتورة', 'error');
+                showMessage('⚠️ الرجاء إدخال رقم جوال العميل', 'error');
                 return;
             }
 
@@ -1273,7 +1329,7 @@ ${link}
         }
 
         // ============================================================
-        // تحميل PDF - صفحة واحدة
+        // تحميل PDF
         // ============================================================
         function downloadPDF() {
             if (!lastSavedData) {
@@ -1303,7 +1359,7 @@ ${link}
         }
 
         // ============================================================
-        // إرسال البيانات عبر iframe مخفي - الحل النهائي
+        // إرسال البيانات عبر iframe مخفي
         // ============================================================
         const form = document.getElementById('invoiceForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -1312,7 +1368,6 @@ ${link}
 
         let lastSubmittedData = null;
 
-        // الاستماع لحدث تحميل iframe
         hiddenFrame.addEventListener('load', function() {
             try {
                 const responseText = hiddenFrame.contentDocument.body.textContent;
@@ -1368,7 +1423,7 @@ ${link}
             };
 
             const requiredFields = ['bookingNumber', 'invoiceDate', 'checkIn', 'checkOut', 'day', 'guestName',
-                'propertyType', 'nights', 'dailyPrice', 'paid', 'total', 'paymentStatus', 'stayType'
+                'phone', 'propertyType', 'nights', 'dailyPrice', 'paid', 'total', 'paymentStatus', 'stayType'
             ];
             for (const field of requiredFields) {
                 if (!formData[field]) {
@@ -1417,15 +1472,19 @@ ${link}
 
             showMessage(`✅ تم حفظ الفاتورة بنجاح! رقم الحجز: ${formData.bookingNumber}`, 'success');
 
-            const bookingNumber = document.getElementById('bookingNumber').value;
+            // إعادة تعيين النموذج مع الاحتفاظ برقم الحجز المتسلسل
             form.reset();
-            document.getElementById('bookingNumber').value = parseInt(bookingNumber) + 1;
-            remainingInput.value = '0';
+            document.getElementById('bookingNumber').value = getNextBookingNumber();
 
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('invoiceDate').value = today;
             document.getElementById('checkIn').value = today;
             document.getElementById('checkOut').value = today;
+            
+            // إعادة تعيين الحقول التلقائية
+            nightsInput.value = 0;
+            totalInput.value = 0;
+            remainingInput.value = 0;
 
             document.getElementById('savedBookingNumber').textContent = formData.bookingNumber;
             printDialog.classList.add('show');
@@ -1510,14 +1569,21 @@ ${link}
         }
 
         // ============================================================
-        // ضبط التاريخ الافتراضي ورقم الحجز
+        // تهيئة الصفحة
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('invoiceDate').value = today;
             document.getElementById('checkIn').value = today;
             document.getElementById('checkOut').value = today;
-            document.getElementById('bookingNumber').value = Math.floor(Math.random() * 100) + 1;
+            
+            // تعيين رقم الحجز المتسلسل
+            document.getElementById('bookingNumber').value = getNextBookingNumber();
+            
+            // تعيين الحقول التلقائية
+            nightsInput.value = 0;
+            totalInput.value = 0;
+            remainingInput.value = 0;
         });
     </script>
 
