@@ -380,14 +380,14 @@
         }
 
         /* ============================================================
-                   INVOICE PRINT STYLES
+                   INVOICE PRINT STYLES - تنسيق صفحة واحدة
                 ============================================================ */
         .invoice-container {
             display: none;
             max-width: 800px;
             margin: 20px auto;
             background: #fff;
-            padding: 30px;
+            padding: 20px 25px;
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
@@ -396,122 +396,123 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 3px solid #1a3a4a;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
         }
         .invoice-container .invoice-header .brand h2 {
             color: #1a3a4a;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
         .invoice-container .invoice-header .brand p {
             color: #5a6a7a;
-            font-size: 0.8rem;
+            font-size: 0.65rem;
         }
         .invoice-container .invoice-header .invoice-number {
             text-align: left;
         }
         .invoice-container .invoice-header .invoice-number h3 {
             color: #1a3a4a;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
         .invoice-container .invoice-header .invoice-number p {
             color: #6a7a8a;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
         }
         .invoice-container .invoice-details {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 10px 12px;
+            border-radius: 6px;
         }
         .invoice-container .invoice-details .detail-item {
             display: flex;
             flex-direction: column;
         }
         .invoice-container .invoice-details .detail-item .label {
-            font-size: 0.7rem;
+            font-size: 0.55rem;
             color: #6a7a8a;
             font-weight: 600;
         }
         .invoice-container .invoice-details .detail-item .value {
-            font-size: 1rem;
+            font-size: 0.75rem;
             color: #1a3a4a;
             font-weight: 700;
         }
         .invoice-container .invoice-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            font-size: 0.7rem;
         }
         .invoice-container .invoice-table th {
             background: #1a3a4a;
             color: #fff;
-            padding: 10px;
+            padding: 6px 8px;
             text-align: right;
-            font-size: 0.75rem;
+            font-size: 0.6rem;
         }
         .invoice-container .invoice-table td {
-            padding: 10px;
+            padding: 6px 8px;
             border-bottom: 1px solid #e8edf0;
             color: #1e2a3a;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
         .invoice-container .invoice-table .total-row td {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.8rem;
         }
         .invoice-container .invoice-table .total-row .label {
             color: #1a3a4a;
         }
         .invoice-container .invoice-table .total-row .value {
             color: #a67c52;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
         .invoice-container .invoice-footer {
             border-top: 1px solid #e8edf0;
-            padding-top: 15px;
+            padding-top: 10px;
             display: flex;
             justify-content: space-between;
-            font-size: 0.75rem;
+            font-size: 0.6rem;
             color: #6a7a8a;
         }
         .invoice-container .invoice-footer .signature {
             text-align: left;
         }
         .invoice-container .invoice-footer .signature .line {
-            width: 150px;
+            width: 100px;
             border-bottom: 1px solid #1a3a4a;
-            margin-top: 5px;
+            margin-top: 3px;
         }
 
         /* ============================================================
-                   INVOICE TERMS & CONDITIONS
+                   INVOICE TERMS & CONDITIONS - مضغوطة
                 ============================================================ */
         .invoice-terms {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px solid #e8edf0;
-            font-size: 0.7rem;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #e8edf0;
+            font-size: 0.55rem;
             color: #4a5a6a;
-            line-height: 1.8;
+            line-height: 1.5;
         }
         .invoice-terms .terms-title {
             font-weight: 700;
             color: #1a3a4a;
-            font-size: 0.75rem;
-            margin-bottom: 6px;
+            font-size: 0.6rem;
+            margin-bottom: 3px;
         }
         .invoice-terms .terms-list {
-            padding-right: 20px;
+            padding-right: 16px;
             list-style: none;
         }
         .invoice-terms .terms-list li {
             position: relative;
-            padding-right: 18px;
-            margin-bottom: 4px;
+            padding-right: 14px;
+            margin-bottom: 2px;
         }
         .invoice-terms .terms-list li::before {
             content: '•';
@@ -523,7 +524,7 @@
 
         .print-btn-container {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 15px;
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
@@ -532,11 +533,11 @@
         .print-btn-container .btn-print-invoice {
             background: #1a3a4a;
             color: #fff;
-            padding: 12px 30px;
+            padding: 10px 25px;
             border: none;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -547,11 +548,11 @@
         .print-btn-container .btn-pdf-invoice {
             background: #EF4444;
             color: #fff;
-            padding: 12px 30px;
+            padding: 10px 25px;
             border: none;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -562,11 +563,11 @@
         .print-btn-container .btn-whatsapp-invoice {
             background: #25D366;
             color: #fff;
-            padding: 12px 30px;
+            padding: 10px 25px;
             border: none;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -577,11 +578,11 @@
         .print-btn-container .btn-whatsapp-link-invoice {
             background: #075E54;
             color: #fff;
-            padding: 12px 30px;
+            padding: 10px 25px;
             border: none;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -592,11 +593,11 @@
         .print-btn-container .btn-copy-link-invoice {
             background: #3B82F6;
             color: #fff;
-            padding: 12px 30px;
+            padding: 10px 25px;
             border: none;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -606,9 +607,14 @@
         }
 
         /* ============================================================
-                   PRINT MEDIA QUERY
+                   PRINT MEDIA QUERY - صفحة واحدة
                 ============================================================ */
         @media print {
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
             body * {
                 visibility: hidden;
             }
@@ -623,23 +629,83 @@
                 left: 0;
                 right: 0;
                 margin: 0 auto;
-                padding: 20px;
-                background: #fff;
-                box-shadow: none;
-                border-radius: 0;
+                padding: 12px 16px !important;
+                background: #fff !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            .invoice-container .invoice-header .brand h2 {
+                font-size: 1rem !important;
+            }
+            .invoice-container .invoice-header .brand p {
+                font-size: 0.55rem !important;
+            }
+            .invoice-container .invoice-header .invoice-number h3 {
+                font-size: 0.85rem !important;
+            }
+            .invoice-container .invoice-header .invoice-number p {
+                font-size: 0.5rem !important;
+            }
+            .invoice-container .invoice-details {
+                padding: 6px 8px !important;
+                gap: 4px !important;
+                margin-bottom: 6px !important;
+            }
+            .invoice-container .invoice-details .detail-item .label {
+                font-size: 0.45rem !important;
+            }
+            .invoice-container .invoice-details .detail-item .value {
+                font-size: 0.6rem !important;
+            }
+            .invoice-container .invoice-table {
+                font-size: 0.55rem !important;
+                margin-bottom: 4px !important;
+            }
+            .invoice-container .invoice-table th {
+                font-size: 0.5rem !important;
+                padding: 3px 5px !important;
+            }
+            .invoice-container .invoice-table td {
+                font-size: 0.55rem !important;
+                padding: 3px 5px !important;
+            }
+            .invoice-container .invoice-table .total-row td {
+                font-size: 0.65rem !important;
+            }
+            .invoice-container .invoice-table .total-row .value {
+                font-size: 0.8rem !important;
+            }
+            .invoice-container .invoice-footer {
+                font-size: 0.5rem !important;
+                padding-top: 4px !important;
+            }
+            .invoice-container .invoice-footer .signature .line {
+                width: 60px !important;
+            }
+            .invoice-terms {
+                font-size: 0.45rem !important;
+                margin-top: 4px !important;
+                padding-top: 4px !important;
+            }
+            .invoice-terms .terms-title {
+                font-size: 0.5rem !important;
+            }
+            .invoice-terms .terms-list li {
+                font-size: 0.45rem !important;
             }
             .no-print {
                 display: none !important;
             }
-            .invoice-terms {
-                border-top-color: #ccc;
-                color: #333;
+            .print-btn-container {
+                display: none !important;
             }
-            .invoice-terms .terms-title {
-                color: #1a3a4a;
-            }
-            .invoice-terms .terms-list li::before {
-                color: #a67c52;
+            .invoice-container .invoice-header {
+                padding-bottom: 4px !important;
+                margin-bottom: 6px !important;
             }
         }
 
@@ -655,13 +721,13 @@
                 padding: 20px 16px;
             }
             .invoice-container .invoice-details {
-                grid-template-columns: 1fr;
-                gap: 10px;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
             }
             .invoice-container .invoice-header {
                 flex-direction: column;
                 text-align: center;
-                gap: 10px;
+                gap: 6px;
             }
             .invoice-container .invoice-header .invoice-number {
                 text-align: center;
@@ -864,14 +930,14 @@
         </div>
 
         <!-- ============================================================
-        INVOICE PREVIEW
+        INVOICE PREVIEW - تنسيق صفحة واحدة
         ============================================================ -->
         <div class="invoice-container" id="invoicePreview">
             <div class="invoice-header">
                 <div class="brand">
                     <h2>🏕️ منتجع حياله - القصيم</h2>
                     <p>النظام المالي والإداري لإدارة منتجع وشاليهات حيالة القصيم</p>
-                    <p style="font-size:0.7rem;color:#8a9aaa;">📍 القصيم/ بريدة - حي الخليج · 📱 +966509982400</p>
+                    <p style="font-size:0.6rem;color:#8a9aaa;">📍 القصيم/ بريدة - حي الخليج · 📱 +966509982400</p>
                 </div>
                 <div class="invoice-number">
                     <h3>فاتورة رقم: <span id="invNumber">0001</span></h3>
@@ -905,7 +971,7 @@
                     <span class="value" id="invCheckOut">-</span>
                 </div>
                 <div class="detail-item">
-                    <span class="label">عدد أيام المبيت</span>
+                    <span class="label">عدد الأيام</span>
                     <span class="value" id="invNights">-</span>
                 </div>
                 <div class="detail-item">
@@ -952,17 +1018,17 @@
             <div class="invoice-footer">
                 <div>
                     <p>حالة السداد: <span id="invStatus">-</span></p>
-                    <p style="font-size:0.65rem;color:#8a9aaa;" id="invNote">-</p>
+                    <p style="font-size:0.55rem;color:#8a9aaa;" id="invNote">-</p>
                 </div>
                 <div class="signature">
                     <p>توقيع المستلم</p>
                     <div class="line"></div>
-                    <p style="font-size:0.6rem;color:#8a9aaa;">شكراً لثقتكم بنا</p>
+                    <p style="font-size:0.5rem;color:#8a9aaa;">شكراً لثقتكم بنا</p>
                 </div>
             </div>
 
             <!-- ============================================================
-            TERMS & CONDITIONS - الشروط والأحكام
+            TERMS & CONDITIONS - مضغوطة
             ============================================================ -->
             <div class="invoice-terms">
                 <div class="terms-title">📋 الشروط والأحكام:</div>
@@ -1207,7 +1273,7 @@ ${link}
         }
 
         // ============================================================
-        // تحميل PDF
+        // تحميل PDF - صفحة واحدة
         // ============================================================
         function downloadPDF() {
             if (!lastSavedData) {
@@ -1219,11 +1285,12 @@ ${link}
 
             const element = document.getElementById('invoicePreview');
             const opt = {
-                margin: 10,
+                margin: 8,
                 filename: `فاتورة_${lastSavedData.bookingNumber}_${lastSavedData.guestName}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                image: { type: 'jpeg', quality: 0.95 },
+                html2canvas: { scale: 1.5, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
             showMessage('⏳ جاري تحويل الفاتورة إلى PDF...', 'success');
@@ -1243,10 +1310,11 @@ ${link}
         const loadingSpinner = document.getElementById('loadingSpinner');
         const messageDiv = document.getElementById('message');
 
+        let lastSubmittedData = null;
+
         // الاستماع لحدث تحميل iframe
         hiddenFrame.addEventListener('load', function() {
             try {
-                // محاولة قراءة الرد من iframe
                 const responseText = hiddenFrame.contentDocument.body.textContent;
                 const response = JSON.parse(responseText);
 
@@ -1259,7 +1327,6 @@ ${link}
                     loadingSpinner.style.display = 'none';
                 }
             } catch (e) {
-                // إذا لم نستطع قراءة الرد، نفترض النجاح
                 if (lastSubmittedData) {
                     handleSuccess(lastSubmittedData);
                 } else {
@@ -1271,15 +1338,12 @@ ${link}
             }
         });
 
-        let lastSubmittedData = null;
-
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
             if (isSubmitting) return;
             isSubmitting = true;
 
-            // جمع البيانات
             const formData = {
                 action: 'addInvoice',
                 bookingNumber: document.getElementById('bookingNumber').value,
@@ -1303,7 +1367,6 @@ ${link}
                 timeNote: document.getElementById('timeNote').value
             };
 
-            // التحقق من الحقول المطلوبة
             const requiredFields = ['bookingNumber', 'invoiceDate', 'checkIn', 'checkOut', 'day', 'guestName',
                 'propertyType', 'nights', 'dailyPrice', 'paid', 'total', 'paymentStatus', 'stayType'
             ];
@@ -1315,16 +1378,13 @@ ${link}
                 }
             }
 
-            // حفظ البيانات للإشارة إليها لاحقاً
             lastSubmittedData = formData;
 
-            // إظهار التحميل
             submitBtn.disabled = true;
             submitBtn.style.display = 'none';
             loadingSpinner.style.display = 'block';
             hideMessage();
 
-            // إنشاء نموذج مخفي للإرسال
             const hiddenForm = document.createElement('form');
             hiddenForm.method = 'POST';
             hiddenForm.action = SCRIPT_URL;
@@ -1340,13 +1400,9 @@ ${link}
             hiddenForm.submit();
             document.body.removeChild(hiddenForm);
 
-            // مهلة أمان: إذا لم يستجب الـ iframe خلال 10 ثواني
             setTimeout(function() {
-                if (isSubmitting) {
-                    // إذا لم يتم معالجة الرد، نفترض النجاح
-                    if (lastSubmittedData) {
-                        handleSuccess(lastSubmittedData);
-                    }
+                if (isSubmitting && lastSubmittedData) {
+                    handleSuccess(lastSubmittedData);
                 }
             }, 10000);
         });
@@ -1361,13 +1417,11 @@ ${link}
 
             showMessage(`✅ تم حفظ الفاتورة بنجاح! رقم الحجز: ${formData.bookingNumber}`, 'success');
 
-            // إعادة تعيين النموذج مع الاحتفاظ ببعض البيانات
             const bookingNumber = document.getElementById('bookingNumber').value;
             form.reset();
             document.getElementById('bookingNumber').value = parseInt(bookingNumber) + 1;
             remainingInput.value = '0';
 
-            // ضبط التاريخ
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('invoiceDate').value = today;
             document.getElementById('checkIn').value = today;
@@ -1463,8 +1517,6 @@ ${link}
             document.getElementById('invoiceDate').value = today;
             document.getElementById('checkIn').value = today;
             document.getElementById('checkOut').value = today;
-
-            // رقم حجز افتراضي
             document.getElementById('bookingNumber').value = Math.floor(Math.random() * 100) + 1;
         });
     </script>
